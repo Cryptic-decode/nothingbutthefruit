@@ -49,7 +49,7 @@ export default function About() {
               </span>
             </h1>
             <p className="mt-8 text-xl leading-8 text-gray-300 max-w-3xl mx-auto sm:text-2xl sm:leading-9">
-              From the battlefield to the pulpit — bringing you pure gospel truth
+              From the battlefield to the pulpit, bringing you pure gospel truth
             </p>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function About() {
                   Pastor Demetria Bass is the <span className="font-semibold text-purple-700">Executive Pastor at Bass Global Ministries</span> and host of <span className="font-semibold text-brand-black bg-brand-gold px-2 py-1 rounded">Nothing But The Fruit</span>, a gospel podcast dedicated to deep biblical teaching and spiritual growth.
                 </p>
                 <p className="mt-6 text-xl leading-relaxed text-gray-600 sm:text-2xl">
-                  With a unique journey from the <span className="font-semibold text-purple-700">U.S. military to ministry</span>, Pastor Demetria brings discipline, dedication, and a warrior's heart to the work of God's Kingdom. Her passion is helping believers move from "milk to meat" — deepening their understanding of Scripture and equipping them to bear lasting fruit in every season of life.
+                  With a unique journey from the <span className="font-semibold text-purple-700">U.S. military to ministry</span>, Pastor Demetria brings discipline, dedication, and a warrior's heart to the work of God's Kingdom. Her passion is helping believers move from "milk to meat", deepening their understanding of Scripture and equipping them to bear lasting fruit in every season of life.
               </p>
               <p className="mt-6 text-xl leading-relaxed text-gray-600 sm:text-2xl">
                   Through <span className="font-semibold text-purple-700">Nothing But The Fruit</span>, Pastor Demetria unpacks biblical truth with clarity and conviction, drawing from years of ministry experience, spiritual warfare, and intimate relationship with God. Whether you're a new believer or a seasoned saint, this podcast will challenge you to grow deeper in your faith and walk in the fullness of God's Word.
@@ -225,7 +225,7 @@ export default function About() {
                 <h3 className="text-2xl font-bold text-gray-900 ml-4 group-hover:text-purple-700 transition-colors duration-300">Conviction</h3>
               </div>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Boldness in speaking biblical truth. We don't water down the gospel — we deliver it with courage, love, and unwavering faith.
+                Boldness in speaking biblical truth. We don't water down the gospel, we deliver it with courage, love, and unwavering faith.
               </p>
             </div>
 
@@ -245,80 +245,70 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Team Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-purple-50 relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-24 h-24 bg-brand-gold opacity-5 rounded-full blur-xl animate-float"></div>
-          <div className="absolute bottom-20 right-20 w-32 h-32 bg-purple-200 opacity-5 rounded-full blur-xl animate-float" style={{animationDelay: '1s'}}></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 animate-on-scroll animate-slideInUp">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
-              Meet Our Team
-            </h2>
-            <p className="mt-4 text-xl text-gray-600">
-              The creative minds behind the magic
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Founder/Creative Lead */}
-            <div className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-6 hover:rotate-2 animate-on-scroll animate-slideInLeft">
-              <div className="w-24 h-24 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 animate-float">
-                <span className="text-3xl font-bold text-brand-black">D</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors duration-300">David Olanrewaju</h3>
-              <p className="text-brand-gold font-semibold mb-4">Founder & Creative Lead</p>
-              <p className="text-gray-600">
-                Visionary behind PodMagic Media with a passion for transforming content creators into successful brands.
-              </p>
-            </div>
-
-            {/* Lead Podcast Editor */}
-            <div className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-6 hover:-rotate-2 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.1s'}}>
-              <div className="w-24 h-24 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 animate-float" style={{animationDelay: '1s'}}>
-                <span className="text-3xl font-bold text-brand-black">B</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors duration-300">Blessing Olanrewaju</h3>
-              <p className="text-brand-gold font-semibold mb-4">Lead Editor & Social Media Manager</p>
-              <p className="text-gray-600">
-                Master of audio engineering and social media strategy who transforms raw content into professional, engaging experiences across all platforms.
-              </p>
-            </div>
-
-            {/* Content Strategist */}
-            <div className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-6 hover:rotate-2 animate-on-scroll animate-slideInRight" style={{animationDelay: '0.2s'}}>
-              <div className="w-24 h-24 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 animate-float" style={{animationDelay: '2s'}}>
-                <span className="text-3xl font-bold text-brand-black">F</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors duration-300">Faith</h3>
-              <p className="text-brand-gold font-semibold mb-4">Content Strategist</p>
-              <p className="text-gray-600">
-                Knows what works on every platform and creates data-driven strategies that actually drive results.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Closing Callout Section */}
+      {/* Stay Connected Section */}
       <section className="py-20 bg-brand-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
-            Ready to Join Our Community?
+            Stay Connected
           </h2>
-          <p className="mt-6 text-xl text-gray-300 max-w-4xl mx-auto animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
-            Whether you&apos;re just getting started or trying to scale, we&apos;re here to help your content reach the people it&apos;s meant for.
+          <p className="mt-6 text-xl text-gray-300 max-w-3xl mx-auto animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
+            Join our growing community of believers and never miss a teaching. Subscribe today and grow deeper in your walk with God.
           </p>
-          <div className="mt-10 animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
+            <a 
+              href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              Subscribe on YouTube
+            </a>
             <a 
               href="/contact"
-              className="inline-block bg-brand-gold hover:bg-yellow-400 text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-block border-2 border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105"
             >
-              Let's Work Together
+              Send a Prayer Request
             </a>
+          </div>
+          
+          {/* Social Media */}
+          <div className="mt-16 pt-8 border-t border-gray-700 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.6s'}}>
+            <p className="text-gray-400 mb-6">Follow us for daily encouragement and episode updates</p>
+            <div className="flex justify-center space-x-6">
+              <a 
+                href="https://youtube.com/@nothingbutthefruit" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
+                aria-label="YouTube"
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+              <a 
+                href="https://instagram.com/nothingbutthefruit" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
+                aria-label="Instagram"
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.012-3.584.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072C3.58 0 2.385 1.196 2.31 2.473.252 3.753.24 4.161.24 7.421c0 3.26.012 3.668.07 4.948.149 3.259 1.691 4.771 4.919 4.919 1.266.058 1.644.07 4.85.07 3.259 0 3.668-.014 4.948-.072 3.259-.149 4.771-1.691 4.919-4.919.058-1.265.07-1.644.07-4.849 0-3.26-.012-3.668-.07-4.948-.149-3.259-1.691-4.771-4.919-4.919-1.265-.058-1.644-.07-4.849-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162S15.403 5.838 12 5.838zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.44-.645 1.44-1.44s-.645-1.44-1.44-1.44z"/>
+                </svg>
+              </a>
+              <a 
+                href="https://facebook.com/nothingbutthefruit" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
+                aria-label="Facebook"
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.271 0-4.192 1.543-4.192 4.615v3.385z"/>
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </section>

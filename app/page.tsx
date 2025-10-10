@@ -119,19 +119,20 @@ export default function Home() {
       </section>
 
       {/* Latest Episode Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
-        {/* Background Elements */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        {/* Background Elements - Subtle and clean */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/30 to-amber-50/20"></div>
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-brand-gold opacity-5 rounded-full blur-xl animate-float"></div>
-          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-300 opacity-5 rounded-full blur-xl animate-float" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-20 right-20 w-32 h-32 bg-brand-gold opacity-5 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-20 left-20 w-40 h-40 bg-purple-200 opacity-5 rounded-full blur-3xl"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
               Latest Episode
             </h2>
-            <p className="mt-4 text-xl text-gray-300 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
+            <p className="mt-4 text-xl text-gray-700 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
               Watch our newest teaching and be transformed by God's Word
             </p>
           </div>
@@ -215,8 +216,15 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-white relative overflow-hidden">
+        {/* Background Elements - Subtle pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50/30 to-purple-50/20"></div>
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 right-10 w-40 h-40 bg-purple-200 opacity-5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 left-10 w-32 h-32 bg-brand-gold opacity-5 rounded-full blur-2xl"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-on-scroll animate-slideInUp">
             <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
               What We Cover
