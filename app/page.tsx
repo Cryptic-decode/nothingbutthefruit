@@ -1,4 +1,6 @@
 
+import Link from 'next/link';
+import YouTubeEmbed from './components/YouTubeEmbed';
 
 export default function Home() {
   return (
@@ -123,6 +125,47 @@ export default function Home() {
           <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
+        </div>
+      </section>
+
+      {/* Latest Episode Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-32 h-32 bg-brand-gold opacity-5 rounded-full blur-xl animate-float"></div>
+          <div className="absolute bottom-20 right-10 w-40 h-40 bg-purple-300 opacity-5 rounded-full blur-xl animate-float" style={{animationDelay: '2s'}}></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
+              Latest Episode
+            </h2>
+            <p className="mt-4 text-xl text-gray-300 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
+              Watch our newest teaching and be transformed by God's Word
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
+            <YouTubeEmbed 
+              videoId="your-latest-video-id"
+              title="Latest Episode - Nothing But The Fruit"
+            />
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-xl"
+            >
+              Subscribe for New Episodes
+              <svg className="inline-block ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -296,55 +339,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How We Work Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
-              How We Work
-            </h2>
-            <div className="mt-8 max-w-4xl mx-auto animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
-              <p className="text-xl leading-relaxed text-gray-600 sm:text-2xl">
-                Our 3-step process: Strategize, Produce, and Grow with visual flow and descriptions.
-              </p>
-            </div>
-
-            {/* How We Work highlights */}
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center animate-on-scroll animate-slideInLeft">
-                <div className="mx-auto w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">Strategize</h3>
-                <p className="mt-2 text-gray-600">Define your goals and target audience</p>
-              </div>
-
-              <div className="text-center animate-on-scroll animate-slideInUp" style={{animationDelay: '0.1s'}}>
-                <div className="mx-auto w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">Produce</h3>
-                <p className="mt-2 text-gray-600">Create high-quality content</p>
-              </div>
-
-              <div className="text-center animate-on-scroll animate-slideInRight" style={{animationDelay: '0.2s'}}>
-                <div className="mx-auto w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">Grow</h3>
-                <p className="mt-2 text-gray-600">Scale your content and reach your audience</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials Section - COMMENTED OUT until we have real listener reviews */}
       {/* 
       <section className="py-20 bg-gray-50">
@@ -407,29 +401,70 @@ export default function Home() {
       </section>
       */}
 
-      {/* Final CTA Section */}
+      {/* Stay Connected Section */}
       <section className="py-20 bg-brand-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
-            Ready to scale your content game?
+            Stay Connected
           </h2>
           <p className="mt-6 text-xl text-gray-300 max-w-3xl mx-auto animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
-            Let&apos;s chat — no strings attached.
+            Join our growing community of believers and never miss a teaching. Subscribe today and grow deeper in your walk with God.
           </p>
-          <div className="mt-10 animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
+            <a 
+              href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              Subscribe on YouTube
+            </a>
             <a 
               href="/contact"
-              className="inline-block bg-brand-gold hover:bg-yellow-400 text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-block border-2 border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105"
             >
-              📞 Schedule a Free Call
+              Send a Prayer Request
             </a>
           </div>
           
-          {/* Additional trust signals */}
+          {/* Social Media */}
           <div className="mt-16 pt-8 border-t border-gray-700 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.6s'}}>
-            <p className="text-gray-400 text-sm">
-              Join 100+ creators who trust PodMagic Media with their content
-            </p>
+            <p className="text-gray-400 mb-6">Follow us for daily encouragement and episode updates</p>
+            <div className="flex justify-center space-x-6">
+              <a 
+                href="https://youtube.com/@nothingbutthefruit" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
+                aria-label="YouTube"
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+              <a 
+                href="https://instagram.com/nothingbutthefruit" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
+                aria-label="Instagram"
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.012-3.584.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072C3.58 0 2.385 1.196 2.31 2.473.252 3.753.24 4.161.24 7.421c0 3.26.012 3.668.07 4.948.149 3.259 1.691 4.771 4.919 4.919 1.266.058 1.644.07 4.85.07 3.259 0 3.668-.014 4.948-.072 3.259-.149 4.771-1.691 4.919-4.919.058-1.265.07-1.644.07-4.849 0-3.26-.012-3.668-.07-4.948-.149-3.259-1.691-4.771-4.919-4.919-1.265-.058-1.644-.07-4.849-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162S15.403 5.838 12 5.838zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.44-.645 1.44-1.44s-.645-1.44-1.44-1.44z"/>
+                </svg>
+              </a>
+              <a 
+                href="https://facebook.com/nothingbutthefruit" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
+                aria-label="Facebook"
+              >
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.271 0-4.192 1.543-4.192 4.615v3.385z"/>
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </section>
