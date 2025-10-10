@@ -112,7 +112,7 @@ export default function Episodes() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {episodes.map((episode, index) => (
+              {episodes.map((episode) => (
                 <div 
                   key={episode.id}
                   className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col"
