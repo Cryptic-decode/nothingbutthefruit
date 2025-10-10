@@ -9,16 +9,6 @@ export default function Home() {
       <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 py-20 lg:py-32">
         {/* Background Elements */}
         <div className="absolute inset-0">
-          {/* Animated gradient orbs */}
-          <div className="absolute top-20 left-20 w-64 h-64 bg-brand-gold opacity-10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-80 h-80 bg-pink-400 opacity-10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-20 left-1/3 w-56 h-56 bg-purple-400 opacity-10 rounded-full blur-2xl animate-pulse" style={{animationDelay: '4s'}}></div>
-          
-          {/* Floating shapes */}
-          <div className="absolute top-32 right-1/4 w-8 h-8 bg-brand-gold opacity-30 rounded-full animate-bounce" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-60 left-1/4 w-6 h-6 bg-pink-300 opacity-40 rounded-full animate-bounce" style={{animationDelay: '3s'}}></div>
-          <div className="absolute bottom-40 right-1/3 w-10 h-10 bg-purple-300 opacity-30 rounded-full animate-bounce" style={{animationDelay: '2s'}}></div>
-
           {/* Dynamic wave pattern */}
           <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
             <defs>
