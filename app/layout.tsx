@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PodMagic Media - Your Podcast, Our Magic",
-  description: "Professional podcast management, YouTube channel support, and social media management. Turn your voice into a brand and your content into a business.",
-  keywords: "podcast management, youtube editing, social media management, content creation, podcast editing",
+  title: "Nothing But The Fruit | Gospel Podcast with Pastor Demetria Bass",
+  description: "Join Pastor Demetria Bass for powerful biblical teaching and spiritual growth. From the battlefield to the pulpit, experience pure gospel truth that transforms lives. Nothing but the fruit of God's Word.",
+  keywords: "gospel podcast, christian podcast, Pastor Demetria Bass, Bass Global Ministries, biblical teaching, spiritual growth, faith podcast, christian ministry, BGM, fruit of the spirit",
 };
 
 export default function RootLayout({
