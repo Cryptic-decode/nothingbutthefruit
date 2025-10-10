@@ -3,17 +3,45 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --brand-yellow: #FFE500;
+  
+  /* Primary Brand Colors - Gospel Theme */
+  --brand-gold: #F59E0B;
   --brand-black: #000000;
   --brand-gray: #666666;
+  
+  /* Purple Palette - Royalty & Spirit */
+  --royal-purple: #6B46C1;
+  --deep-purple: #5B21B6;
+  --soft-purple: #8B5CF6;
+  
+  /* Accent Colors */
+  --warm-white: #FAFAF9;
+  --rich-black: #1C1917;
+  
+  /* Legacy Support (for gradual migration) */
+  --brand-yellow: var(--brand-gold);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand-yellow: var(--brand-yellow);
+  
+  /* Primary Brand Colors */
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-yellow: var(--brand-gold);
   --color-brand-black: var(--brand-black);
   --color-brand-gray: var(--brand-gray);
+  
+  /* Purple Palette */
+  --color-royal-purple: var(--royal-purple);
+  --color-deep-purple: var(--deep-purple);
+  --color-soft-purple: var(--soft-purple);
+  
+  /* Accent Colors */
+  --color-warm-white: var(--warm-white);
+  --color-rich-black: var(--rich-black);
+  
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -34,12 +62,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--brand-yellow);
+  background: var(--brand-gold);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e6d000;
+  background: #D97706;
 }
 
 /* Custom animations */
