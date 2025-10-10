@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -7,16 +8,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              {/* Open Book Logo */}
-              <div className="w-10 h-10 bg-brand-gold rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-white">Nothing But The Fruit</h3>
-                {/* <p className="text-xs text-gray-400 -mt-1">The Fruit</p> */}
+            <div className="mb-6">
+              {/* Tree Branch Logo - Footer */}
+              <div className="flex items-center space-x-3">
+                <div className="w-11 h-11 flex items-center justify-center relative">
+                  <Image src="/tree-branch.png" alt="Tree Branch" width={44} height={44} className="object-contain" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Nothing But The Fruit</h3>
+                </div>
               </div>
             </div>
             <p className="text-gray-300 text-lg leading-relaxed max-w-md">
