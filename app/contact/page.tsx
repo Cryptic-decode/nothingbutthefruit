@@ -222,26 +222,6 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Instagram */}
-                <div className="flex items-start animate-on-scroll animate-slideInUp" style={{animationDelay: '0.1s'}}>
-                  <div className="w-12 h-12 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mr-4 flex-shrink-0 animate-float" style={{animationDelay: '0.5s'}}>
-                    <svg className="w-6 h-6 text-brand-black" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.621 5.367 11.988 11.988 11.988s11.987-5.367 11.987-11.988C24.004 5.367 18.637.001 12.017.001zM8.948 16.011c-.664 0-1.201-.538-1.201-1.201s.537-1.2 1.201-1.2c.664 0 1.201.537 1.201 1.2s-.537 1.201-1.201 1.201zm6.105 0c-.664 0-1.201-.538-1.201-1.201s.537-1.2 1.201-1.2c.664 0 1.201.537 1.201 1.2s-.537 1.201-1.201 1.201z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">Instagram</h3>
-                    <p className="text-gray-600 mb-2">Follow for daily encouragement and episode updates</p>
-                    <a 
-                      href="https://instagram.com/nothingbutthefruit" 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-brand-black hover:text-gray-700 font-semibold transition-colors duration-200"
-                    >
-                      @nothingbutthefruit
-                    </a>
-                  </div>
-                </div>
 
                 {/* YouTube */}
                 <div className="flex items-start animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>

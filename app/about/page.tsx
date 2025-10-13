@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import StayConnected from '../components/StayConnected';
 
 export default function About() {
   return (
@@ -77,7 +78,7 @@ export default function About() {
                   <div className="absolute inset-0 bg-gradient-to-br from-brand-gold to-purple-600 rounded-2xl transform rotate-3"></div>
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-300">
                     <Image
-                      src="/PastorDee.jpg"
+                      src="/PastorDeeNew.png"
                       alt="Pastor Demetria Bass"
                       width={500}
                       height={500}
@@ -246,72 +247,7 @@ export default function About() {
       </section>
 
       {/* Stay Connected Section */}
-      <section className="py-20 bg-brand-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
-            Stay Connected
-          </h2>
-          <p className="mt-6 text-xl text-gray-300 max-w-3xl mx-auto animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
-            Join our growing community of believers and never miss a teaching. Subscribe today and grow deeper in your walk with God.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
-            <a 
-              href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              Subscribe on YouTube
-            </a>
-            <a 
-              href="/contact"
-              className="inline-block border-2 border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105"
-            >
-              Send a Prayer Request
-            </a>
-          </div>
-          
-          {/* Social Media */}
-          <div className="mt-16 pt-8 border-t border-gray-700 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.6s'}}>
-            <p className="text-gray-400 mb-6">Follow us for daily encouragement and episode updates</p>
-            <div className="flex justify-center space-x-6">
-              <a 
-                href="https://youtube.com/@nothingbutthefruit" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
-                aria-label="YouTube"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </a>
-              <a 
-                href="https://instagram.com/nothingbutthefruit" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
-                aria-label="Instagram"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.012-3.584.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072C3.58 0 2.385 1.196 2.31 2.473.252 3.753.24 4.161.24 7.421c0 3.26.012 3.668.07 4.948.149 3.259 1.691 4.771 4.919 4.919 1.266.058 1.644.07 4.85.07 3.259 0 3.668-.014 4.948-.072 3.259-.149 4.771-1.691 4.919-4.919.058-1.265.07-1.644.07-4.849 0-3.26-.012-3.668-.07-4.948-.149-3.259-1.691-4.771-4.919-4.919-1.265-.058-1.644-.07-4.849-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162S15.403 5.838 12 5.838zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.44-.645 1.44-1.44s-.645-1.44-1.44-1.44z"/>
-                </svg>
-              </a>
-              <a 
-                href="https://facebook.com/nothingbutthefruit" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-black transition-colors duration-200"
-                aria-label="Facebook"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.271 0-4.192 1.543-4.192 4.615v3.385z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <StayConnected />
     </div>
   );
 } 
