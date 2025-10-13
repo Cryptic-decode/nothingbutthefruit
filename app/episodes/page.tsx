@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import EpisodeCard from '../components/EpisodeCard';
-import { fetchChannelVideos, getChannelInfo } from '../lib/youtubeService';
+import { fetchChannelVideos } from '../lib/youtubeService';
 
 export default async function Episodes() {
   // Fetch videos from YouTube channel
   const videos = await fetchChannelVideos();
-  const channelInfo = await getChannelInfo();
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}

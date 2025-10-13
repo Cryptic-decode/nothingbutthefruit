@@ -25,51 +25,69 @@ export interface YouTubeChannel {
 }
 
 // Channel handle to ID mapping (we'll resolve this)
-const CHANNEL_HANDLE = '@NothingButTheFruit';
-const CHANNEL_ID = 'UC_placeholder'; // Will be resolved
+const CHANNEL_HANDLE = '@nothingbutthefruit';
+
+// Manual channel ID override (uncomment and set if you know the channel ID)
+// To get your channel ID: Go to https://www.youtube.com/@nothingbutthefruit, right-click -> View Source, search for "channelId"
+const MANUAL_CHANNEL_ID = 'UCLWe0BfP-ZPGW-TJseapbjA';
 
 /**
  * Resolves YouTube channel handle to channel ID
- * Uses a direct approach to fetch channel ID from the channel page
+ * Uses multiple approaches to find the channel ID
  */
 export async function resolveChannelId(handle: string): Promise<string> {
   try {
     // Remove @ symbol if present
     const cleanHandle = handle.replace('@', '');
     
-    // Try to fetch the channel page to extract the channel ID
-    const channelUrl = `https://www.youtube.com/${cleanHandle}`;
-    
-    const response = await fetch(channelUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; NothingButTheFruit-Website/1.0)',
-      },
-    });
+    // Try multiple URL formats
+    const urlsToTry = [
+      `https://www.youtube.com/@${cleanHandle}`,
+      `https://www.youtube.com/c/${cleanHandle}`,
+      `https://www.youtube.com/user/${cleanHandle}`,
+      `https://www.youtube.com/channel/${cleanHandle}`,
+    ];
 
-    if (!response.ok) {
-      console.warn(`Failed to fetch channel page for ${handle}: ${response.status}`);
-      return 'UC_placeholder';
-    }
+    for (const channelUrl of urlsToTry) {
+      try {
+        console.log(`Trying to resolve channel ID from: ${channelUrl}`);
+        
+        const response = await fetch(channelUrl, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; NothingButTheFruit-Website/1.0)',
+          },
+        });
 
-    const html = await response.text();
-    
-    // Extract channel ID from the page HTML
-    // Look for patterns like "channelId":"UC..." or "externalId":"UC..."
-    const channelIdMatch = html.match(/"channelId":"(UC[a-zA-Z0-9_-]{22})"/) ||
-                          html.match(/"externalId":"(UC[a-zA-Z0-9_-]{22})"/) ||
-                          html.match(/channelId=([UCa-zA-Z0-9_-]{24})/);
-    
-    if (channelIdMatch && channelIdMatch[1]) {
-      const channelId = channelIdMatch[1];
-      console.log(`Successfully resolved channel ID for ${handle}: ${channelId}`);
-      return channelId;
+        if (response.ok) {
+          const html = await response.text();
+          
+          // Extract channel ID from the page HTML
+          const channelIdMatch = html.match(/"channelId":"(UC[a-zA-Z0-9_-]{22})"/) ||
+                                html.match(/"externalId":"(UC[a-zA-Z0-9_-]{22})"/) ||
+                                html.match(/channelId=([UCa-zA-Z0-9_-]{24})/);
+          
+          if (channelIdMatch && channelIdMatch[1]) {
+            const channelId = channelIdMatch[1];
+            console.log(`✅ Successfully resolved channel ID for ${handle}: ${channelId}`);
+            return channelId;
+          }
+        } else {
+          console.log(`❌ Failed to fetch ${channelUrl}: ${response.status}`);
+        }
+      } catch (urlError) {
+        console.log(`❌ Error fetching ${channelUrl}:`, urlError);
+        continue;
+      }
     }
     
-    console.warn(`Could not find channel ID in page for ${handle}`);
+    console.warn(`❌ Could not resolve channel ID for ${handle} from any URL format`);
+    console.log(`💡 The channel might not exist yet or the handle might be different`);
+    console.log(`💡 You can manually provide the channel ID if you know it`);
+    
     return 'UC_placeholder';
     
   } catch (error) {
-    console.error(`Error resolving channel ID for ${handle}:`, error);
+    console.error(`❌ Error resolving channel ID for ${handle}:`, error);
     return 'UC_placeholder';
   }
 }
@@ -81,6 +99,12 @@ export async function resolveChannelId(handle: string): Promise<string> {
 export async function fetchChannelVideos(channelId?: string): Promise<YouTubeVideo[]> {
   try {
     let resolvedChannelId = channelId;
+    
+    // Check for manual override first
+    if (MANUAL_CHANNEL_ID) {
+      console.log('Using manual channel ID override:', MANUAL_CHANNEL_ID);
+      resolvedChannelId = MANUAL_CHANNEL_ID;
+    }
     
     // If no channel ID provided, resolve it from the handle
     if (!resolvedChannelId || resolvedChannelId === 'UC_placeholder') {
@@ -234,6 +258,12 @@ function decodeHtmlEntities(text: string): string {
 export async function getChannelInfo(channelId?: string): Promise<YouTubeChannel | null> {
   try {
     let resolvedChannelId = channelId;
+    
+    // Check for manual override first
+    if (MANUAL_CHANNEL_ID) {
+      console.log('Using manual channel ID override for channel info:', MANUAL_CHANNEL_ID);
+      resolvedChannelId = MANUAL_CHANNEL_ID;
+    }
     
     // If no channel ID provided, resolve it from the handle
     if (!resolvedChannelId || resolvedChannelId === 'UC_placeholder') {
