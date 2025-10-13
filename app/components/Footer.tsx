@@ -9,13 +9,10 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="mb-6">
-              {/* Tree Branch Logo - Footer */}
-              <div className="flex items-center space-x-3">
-                <div className="w-11 h-11 flex items-center justify-center relative">
-                  <Image src="/tree-branch.png" alt="Tree Branch" width={44} height={44} className="object-contain" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white" style={{fontFamily: 'var(--font-playfair), Georgia, serif'}}>Nothing But The Fruit</h3>
+              {/* Brand Logo - Footer */}
+              <div className="flex items-center">
+                <div className="h-12 flex items-center justify-center relative">
+                  <Image src="/NothingButTheFruitUpgrade2.png" alt="Nothing But The Fruit" width={200} height={48} className="object-contain" />
                 </div>
               </div>
             </div>
