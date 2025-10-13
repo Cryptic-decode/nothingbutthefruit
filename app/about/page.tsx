@@ -29,7 +29,12 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black py-20 lg:py-32">
+      <section className="relative overflow-hidden py-20 lg:py-32" style={{
+        background: 'linear-gradient(135deg, #111827 0%, #1f2937 50%, #000000 100%)',
+        backgroundImage: 'linear-gradient(135deg, #111827 0%, #1f2937 50%, #000000 100%)',
+        WebkitBackgroundClip: 'padding-box',
+        backgroundClip: 'padding-box'
+      }}>
         {/* Background Elements */}
         <div className="absolute inset-0">
           {/* Geometric shapes */}

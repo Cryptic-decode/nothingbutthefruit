@@ -7,16 +7,21 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 py-20 lg:py-32">
+      <section className="relative overflow-hidden py-20 lg:py-32" style={{
+        background: 'linear-gradient(135deg, #312e81 0%, #581c87 50%, #be185d 100%)',
+        backgroundImage: 'linear-gradient(135deg, #312e81 0%, #581c87 50%, #be185d 100%)',
+        WebkitBackgroundClip: 'padding-box',
+        backgroundClip: 'padding-box'
+      }}>
         {/* Background Elements */}
         <div className="absolute inset-0">
-          {/* Dynamic wave pattern */}
+          {/* Dynamic wave pattern - Safari compatible */}
           <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
             <defs>
               <pattern id="waves-home" x="0" y="0" width="200" height="100" patternUnits="userSpaceOnUse">
-                <path d="M0,50 Q50,0 100,50 T200,50" stroke="#F59E0B" strokeWidth="2" fill="none" className="animate-pulse"/>
-                <path d="M0,70 Q50,20 100,70 T200,70" stroke="#A855F7" strokeWidth="1.5" fill="none" className="animate-pulse" style={{animationDelay: '1s'}}/>
-                <path d="M0,30 Q50,-20 100,30 T200,30" stroke="#EC4899" strokeWidth="1" fill="none" className="animate-pulse" style={{animationDelay: '2s'}}/>
+                <path d="M0,50 Q50,0 100,50 T200,50" stroke="#F59E0B" strokeWidth="2" fill="none"/>
+                <path d="M0,70 Q50,20 100,70 T200,70" stroke="#A855F7" strokeWidth="1.5" fill="none"/>
+                <path d="M0,30 Q50,-20 100,30 T200,30" stroke="#EC4899" strokeWidth="1" fill="none"/>
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#waves-home)"/>
@@ -64,9 +69,16 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-full text-brand-black bg-brand-gold hover:bg-amber-500 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 shadow-2xl hover:shadow-3xl"
               >
-                ▶️ Watch Latest Episode
-                <svg className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                Watch Latest Episode
+                <svg 
+                  className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                  fill="currentColor" 
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  role="img"
+                >
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
               </a>
               <a 
@@ -153,7 +165,14 @@ export default function Home() {
               className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-xl"
             >
               Subscribe for New Episodes
-              <svg className="inline-block ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <svg 
+                className="inline-block ml-2 w-5 h-5" 
+                fill="currentColor" 
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                role="img"
+              >
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
             </Link>

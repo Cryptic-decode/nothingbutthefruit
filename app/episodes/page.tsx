@@ -32,16 +32,21 @@ export default async function Episodes() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-gray-900 py-20 lg:py-32">
+      <section className="relative overflow-hidden py-20 lg:py-32" style={{
+        background: 'linear-gradient(135deg, #581c87 0%, #312e81 50%, #111827 100%)',
+        backgroundImage: 'linear-gradient(135deg, #581c87 0%, #312e81 50%, #111827 100%)',
+        WebkitBackgroundClip: 'padding-box',
+        backgroundClip: 'padding-box'
+      }}>
         {/* Background Elements */}
         <div className="absolute inset-0">
-          {/* Dynamic wave pattern - similar to home page */}
+          {/* Dynamic wave pattern - Safari compatible */}
           <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
             <defs>
               <pattern id="waves-episodes" x="0" y="0" width="200" height="100" patternUnits="userSpaceOnUse">
-                <path d="M0,50 Q50,0 100,50 T200,50" stroke="#F59E0B" strokeWidth="2" fill="none" className="animate-pulse"/>
-                <path d="M0,70 Q50,20 100,70 T200,70" stroke="#A855F7" strokeWidth="1.5" fill="none" className="animate-pulse" style={{animationDelay: '1s'}}/>
-                <path d="M0,30 Q50,-20 100,30 T200,30" stroke="#EC4899" strokeWidth="1" fill="none" className="animate-pulse" style={{animationDelay: '2s'}}/>
+                <path d="M0,50 Q50,0 100,50 T200,50" stroke="#F59E0B" strokeWidth="2" fill="none"/>
+                <path d="M0,70 Q50,20 100,70 T200,70" stroke="#A855F7" strokeWidth="1.5" fill="none"/>
+                <path d="M0,30 Q50,-20 100,30 T200,30" stroke="#EC4899" strokeWidth="1" fill="none"/>
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#waves-episodes)"/>
