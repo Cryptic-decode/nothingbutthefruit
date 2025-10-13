@@ -1,5 +1,29 @@
 import Image from 'next/image';
 import StayConnected from '../components/StayConnected';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About Pastor Demetria Bass | Nothing But The Fruit',
+  description: 'Meet Pastor Demetria Bass, founder of Nothing But The Fruit. From the battlefield to the pulpit, discover her journey of faith and commitment to spreading pure gospel truth.',
+  keywords: [
+    'Pastor Demetria Bass',
+    'Bass Global Ministries',
+    'christian pastor',
+    'gospel ministry',
+    'biblical teaching',
+    'spiritual leader',
+    'faith journey',
+    'christian testimony'
+  ],
+  openGraph: {
+    title: 'About Pastor Demetria Bass | Nothing But The Fruit',
+    description: 'Meet Pastor Demetria Bass, founder of Nothing But The Fruit. From the battlefield to the pulpit, discover her journey of faith and commitment to spreading pure gospel truth.',
+    images: ['/PastorDeeNew.png'],
+  },
+  alternates: {
+    canonical: '/about',
+  },
+};
 
 export default function About() {
   return (

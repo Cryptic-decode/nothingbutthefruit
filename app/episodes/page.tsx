@@ -1,6 +1,30 @@
 import Link from 'next/link';
 import EpisodeCard from '../components/EpisodeCard';
 import { fetchChannelVideos } from '../lib/youtubeService';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Episodes | Nothing But The Fruit Gospel Podcast',
+  description: 'Watch all episodes of Nothing But The Fruit with Pastor Demetria Bass. Powerful biblical teachings, spiritual growth, and gospel truth that transforms lives.',
+  keywords: [
+    'gospel podcast episodes',
+    'biblical teaching videos',
+    'Pastor Demetria Bass episodes',
+    'christian podcast series',
+    'spiritual growth videos',
+    'gospel truth teachings',
+    'biblical wisdom',
+    'faith building content'
+  ],
+  openGraph: {
+    title: 'Episodes | Nothing But The Fruit Gospel Podcast',
+    description: 'Watch all episodes of Nothing But The Fruit with Pastor Demetria Bass. Powerful biblical teachings, spiritual growth, and gospel truth that transforms lives.',
+    images: ['/og-episodes.jpg'],
+  },
+  alternates: {
+    canonical: '/episodes',
+  },
+};
 
 export default async function Episodes() {
   // Fetch videos from YouTube channel
