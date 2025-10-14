@@ -302,7 +302,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-brand-gold mr-2">•</span>
-                  Military &amp; ministry wisdom
+                  Applying biblical wisdom
                 </li>
                 <li className="flex items-start">
                   <span className="text-brand-gold mr-2">•</span>
@@ -326,7 +326,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-brand-gold mr-2">•</span>
-                  Discipleship &amp; spiritual parenting
+                  Becoming mature disciples
                 </li>
                 <li className="flex items-start">
                   <span className="text-brand-gold mr-2">•</span>

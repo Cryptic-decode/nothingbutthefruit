@@ -121,7 +121,7 @@ export default function About() {
               {/* Bio Text */}
               <div className="prose prose-lg animate-on-scroll animate-slideInRight" style={{animationDelay: '0.2s'}}>
               <p className="text-xl leading-relaxed text-gray-600 sm:text-2xl">
-                  Pastor Demetria Bass is the <span className="font-semibold text-purple-700">Executive Pastor at Bass Global Ministries</span> and host of <span className="font-semibold text-brand-black bg-brand-gold px-2 py-1 rounded">Nothing But The Fruit</span>, a gospel podcast dedicated to deep biblical teaching and spiritual growth.
+                  Pastor Demetria Bass is the <span className="font-semibold text-purple-700">Executive Pastor at Bass Global Ministries</span> and host of <span className="font-semibold text-brand-black bg-brand-gold px-2 py-1 rounded">Nothing But The Fruit</span>, a gospel podcast dedicated to deep biblical teaching and christian growth.
                 </p>
                 <p className="mt-6 text-xl leading-relaxed text-gray-600 sm:text-2xl">
                   With a unique journey from the <span className="font-semibold text-purple-700">U.S. military to ministry</span>, Pastor Demetria brings discipline, dedication, and a warrior's heart to the work of God's Kingdom. Her passion is helping believers move from "milk to meat", deepening their understanding of Scripture and equipping them to bear lasting fruit in every season of life.

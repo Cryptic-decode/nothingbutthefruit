@@ -23,12 +23,12 @@ export default function Header() {
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Nothing But The Fruit</span>
-            <div className="flex items-center">
-              {/* Brand Logo */}
-              <div className="h-12 flex items-center justify-center relative">
-                <Image src="/NothingButTheFruitUpgrade.png" alt="Nothing But The Fruit" width={200} height={48} className="object-contain" priority />
+              <div className="flex items-center">
+                {/* Brand Logo */}
+                <div className="h-12 flex items-center justify-center relative">
+                  <Image src="/NothingButTheFruitUpgrade.png" alt="Nothing But The Fruit" width={200} height={48} className="object-contain" priority />
+                </div>
               </div>
-            </div>
           </Link>
         </div>
         

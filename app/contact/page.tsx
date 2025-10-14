@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Toast from '../components/Toast';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -10,12 +11,68 @@ export default function Contact() {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'success' | 'error';
+    isVisible: boolean;
+  }>({
+    message: '',
+    type: 'success',
+    isVisible: false
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    // You can add actual form submission logic later
-    alert('Thank you for your message! We\'ll get back to you soon.');
+    
+    // Show loading state
+    const submitButton = e.currentTarget.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalText = submitButton.textContent;
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setToast({
+          message: 'Thank you for your message! We\'ll get back to you soon.',
+          type: 'success',
+          isVisible: true
+        });
+        // Reset form
+        setFormData({
+          fullName: '',
+          email: '',
+          messageType: '',
+          message: ''
+        });
+      } else {
+        setToast({
+          message: result.error || 'Something went wrong. Please try again.',
+          type: 'error',
+          isVisible: true
+        });
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setToast({
+        message: 'Something went wrong. Please try again or contact us directly.',
+        type: 'error',
+        isVisible: true
+      });
+    } finally {
+      // Reset button state
+      submitButton.textContent = originalText;
+      submitButton.disabled = false;
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -25,8 +82,18 @@ export default function Contact() {
     });
   };
 
+  const closeToast = () => {
+    setToast(prev => ({ ...prev, isVisible: false }));
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={closeToast}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 py-20 lg:py-32">
         {/* Background Elements */}
@@ -214,10 +281,10 @@ export default function Contact() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">Email</h3>
                     <p className="text-gray-600 mb-2">For prayer requests, testimonies, and inquiries</p>
                     <a 
-                      href="mailto:info@nothingbutthefruit.com" 
+                      href="mailto:nbtfruit@gmail.com" 
                       className="text-brand-black hover:text-gray-700 font-semibold transition-colors duration-200"
                     >
-                      info@nothingbutthefruit.com
+                      nbtfruit@gmail.com
                     </a>
                   </div>
                 </div>

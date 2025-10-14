@@ -311,7 +311,7 @@ _Ready to grow deeper in your faith? [Join our community](https://youtube.com/@n
 
 **Ministry Contact:**
 
-- **Email**: info@nothingbutthefruit.com
+- **Email**: nbtfruit@gmail.com
 - **YouTube**: [@nothingbutthefruit](https://youtube.com/@nothingbutthefruit)
 - **Facebook**: [nothingbutthefruit](https://facebook.com/nothingbutthefruit)
 - **Bass Global Ministries**: [bassglobalministries.com](https://www.bassglobalministries.com)
