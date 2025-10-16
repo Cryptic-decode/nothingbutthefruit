@@ -12,7 +12,7 @@ export default function Footer() {
               {/* Brand Logo - Footer */}
               <div className="flex items-center">
                 <div className="h-12 flex items-center justify-center relative">
-                  <Image src="/NothingButTheFruitUpgrade2.png" alt="Nothing But The Fruit" width={200} height={48} className="object-contain" />
+                  <Image src="/NBTF44.png" alt="Nothing But The Fruit" width={90} height={28} className="object-contain" />
                 </div>
               </div>
             </div>

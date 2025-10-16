@@ -26,9 +26,9 @@ export default function Header() {
               <div className="flex items-center">
                 {/* Brand Logo */}
                 <div className="h-12 flex items-center justify-center relative">
-                  <Image src="/NothingButTheFruitUpgrade.png" alt="Nothing But The Fruit" width={200} height={48} className="object-contain" priority />
-                </div>
+                  <Image src="/NBTF44.png" alt="Nothing But The Fruit" width={90} height={28} className="object-contain" priority />
               </div>
+            </div>
           </Link>
         </div>
         
@@ -47,17 +47,17 @@ export default function Header() {
           {navigation.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <Link
-                key={item.name}
-                href={item.href}
+            <Link
+              key={item.name}
+              href={item.href}
                 className={`transition-all duration-300 ${
                   isActive 
                     ? 'text-purple-700 text-base font-extrabold' 
                     : 'text-gray-900 text-sm font-bold hover:text-purple-700'
                 }`}
-              >
-                {item.name}
-              </Link>
+            >
+              {item.name}
+            </Link>
             );
           })}
         </div>
@@ -69,10 +69,12 @@ export default function Header() {
             rel="noopener noreferrer"
             className="group bg-brand-gold hover:bg-amber-500 text-brand-black font-semibold py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-xl"
           >
+            <span className="flex items-center">
             Subscribe
-            {/* <svg className="inline ml-1 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg> */}
+              <svg className="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            </span>
           </Link>
         </div>
       </nav>
@@ -89,23 +91,23 @@ export default function Header() {
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200/30 bg-white/50 backdrop-blur-xl">
                 <Link href="/" className="-m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
-                  <span className="sr-only">Nothing But The Fruit</span>
+                <span className="sr-only">Nothing But The Fruit</span>
                   <div className="flex items-center">
                     {/* Brand Logo - Mobile */}
                     <div className="h-10 flex items-center justify-center relative">
                       <Image src="/NothingButTheFruitUpgrade.png" alt="Nothing But The Fruit" width={160} height={40} className="object-contain" />
-                    </div>
                   </div>
-                </Link>
-                <button
-                  type="button"
+                </div>
+              </Link>
+              <button
+                type="button"
                   className="-m-2.5 rounded-md p-2.5 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="sr-only">Close menu</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span className="sr-only">Close menu</span>
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
               
               {/* Navigation Links */}
               <div className="flex-1 px-6 py-6 bg-white/95 h-[100vh]">
@@ -113,34 +115,39 @@ export default function Header() {
                   {navigation.map((item) => {
                     const isActive = pathname === item.href;
                     return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
+                    <Link
+                      key={item.name}
+                      href={item.href}
                         className={`block rounded-lg px-4 py-3 text-base font-semibold transition-all duration-200 ${
                           isActive 
                             ? 'bg-brand-gold text-brand-black shadow-sm' 
                             : 'text-gray-900 hover:bg-white/80 hover:text-purple-700'
                         }`}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
                     );
                   })}
                 </nav>
-              </div>
+                </div>
               
               {/* Subscribe Button */}
               <div className="p-6 border-t border-gray-200/30 bg-white/50 backdrop-blur-xl">
-                <Link
-                  href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  <Link
+                    href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   className="block w-full bg-brand-gold hover:bg-amber-500 text-brand-black font-semibold py-3 px-6 rounded-full text-center transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Subscribe on YouTube
-                </Link>
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                  <span className="flex items-center justify-center">
+                    Subscribe on YouTube
+                    <svg className="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                  </span>
+                  </Link>
               </div>
             </div>
           </div>
@@ -148,4 +155,4 @@ export default function Header() {
       )}
     </header>
   );
-}
+} 
