@@ -3,25 +3,35 @@ import StayConnected from '../components/StayConnected';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Pastor Demetria Bass | Nothing But The Fruit',
-  description: 'Meet Pastor Demetria Bass, founder of Nothing But The Fruit. From the battlefield to the pulpit, discover her journey of faith and commitment to spreading pure gospel truth.',
+  title: 'About Pastor Demetria Bass | Nothing But The Fruit Podcast',
+  description: 'Meet Pastor Demetria Bass, military veteran turned powerful minister. Discover her journey from the battlefield to the pulpit, delivering transformative biblical teaching that changes lives.',
   keywords: [
     'Pastor Demetria Bass',
+    'military veteran minister',
+    'christian minister biography',
     'Bass Global Ministries',
-    'christian pastor',
-    'gospel ministry',
-    'biblical teaching',
-    'spiritual leader',
-    'faith journey',
+    'biblical teaching pastor',
+    'christian women minister',
+    'gospel minister story',
+    'christian leadership',
+    'military to ministry',
     'christian testimony'
   ],
   openGraph: {
-    title: 'About Pastor Demetria Bass | Nothing But The Fruit',
-    description: 'Meet Pastor Demetria Bass, founder of Nothing But The Fruit. From the battlefield to the pulpit, discover her journey of faith and commitment to spreading pure gospel truth.',
-    images: ['/PastorDeeNew.png'],
+    title: 'About Pastor Demetria Bass | Nothing But The Fruit Podcast',
+    description: 'Meet Pastor Demetria Bass, military veteran turned powerful minister. Discover her journey from the battlefield to the pulpit.',
+    url: 'https://nothingbutthefruit.com/about',
+    images: [
+      {
+        url: '/PastorDeeNew.png',
+        width: 1200,
+        height: 630,
+        alt: 'Pastor Demetria Bass - Military Veteran Turned Minister',
+      },
+    ],
   },
   alternates: {
-    canonical: '/about',
+    canonical: 'https://nothingbutthefruit.com/about',
   },
 };
 

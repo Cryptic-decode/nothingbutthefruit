@@ -14,6 +14,7 @@ export interface YouTubeVideo {
   videoId: string;
   duration?: string;
   viewCount?: string;
+  episodeNumber?: number; // Extracted from title (e.g., "Ep 11" → 11)
 }
 
 export interface YouTubeChannel {
@@ -93,10 +94,11 @@ export async function resolveChannelId(handle: string): Promise<string> {
 }
 
 /**
- * Fetches latest videos from YouTube channel RSS feed
+ * Fetches videos from YouTube channel using Data API v3 (with RSS fallback)
  * Automatically resolves channel ID if not provided
+ * Filters out Shorts (videos < 60 seconds)
  */
-export async function fetchChannelVideos(channelId?: string): Promise<YouTubeVideo[]> {
+export async function fetchChannelVideos(channelId?: string, maxResults: number = 50): Promise<YouTubeVideo[]> {
   try {
     let resolvedChannelId = channelId;
     
@@ -117,9 +119,174 @@ export async function fetchChannelVideos(channelId?: string): Promise<YouTubeVid
       return [];
     }
 
-    const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${resolvedChannelId}`;
+    // Try YouTube Data API v3 first if API key is available
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (apiKey) {
+      try {
+        return await fetchVideosFromAPI(resolvedChannelId, apiKey, maxResults);
+      } catch (apiError) {
+        console.warn('YouTube Data API failed, falling back to RSS:', apiError);
+        // Fall through to RSS fallback
+      }
+    } else {
+      console.log('No YOUTUBE_API_KEY found, using RSS feed (limited to ~15 recent videos)');
+    }
+
+    // Fallback to RSS feed
+    return await fetchVideosFromRSS(resolvedChannelId);
     
-    const response = await fetch(rssUrl, {
+  } catch (error) {
+    console.error('Error fetching YouTube videos:', error);
+    
+    // Return empty array for graceful degradation
+    return [];
+  }
+}
+
+/**
+ * Fetches videos using YouTube Data API v3
+ */
+async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults: number): Promise<YouTubeVideo[]> {
+  const allVideos: YouTubeVideo[] = [];
+  let nextPageToken: string | undefined = undefined;
+  
+  // Get channel details to find uploads playlist (only once)
+  const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`;
+  const channelResponse = await fetch(channelUrl, {
+    next: { revalidate: 3600 }, // Cache for 1 hour
+  });
+
+  if (!channelResponse.ok) {
+    throw new Error(`Failed to fetch channel: ${channelResponse.status}`);
+  }
+
+  const channelData = await channelResponse.json();
+  if (!channelData.items || channelData.items.length === 0) {
+    throw new Error('Channel not found');
+  }
+
+  const uploadsPlaylistId = channelData.items[0].contentDetails?.relatedPlaylists?.uploads;
+  if (!uploadsPlaylistId) {
+    throw new Error('Could not find uploads playlist for channel');
+  }
+
+  // Fetch videos from uploads playlist with pagination
+  do {
+
+    // Fetch videos from uploads playlist
+    const playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${uploadsPlaylistId}&maxResults=50&key=${apiKey}${nextPageToken ? `&pageToken=${nextPageToken}` : ''}`;
+    
+    const response = await fetch(playlistUrl, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch videos: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.items || data.items.length === 0) {
+      break;
+    }
+
+    // Get video IDs to fetch duration details
+    const videoIds = data.items.map((item: any) => item.contentDetails?.videoId).filter(Boolean);
+    
+    // Fetch video details to get duration (to filter Shorts)
+    const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds.join(',')}&key=${apiKey}`;
+    const videosResponse = await fetch(videosUrl, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!videosResponse.ok) {
+      throw new Error(`Failed to fetch video details: ${videosResponse.status}`);
+    }
+
+    const videosData = await videosResponse.json();
+
+    // Process videos and filter out Shorts
+    for (const item of data.items) {
+      const videoId = item.contentDetails?.videoId;
+      if (!videoId) continue;
+
+      // Find corresponding video details
+      const videoDetails = videosData.items?.find((v: any) => v.id === videoId);
+      if (!videoDetails) continue;
+
+      // Check duration - Shorts are typically < 60 seconds
+      const duration = videoDetails.contentDetails?.duration;
+      if (duration) {
+        const durationSeconds = parseDuration(duration);
+        if (durationSeconds < 60) {
+          // Skip Shorts
+          continue;
+        }
+      }
+
+      // Check if it's a Short by URL pattern (backup check)
+      const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+      const isShort = item.snippet?.title?.toLowerCase().includes('#shorts') || 
+                      item.snippet?.description?.toLowerCase().includes('#shorts');
+      if (isShort) {
+        continue;
+      }
+
+      const title = item.snippet?.title || 'Untitled';
+      const episodeNumber = extractEpisodeNumber(title);
+
+      allVideos.push({
+        id: videoId,
+        title,
+        description: item.snippet?.description || '',
+        publishedAt: item.snippet?.publishedAt || new Date().toISOString(),
+        thumbnail: {
+          url: item.snippet?.thumbnails?.maxres?.url || 
+               item.snippet?.thumbnails?.high?.url || 
+               item.snippet?.thumbnails?.default?.url || 
+               `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+          width: item.snippet?.thumbnails?.maxres?.width || 1280,
+          height: item.snippet?.thumbnails?.maxres?.height || 720,
+        },
+        videoId,
+        episodeNumber,
+      });
+    }
+
+    nextPageToken = data.nextPageToken;
+    
+    // Stop if we have enough videos or no more pages
+    if (allVideos.length >= maxResults || !nextPageToken) {
+      break;
+    }
+
+  } while (nextPageToken && allVideos.length < maxResults);
+
+  // Sort videos: by episode number (descending), then by published date (descending)
+  allVideos.sort((a, b) => {
+    if (a.episodeNumber && b.episodeNumber) {
+      return b.episodeNumber - a.episodeNumber;
+    }
+    if (a.episodeNumber && !b.episodeNumber) {
+      return -1;
+    }
+    if (!a.episodeNumber && b.episodeNumber) {
+      return 1;
+    }
+    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+  });
+
+  console.log(`Successfully fetched ${allVideos.length} full-length videos from YouTube Data API (Shorts excluded)`);
+  return allVideos;
+}
+
+/**
+ * Fetches videos from RSS feed (fallback method)
+ */
+async function fetchVideosFromRSS(channelId: string): Promise<YouTubeVideo[]> {
+  const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  
+  const response = await fetch(rssUrl, {
       next: { revalidate: 3600 }, // Cache for 1 hour
       headers: {
         'User-Agent': 'NothingButTheFruit-Website/1.0',
@@ -142,14 +309,20 @@ export async function fetchChannelVideos(channelId?: string): Promise<YouTubeVid
     }
 
     return parseRSSFeed(xmlText);
-    
-  } catch (error) {
-    console.error('Error fetching YouTube videos:', error);
-    
-    // Return empty array for graceful degradation
-    // In production, you might want to log this to an error tracking service
-    return [];
-  }
+}
+
+/**
+ * Parses ISO 8601 duration string (e.g., "PT1M30S") to seconds
+ */
+function parseDuration(duration: string): number {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  
+  const hours = parseInt(match[1] || '0', 10);
+  const minutes = parseInt(match[2] || '0', 10);
+  const seconds = parseInt(match[3] || '0', 10);
+  
+  return hours * 3600 + minutes * 60 + seconds;
 }
 
 /**
@@ -176,6 +349,16 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
       const entryXml = match[1];
       
       try {
+        // Extract alternate link to check if it's a Short
+        const linkMatch = entryXml.match(/<link[^>]*rel="alternate"[^>]*href="([^"]+)"/);
+        const alternateLink = linkMatch ? linkMatch[1] : '';
+        
+        // Skip YouTube Shorts (they have /shorts/ in the URL)
+        if (alternateLink.includes('/shorts/')) {
+          console.log(`Entry ${entryCount}: Skipping Short (${alternateLink})`);
+          continue;
+        }
+        
         // Extract video ID from <yt:videoId>
         const videoIdMatch = entryXml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
         if (!videoIdMatch) {
@@ -188,6 +371,9 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
         // Extract title
         const titleMatch = entryXml.match(/<title>([^<]+)<\/title>/);
         const title = titleMatch ? decodeHtmlEntities(titleMatch[1]) : 'Untitled';
+        
+        // Extract episode number from title (e.g., "Ep 11", "Episode 11", "Ep. 11")
+        const episodeNumber = extractEpisodeNumber(title);
         
         // Extract description
         const descriptionMatch = entryXml.match(/<media:description>([^<]+)<\/media:description>/);
@@ -215,7 +401,8 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
           description,
           publishedAt,
           thumbnail,
-          videoId
+          videoId,
+          episodeNumber
         });
         
       } catch (entryError) {
@@ -224,13 +411,55 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
       }
     }
     
-    console.log(`Successfully parsed ${videos.length} videos from RSS feed`);
+    // Sort videos: by episode number (descending), then by published date (descending)
+    videos.sort((a, b) => {
+      // If both have episode numbers, sort by episode number descending
+      if (a.episodeNumber && b.episodeNumber) {
+        return b.episodeNumber - a.episodeNumber;
+      }
+      // If only one has an episode number, prioritize it
+      if (a.episodeNumber && !b.episodeNumber) {
+        return -1;
+      }
+      if (!a.episodeNumber && b.episodeNumber) {
+        return 1;
+      }
+      // If neither has episode number, sort by published date descending
+      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+    });
+    
+    console.log(`Successfully parsed ${videos.length} full-length videos from RSS feed (Shorts excluded)`);
     return videos;
     
   } catch (error) {
     console.error('Error parsing RSS feed:', error);
     return [];
   }
+}
+
+/**
+ * Extracts episode number from video title
+ * Supports formats like "Ep 11", "Episode 11", "Ep. 11", "Ep11", etc.
+ */
+function extractEpisodeNumber(title: string): number | undefined {
+  // Try various patterns: "Ep 11", "Episode 11", "Ep. 11", "Ep11", "#11", etc.
+  const patterns = [
+    /(?:^|\s)(?:Ep|Episode|Ep\.)\s*(\d+)/i,  // "Ep 11", "Episode 11", "Ep. 11"
+    /(?:^|\s)#(\d+)/i,                        // "#11"
+    /(?:^|\s)Ep(\d+)/i,                       // "Ep11"
+  ];
+  
+  for (const pattern of patterns) {
+    const match = title.match(pattern);
+    if (match && match[1]) {
+      const num = parseInt(match[1], 10);
+      if (!isNaN(num) && num > 0) {
+        return num;
+      }
+    }
+  }
+  
+  return undefined;
 }
 
 /**

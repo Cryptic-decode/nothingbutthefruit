@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import type { ReactNode } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScrollAnimations from "./components/ScrollAnimations";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,25 +24,27 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nothing But The Fruit | Gospel Podcast with Pastor Demetria Bass",
-    template: "%s | Nothing But The Fruit"
+    default: "Nothing But The Fruit Podcast | Biblical Teaching with Pastor Demetria Bass",
+    template: "%s | Nothing But The Fruit Podcast"
   },
-  description: "Join Pastor Demetria Bass for powerful biblical teaching and spiritual growth. From the battlefield to the pulpit, experience pure gospel truth that transforms lives. Nothing but the fruit of God's Word.",
+  description: "Experience transformative biblical teaching with Pastor Demetria Bass. From military veteran to powerful minister, discover pure gospel truth that changes lives. New episodes weekly on YouTube.",
   keywords: [
-    "gospel podcast",
-    "christian podcast", 
+    "christian podcast",
+    "gospel teaching podcast",
     "Pastor Demetria Bass",
+    "biblical teaching podcast",
+    "christian ministry podcast",
+    "military veteran minister",
     "Bass Global Ministries",
-    "biblical teaching",
-    "spiritual growth",
+    "spiritual growth podcast",
+    "Nothing But The Fruit",
+    "christian women podcast",
+    "gospel truth podcast",
+    "biblical wisdom podcast",
+    "christian discipleship podcast",
+    "spiritual transformation podcast",
     "faith podcast",
-    "christian ministry",
-    "BGM",
-    "fruit of the spirit",
-    "gospel truth",
-    "biblical wisdom",
-    "christian discipleship",
-    "spiritual transformation"
+    "christian podcast 2024"
   ],
   authors: [{ name: "Pastor Demetria Bass" }],
   creator: "Nothing But The Fruit",
@@ -58,9 +62,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://nothingbutthefruit.com',
-    title: 'Nothing But The Fruit | Gospel Podcast with Pastor Demetria Bass',
-    description: 'Join Pastor Demetria Bass for powerful biblical teaching and spiritual growth. From the battlefield to the pulpit, experience pure gospel truth that transforms lives.',
-    siteName: 'Nothing But The Fruit',
+    title: 'Nothing But The Fruit Podcast | Biblical Teaching with Pastor Demetria Bass',
+    description: 'Experience transformative biblical teaching with Pastor Demetria Bass. From military veteran to powerful minister, discover pure gospel truth that changes lives.',
+    siteName: 'Nothing But The Fruit Podcast',
     images: [
       {
         url: '/og-image.jpg',
@@ -72,8 +76,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nothing But The Fruit | Gospel Podcast with Pastor Demetria Bass',
-    description: 'Join Pastor Demetria Bass for powerful biblical teaching and spiritual growth. Experience pure gospel truth that transforms lives.',
+    title: 'Nothing But The Fruit Podcast | Biblical Teaching with Pastor Demetria Bass',
+    description: 'Experience transformative biblical teaching with Pastor Demetria Bass. From military veteran to powerful minister, discover pure gospel truth that changes lives.',
     images: ['/og-image.jpg'],
     creator: '@nothingbutthefruit',
   },
@@ -89,16 +93,14 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-    yahoo: 'your-yahoo-verification-code',
+    google: process.env.GOOGLE_SITE_VERIFICATION || 'your-google-verification-code',
   },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -106,6 +108,7 @@ export default function RootLayout({
         <link rel="icon" href="/icon.png" />
         <link rel="apple-touch-icon" href="/icon.png" />
         <meta name="theme-color" content="#F59E0B" />
+        {/* Organization Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -133,6 +136,37 @@ export default function RootLayout({
             })
           }}
         />
+
+        {/* Podcast Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "PodcastSeries",
+              "name": "Nothing But The Fruit",
+              "description": "Experience transformative biblical teaching with Pastor Demetria Bass. From military veteran to powerful minister, discover pure gospel truth that changes lives.",
+              "author": {
+                "@type": "Person",
+                "name": "Pastor Demetria Bass",
+                "description": "Military veteran turned powerful minister, providing biblical teaching and spiritual growth"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "Bass Global Ministries"
+              },
+              "image": "https://nothingbutthefruit.com/icon.png",
+              "url": "https://nothingbutthefruit.com",
+              "webFeed": "https://nothingbutthefruit.com/episodes",
+              "sameAs": [
+                "https://youtube.com/@nothingbutthefruit",
+                "https://facebook.com/nothingbutthefruit"
+              ],
+              "genre": ["Religion & Spirituality", "Christianity", "Biblical Teaching"],
+              "keywords": "christian podcast, gospel teaching, biblical teaching, Pastor Demetria Bass, spiritual growth, faith podcast"
+            })
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
@@ -141,6 +175,7 @@ export default function RootLayout({
         <main className="pt-[90px]">{children}</main>
         <Footer />
         <ScrollAnimations />
+        <GoogleAnalytics />
       </body>
     </html>
   );

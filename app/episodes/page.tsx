@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import EpisodeCard from '../components/EpisodeCard';
+import Pagination from '../components/Pagination';
 import { fetchChannelVideos } from '../lib/youtubeService';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Episodes | Nothing But The Fruit Gospel Podcast',
-  description: 'Watch all episodes of Nothing But The Fruit with Pastor Demetria Bass. Powerful biblical teachings, spiritual growth, and gospel truth that transforms lives.',
+  title: 'Episodes | Nothing But The Fruit Podcast with Pastor Demetria Bass',
+  description: 'Watch all episodes of Nothing But The Fruit with Pastor Demetria Bass. Powerful biblical teachings, spiritual growth, and gospel truth that transforms lives. New episodes weekly.',
   keywords: [
     'gospel podcast episodes',
     'biblical teaching videos',
@@ -13,22 +14,55 @@ export const metadata: Metadata = {
     'christian podcast series',
     'spiritual growth videos',
     'gospel truth teachings',
-    'biblical wisdom',
-    'faith building content'
+    'biblical wisdom podcast',
+    'faith building content',
+    'christian ministry episodes',
+    'biblical teaching podcast'
   ],
   openGraph: {
-    title: 'Episodes | Nothing But The Fruit Gospel Podcast',
+    title: 'Episodes | Nothing But The Fruit Podcast with Pastor Demetria Bass',
     description: 'Watch all episodes of Nothing But The Fruit with Pastor Demetria Bass. Powerful biblical teachings, spiritual growth, and gospel truth that transforms lives.',
-    images: ['/og-episodes.jpg'],
+    url: 'https://nothingbutthefruit.com/episodes',
+    images: [
+      {
+        url: '/og-episodes.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Nothing But The Fruit Podcast Episodes',
+      },
+    ],
   },
   alternates: {
-    canonical: '/episodes',
+    canonical: 'https://nothingbutthefruit.com/episodes',
   },
 };
 
-export default async function Episodes() {
+const EPISODES_PER_PAGE = 9;
+
+interface EpisodesPageProps {
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default async function Episodes({ searchParams }: EpisodesPageProps) {
   // Fetch videos from YouTube channel
-  const videos = await fetchChannelVideos();
+  const allVideos = await fetchChannelVideos();
+  
+  // Parse page number from searchParams
+  const params = await searchParams;
+  let currentPage = Math.max(1, parseInt(params.page || '1', 10));
+  
+  // Calculate pagination
+  const totalVideos = allVideos.length;
+  const totalPages = Math.max(1, Math.ceil(totalVideos / EPISODES_PER_PAGE));
+  
+  // Validate page number (redirect to page 1 if invalid)
+  if (currentPage > totalPages) {
+    currentPage = 1;
+  }
+  
+  const startIndex = (currentPage - 1) * EPISODES_PER_PAGE;
+  const endIndex = startIndex + EPISODES_PER_PAGE;
+  const videos = allVideos.slice(startIndex, endIndex);
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -127,15 +161,32 @@ export default async function Episodes() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {videos.map((video, index) => (
-                <EpisodeCard 
-                  key={video.id}
-                  episode={video}
-                  episodeNumber={index + 1}
-                />
-              ))}
-            </div>
+            <>
+              {/* Results count */}
+              <div className="mb-8 text-center">
+                <p className="text-gray-600">
+                  Showing {startIndex + 1}-{Math.min(endIndex, totalVideos)} of {totalVideos} episodes
+                </p>
+              </div>
+
+              {/* Episodes Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {videos.map((video) => (
+                  <EpisodeCard 
+                    key={video.id}
+                    episode={video}
+                    episodeNumber={video.episodeNumber}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath="/episodes"
+              />
+            </>
           )}
         </div>
       </section>

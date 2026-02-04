@@ -336,12 +336,22 @@ const urlsToTry = [
 ];
 ```
 
-#### RSS Feed Parsing
+#### YouTube Data API v3 Integration
+
+```typescript
+// Primary method: YouTube Data API v3 (requires YOUTUBE_API_KEY)
+// Fetches all videos, filters Shorts by duration (< 60s), supports pagination
+const videos = await fetchChannelVideos(channelId, maxResults);
+// Falls back to RSS if API key not available
+```
+
+#### RSS Feed Parsing (Fallback)
 
 ```typescript
 // Robust XML parsing with error handling
 const entryRegex = /<entry>([\s\S]*?)<\/entry>/g;
 // Extract video data with fallbacks
+// Limited to ~15 most recent videos
 ```
 
 #### Manual Override System
@@ -498,6 +508,7 @@ npm run dev
 # .env.local
 RESEND_API_KEY=your_resend_api_key
 CONTACT_EMAIL=nbtfruit@gmail.com
+YOUTUBE_API_KEY=your_youtube_api_key  # Optional: enables full video fetching via Data API v3
 ```
 
 ### Git Workflow
@@ -610,7 +621,7 @@ try {
 ## Contact & Support
 
 **Project**: Nothing But The Fruit  
-**Developer**: [Your Name]  
+**Developer**: Ololade Otemade | Cryptic Solutions
 **Email**: nbtfruit@gmail.com  
 **Website**: https://nothingbutthefruit.com  
 **YouTube**: https://youtube.com/@nothingbutthefruit
