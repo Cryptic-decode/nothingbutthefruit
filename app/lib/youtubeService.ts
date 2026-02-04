@@ -163,10 +163,11 @@ export async function fetchChannelVideos(channelId?: string, maxResults: number 
           console.log(`✅ Successfully fetched ${videos.length} videos from YouTube Data API`);
           return videos;
         }
-      } catch (apiError: any) {
-        console.error('❌ YouTube Data API failed:', apiError.message || apiError);
-        if (apiError.stack) {
-          console.error('Stack trace:', apiError.stack);
+      } catch (apiError: unknown) {
+        const error = apiError instanceof Error ? apiError : new Error(String(apiError));
+        console.error('❌ YouTube Data API failed:', error.message);
+        if (error.stack) {
+          console.error('Stack trace:', error.stack);
         }
         console.warn('⚠️ Falling back to RSS feed...');
         // Fall through to RSS fallback
@@ -239,7 +240,7 @@ async function fetchVideosFromAPI(
   do {
 
     // Fetch videos from uploads playlist
-    const playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${uploadsPlaylistId}&maxResults=50&key=${apiKey}${nextPageToken ? `&pageToken=${nextPageToken}` : ''}`;
+    const playlistUrl: string = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${uploadsPlaylistId}&maxResults=50&key=${apiKey}${nextPageToken ? `&pageToken=${nextPageToken}` : ''}`;
     
     const response = await fetch(playlistUrl, {
       next: { revalidate: 3600 }, // Cache for 1 hour
@@ -268,7 +269,10 @@ async function fetchVideosFromAPI(
     console.log(`📹 Fetched ${data.items.length} items from playlist (page ${nextPageToken ? 'next' : 'first'})`);
 
     // Get video IDs to fetch duration details
-    const videoIds = data.items.map((item: any) => item.contentDetails?.videoId).filter(Boolean);
+    interface PlaylistItem {
+      contentDetails?: { videoId?: string };
+    }
+    const videoIds = (data.items as PlaylistItem[]).map((item) => item.contentDetails?.videoId).filter(Boolean) as string[];
     
     // Fetch video details to get duration (to filter Shorts)
     const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds.join(',')}&key=${apiKey}`;
@@ -298,13 +302,23 @@ async function fetchVideosFromAPI(
       if (!videoId) continue;
 
       // Find corresponding video details
-      const videoDetails = videosData.items?.find((v: any) => v.id === videoId);
+      interface VideoItem {
+        id: string;
+        contentDetails?: { duration?: string };
+        snippet?: {
+          thumbnails?: {
+            default?: { width?: number; height?: number };
+            maxres?: { width?: number; height?: number };
+          };
+        };
+      }
+      const videoDetails = (videosData.items as VideoItem[] | undefined)?.find((v) => v.id === videoId);
       if (!videoDetails) continue;
 
       // Comprehensive Shorts detection
       const title = item.snippet?.title || '';
       const description = item.snippet?.description || '';
-      const isShort = isYouTubeShort(videoDetails, title, description, videoId);
+      const isShort = isYouTubeShort(videoDetails, title, description);
       
       if (isShort) {
         shortsFiltered++;
@@ -394,11 +408,19 @@ async function fetchVideosFromRSS(channelId: string): Promise<YouTubeVideo[]> {
 /**
  * Comprehensive Shorts detection - checks multiple indicators
  */
+interface VideoDetailsForShorts {
+  contentDetails?: { duration?: string };
+  snippet?: {
+    thumbnails?: {
+      default?: { width?: number; height?: number };
+    };
+  };
+}
+
 function isYouTubeShort(
-  videoDetails: any,
+  videoDetails: VideoDetailsForShorts,
   title: string,
-  description: string,
-  videoId: string
+  description: string
 ): boolean {
   const titleLower = title.toLowerCase();
   const descLower = description.toLowerCase();
