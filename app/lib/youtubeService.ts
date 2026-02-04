@@ -122,14 +122,35 @@ export async function fetchChannelVideos(channelId?: string, maxResults: number 
     // Try YouTube Data API v3 first if API key is available
     const apiKey = process.env.YOUTUBE_API_KEY;
     if (apiKey) {
+      console.log('✅ YOUTUBE_API_KEY found, attempting to use YouTube Data API v3');
+      console.log(`📺 Channel ID: ${resolvedChannelId}`);
+      console.log(`🔑 API Key: ${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)} (masked)`);
       try {
-        return await fetchVideosFromAPI(resolvedChannelId, apiKey, maxResults);
-      } catch (apiError) {
-        console.warn('YouTube Data API failed, falling back to RSS:', apiError);
+        const siteUrl = getSiteUrlForApiReferrer();
+        if (siteUrl) {
+          console.log(`🌐 Using Referer header for YouTube API: ${siteUrl}`);
+        } else {
+          console.warn('⚠️ No SITE_URL/NEXT_PUBLIC_SITE_URL set; YouTube API keys restricted by HTTP referrer may fail');
+        }
+
+        const videos = await fetchVideosFromAPI(resolvedChannelId, apiKey, maxResults, siteUrl);
+        if (videos.length === 0) {
+          console.warn('⚠️ API returned 0 videos, falling back to RSS feed');
+        } else {
+          console.log(`✅ Successfully fetched ${videos.length} videos from YouTube Data API`);
+          return videos;
+        }
+      } catch (apiError: any) {
+        console.error('❌ YouTube Data API failed:', apiError.message || apiError);
+        if (apiError.stack) {
+          console.error('Stack trace:', apiError.stack);
+        }
+        console.warn('⚠️ Falling back to RSS feed...');
         // Fall through to RSS fallback
       }
     } else {
-      console.log('No YOUTUBE_API_KEY found, using RSS feed (limited to ~15 recent videos)');
+      console.log('⚠️ No YOUTUBE_API_KEY found in process.env, using RSS feed (limited to ~15 recent videos)');
+      console.log('💡 To use YouTube Data API, add YOUTUBE_API_KEY to .env.local and restart the dev server');
     }
 
     // Fallback to RSS feed
@@ -146,24 +167,45 @@ export async function fetchChannelVideos(channelId?: string, maxResults: number 
 /**
  * Fetches videos using YouTube Data API v3
  */
-async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults: number): Promise<YouTubeVideo[]> {
+async function fetchVideosFromAPI(
+  channelId: string,
+  apiKey: string,
+  maxResults: number,
+  referrer?: string
+): Promise<YouTubeVideo[]> {
   const allVideos: YouTubeVideo[] = [];
   let nextPageToken: string | undefined = undefined;
+
+  const googleApiHeaders: HeadersInit = referrer ? { Referer: referrer } : {};
   
   // Get channel details to find uploads playlist (only once)
   const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`;
+  console.log(`🔍 Fetching channel details for: ${channelId}`);
+  
   const channelResponse = await fetch(channelUrl, {
     next: { revalidate: 3600 }, // Cache for 1 hour
+    headers: googleApiHeaders,
   });
 
   if (!channelResponse.ok) {
-    throw new Error(`Failed to fetch channel: ${channelResponse.status}`);
+    const errorText = await channelResponse.text();
+    console.error(`❌ Channel API error (${channelResponse.status}):`, errorText);
+    throw new Error(`Failed to fetch channel: ${channelResponse.status} - ${errorText}`);
   }
 
   const channelData = await channelResponse.json();
-  if (!channelData.items || channelData.items.length === 0) {
-    throw new Error('Channel not found');
+  
+  // Check for API errors in response
+  if (channelData.error) {
+    console.error('❌ YouTube API Error:', JSON.stringify(channelData.error, null, 2));
+    throw new Error(`YouTube API Error: ${channelData.error.message || 'Unknown error'}`);
   }
+  
+  if (!channelData.items || channelData.items.length === 0) {
+    throw new Error(`Channel not found: ${channelId}`);
+  }
+  
+  console.log('✅ Channel found, getting uploads playlist...');
 
   const uploadsPlaylistId = channelData.items[0].contentDetails?.relatedPlaylists?.uploads;
   if (!uploadsPlaylistId) {
@@ -178,17 +220,29 @@ async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults:
     
     const response = await fetch(playlistUrl, {
       next: { revalidate: 3600 }, // Cache for 1 hour
+      headers: googleApiHeaders,
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch videos: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error(`❌ Playlist API error (${response.status}):`, errorText);
+      throw new Error(`Failed to fetch videos: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    
+    // Check for API errors
+    if (data.error) {
+      console.error('❌ YouTube API Error:', JSON.stringify(data.error, null, 2));
+      throw new Error(`YouTube API Error: ${data.error.message || 'Unknown error'}`);
+    }
 
     if (!data.items || data.items.length === 0) {
+      console.log('ℹ️ No more videos in playlist');
       break;
     }
+    
+    console.log(`📹 Fetched ${data.items.length} items from playlist (page ${nextPageToken ? 'next' : 'first'})`);
 
     // Get video IDs to fetch duration details
     const videoIds = data.items.map((item: any) => item.contentDetails?.videoId).filter(Boolean);
@@ -197,15 +251,25 @@ async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults:
     const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds.join(',')}&key=${apiKey}`;
     const videosResponse = await fetch(videosUrl, {
       next: { revalidate: 3600 },
+      headers: googleApiHeaders,
     });
 
     if (!videosResponse.ok) {
-      throw new Error(`Failed to fetch video details: ${videosResponse.status}`);
+      const errorText = await videosResponse.text();
+      console.error(`❌ Videos API error (${videosResponse.status}):`, errorText);
+      throw new Error(`Failed to fetch video details: ${videosResponse.status} - ${errorText}`);
     }
 
     const videosData = await videosResponse.json();
+    
+    // Check for API errors
+    if (videosData.error) {
+      console.error('❌ YouTube Videos API Error:', JSON.stringify(videosData.error, null, 2));
+      throw new Error(`YouTube API Error: ${videosData.error.message || 'Unknown error'}`);
+    }
 
     // Process videos and filter out Shorts
+    let shortsFiltered = 0;
     for (const item of data.items) {
       const videoId = item.contentDetails?.videoId;
       if (!videoId) continue;
@@ -220,6 +284,7 @@ async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults:
         const durationSeconds = parseDuration(duration);
         if (durationSeconds < 60) {
           // Skip Shorts
+          shortsFiltered++;
           continue;
         }
       }
@@ -229,6 +294,7 @@ async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults:
       const isShort = item.snippet?.title?.toLowerCase().includes('#shorts') || 
                       item.snippet?.description?.toLowerCase().includes('#shorts');
       if (isShort) {
+        shortsFiltered++;
         continue;
       }
 
@@ -254,6 +320,7 @@ async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults:
     }
 
     nextPageToken = data.nextPageToken;
+    console.log(`✅ Processed page: ${allVideos.length} full videos, ${shortsFiltered} Shorts filtered`);
     
     // Stop if we have enough videos or no more pages
     if (allVideos.length >= maxResults || !nextPageToken) {
@@ -285,8 +352,8 @@ async function fetchVideosFromAPI(channelId: string, apiKey: string, maxResults:
  */
 async function fetchVideosFromRSS(channelId: string): Promise<YouTubeVideo[]> {
   const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-  
-  const response = await fetch(rssUrl, {
+    
+    const response = await fetch(rssUrl, {
       next: { revalidate: 3600 }, // Cache for 1 hour
       headers: {
         'User-Agent': 'NothingButTheFruit-Website/1.0',
@@ -323,6 +390,25 @@ function parseDuration(duration: string): number {
   const seconds = parseInt(match[3] || '0', 10);
   
   return hours * 3600 + minutes * 60 + seconds;
+}
+
+/**
+ * Returns a stable site URL to use as the HTTP Referer header for Google APIs.
+ * This is only needed if your Google API key is restricted by HTTP referrer.
+ */
+function getSiteUrlForApiReferrer(): string | undefined {
+  const raw =
+    process.env.SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    process.env.VERCEL_URL;
+
+  if (!raw) return undefined;
+
+  // Ensure it looks like a full URL
+  if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+
+  return `https://${raw}`;
 }
 
 /**

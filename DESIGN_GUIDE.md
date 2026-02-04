@@ -509,6 +509,7 @@ npm run dev
 RESEND_API_KEY=your_resend_api_key
 CONTACT_EMAIL=nbtfruit@gmail.com
 YOUTUBE_API_KEY=your_youtube_api_key  # Optional: enables full video fetching via Data API v3
+SITE_URL=http://localhost:3000        # Recommended: used as Referer header for Google APIs when API key uses HTTP referrer restrictions
 ```
 
 ### Git Workflow
