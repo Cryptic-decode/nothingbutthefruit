@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import EpisodeCard from '../components/EpisodeCard';
 import Pagination from '../components/Pagination';
-import { fetchChannelVideos } from '../lib/youtubeService';
+import { fetchChannelEpisodes } from '../lib/youtubeService';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ interface EpisodesPageProps {
 
 export default async function Episodes({ searchParams }: EpisodesPageProps) {
   // Fetch videos from YouTube channel
-  const allVideos = await fetchChannelVideos();
+  const allVideos = await fetchChannelEpisodes();
   
   // Parse page number from searchParams
   const params = await searchParams;
@@ -162,11 +162,31 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
             </div>
           ) : (
             <>
-              {/* Results count */}
+              {/* Results count and info */}
               <div className="mb-8 text-center">
-                <p className="text-gray-600">
-                  Showing {startIndex + 1}-{Math.min(endIndex, totalVideos)} of {totalVideos} episodes
+                <p className="text-lg font-semibold text-gray-900 mb-2">
+                  {totalVideos} {totalVideos === 1 ? 'Episode' : 'Episodes'} Available
                 </p>
+                <p className="text-gray-600">
+                  {totalPages > 1 && (
+                    <>
+                      Showing {startIndex + 1}-{Math.min(endIndex, totalVideos)} of {totalVideos} episodes
+                      {currentPage > 1 && ` (Page ${currentPage} of ${totalPages})`}
+                    </>
+                  )}
+                  {totalPages === 1 && `All ${totalVideos} episodes displayed`}
+                </p>
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <span className="text-sm text-gray-500">Looking for Shorts, clips, or other uploads?</span>
+                  <Link
+                    href="https://youtube.com/@nothingbutthefruit"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold text-purple-700 hover:text-purple-800 underline underline-offset-4 transition-colors duration-200"
+                  >
+                    View on YouTube
+                  </Link>
+                </div>
               </div>
 
               {/* Episodes Grid */}
@@ -181,11 +201,13 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
               </div>
 
               {/* Pagination */}
-              <Pagination 
-                currentPage={currentPage}
-                totalPages={totalPages}
-                basePath="/episodes"
-              />
+              {totalPages > 1 && (
+                <Pagination 
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  basePath="/episodes"
+                />
+              )}
             </>
           )}
         </div>

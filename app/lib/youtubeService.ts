@@ -25,6 +25,29 @@ export interface YouTubeChannel {
   publishedAt: string;
 }
 
+/**
+ * Episodes are videos that are explicitly labeled with an episode number in the title.
+ * We intentionally exclude other uploads (promos, clips, Shorts, etc.) from the Episodes page.
+ */
+export function isEpisodeVideo(video: YouTubeVideo): video is YouTubeVideo & { episodeNumber: number } {
+  if (typeof video.episodeNumber !== 'number' || Number.isNaN(video.episodeNumber)) return false;
+  // Guardrail: prevent year hashtags like #2026 from being misread as episode numbers.
+  // Episodes are expected to be a reasonably small positive integer.
+  if (video.episodeNumber < 1 || video.episodeNumber > 500) return false;
+  const title = (video.title || '').toLowerCase();
+
+  // Exclude common non-episode patterns even if they accidentally contain numbers
+  const excludedKeywords = ['promo', 'teaser', 'trailer', 'clip', 'shorts', '#shorts'];
+  if (excludedKeywords.some((k) => title.includes(k))) return false;
+
+  return true;
+}
+
+export async function fetchChannelEpisodes(channelId?: string, maxResults: number = 200): Promise<YouTubeVideo[]> {
+  const videos = await fetchChannelVideos(channelId, maxResults);
+  return videos.filter(isEpisodeVideo);
+}
+
 // Channel handle to ID mapping (we'll resolve this)
 const CHANNEL_HANDLE = '@nothingbutthefruit';
 
@@ -278,27 +301,17 @@ async function fetchVideosFromAPI(
       const videoDetails = videosData.items?.find((v: any) => v.id === videoId);
       if (!videoDetails) continue;
 
-      // Check duration - Shorts are typically < 60 seconds
-      const duration = videoDetails.contentDetails?.duration;
-      if (duration) {
-        const durationSeconds = parseDuration(duration);
-        if (durationSeconds < 60) {
-          // Skip Shorts
-          shortsFiltered++;
-          continue;
-        }
-      }
-
-      // Check if it's a Short by URL pattern (backup check)
-      const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-      const isShort = item.snippet?.title?.toLowerCase().includes('#shorts') || 
-                      item.snippet?.description?.toLowerCase().includes('#shorts');
+      // Comprehensive Shorts detection
+      const title = item.snippet?.title || '';
+      const description = item.snippet?.description || '';
+      const isShort = isYouTubeShort(videoDetails, title, description, videoId);
+      
       if (isShort) {
         shortsFiltered++;
+        console.log(`🚫 Filtered Short: "${title.substring(0, 50)}..." (ID: ${videoId})`);
         continue;
       }
 
-      const title = item.snippet?.title || 'Untitled';
       const episodeNumber = extractEpisodeNumber(title);
 
       allVideos.push({
@@ -379,6 +392,63 @@ async function fetchVideosFromRSS(channelId: string): Promise<YouTubeVideo[]> {
 }
 
 /**
+ * Comprehensive Shorts detection - checks multiple indicators
+ */
+function isYouTubeShort(
+  videoDetails: any,
+  title: string,
+  description: string,
+  videoId: string
+): boolean {
+  const titleLower = title.toLowerCase();
+  const descLower = description.toLowerCase();
+  
+  // 1. Check duration - Shorts are typically < 65 seconds (allowing small buffer)
+  const duration = videoDetails.contentDetails?.duration;
+  if (duration) {
+    const durationSeconds = parseDuration(duration);
+    if (durationSeconds < 65) {
+      return true;
+    }
+  }
+  
+  // 2. Check for #shorts hashtag in title or description
+  if (titleLower.includes('#shorts') || descLower.includes('#shorts')) {
+    return true;
+  }
+  
+  // 3. Check for "shorts" keyword in title (common pattern)
+  if (titleLower.includes('shorts') && !titleLower.includes('episode')) {
+    return true;
+  }
+  
+  // 4. Check video dimensions - Shorts are typically vertical (9:16 aspect ratio)
+  const thumbnails = videoDetails.snippet?.thumbnails;
+  if (thumbnails?.default) {
+    const width = thumbnails.default.width || 0;
+    const height = thumbnails.default.height || 0;
+    if (width > 0 && height > 0) {
+      const aspectRatio = width / height;
+      // Shorts are vertical (height > width), typically around 0.5625 (9:16)
+      if (aspectRatio < 0.7 && height > width) {
+        // Additional check: if it's very short duration AND vertical, it's likely a Short
+        if (duration) {
+          const durationSeconds = parseDuration(duration);
+          if (durationSeconds < 90) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  
+  // 5. Check if video URL pattern suggests it's a Short (backup)
+  // This shouldn't happen with API, but good to check
+  
+  return false;
+}
+
+/**
  * Parses ISO 8601 duration string (e.g., "PT1M30S") to seconds
  */
 function parseDuration(duration: string): number {
@@ -439,9 +509,22 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
         const linkMatch = entryXml.match(/<link[^>]*rel="alternate"[^>]*href="([^"]+)"/);
         const alternateLink = linkMatch ? linkMatch[1] : '';
         
-        // Skip YouTube Shorts (they have /shorts/ in the URL)
-        if (alternateLink.includes('/shorts/')) {
-          console.log(`Entry ${entryCount}: Skipping Short (${alternateLink})`);
+        // Extract title for additional Shorts detection
+        const titleMatch = entryXml.match(/<title>([^<]+)<\/title>/);
+        const title = titleMatch ? decodeHtmlEntities(titleMatch[1]) : '';
+        
+        // Extract description
+        const descriptionMatch = entryXml.match(/<media:description>([^<]+)<\/media:description>/);
+        const description = descriptionMatch ? decodeHtmlEntities(descriptionMatch[1]) : '';
+        
+        // Skip YouTube Shorts - check multiple indicators
+        const isShort = alternateLink.includes('/shorts/') ||
+                       title.toLowerCase().includes('#shorts') ||
+                       description.toLowerCase().includes('#shorts') ||
+                       (title.toLowerCase().includes('shorts') && !title.toLowerCase().includes('episode'));
+        
+        if (isShort) {
+          console.log(`Entry ${entryCount}: Skipping Short - "${title.substring(0, 50)}..."`);
           continue;
         }
         
@@ -454,16 +537,8 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
         
         const videoId = videoIdMatch[1];
         
-        // Extract title
-        const titleMatch = entryXml.match(/<title>([^<]+)<\/title>/);
-        const title = titleMatch ? decodeHtmlEntities(titleMatch[1]) : 'Untitled';
-        
         // Extract episode number from title (e.g., "Ep 11", "Episode 11", "Ep. 11")
         const episodeNumber = extractEpisodeNumber(title);
-        
-        // Extract description
-        const descriptionMatch = entryXml.match(/<media:description>([^<]+)<\/media:description>/);
-        const description = descriptionMatch ? decodeHtmlEntities(descriptionMatch[1]) : '';
         
         // Extract published date
         const publishedMatch = entryXml.match(/<published>([^<]+)<\/published>/);
@@ -514,7 +589,21 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
       return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
     });
     
-    console.log(`Successfully parsed ${videos.length} full-length videos from RSS feed (Shorts excluded)`);
+    // Sort videos: by episode number (descending), then by published date (descending)
+    videos.sort((a, b) => {
+      if (a.episodeNumber && b.episodeNumber) {
+        return b.episodeNumber - a.episodeNumber;
+      }
+      if (a.episodeNumber && !b.episodeNumber) {
+        return -1;
+      }
+      if (!a.episodeNumber && b.episodeNumber) {
+        return 1;
+      }
+      return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+    });
+    
+    console.log(`✅ Successfully parsed ${videos.length} full-length videos from RSS feed (Shorts excluded)`);
     return videos;
     
   } catch (error) {
@@ -528,11 +617,11 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
  * Supports formats like "Ep 11", "Episode 11", "Ep. 11", "Ep11", etc.
  */
 function extractEpisodeNumber(title: string): number | undefined {
-  // Try various patterns: "Ep 11", "Episode 11", "Ep. 11", "Ep11", "#11", etc.
+  // Only match explicit episode labeling. Avoid generic hashtags like #2026.
+  // Supported: "Ep 11", "Episode 11", "Ep. 11", "Ep11"
   const patterns = [
-    /(?:^|\s)(?:Ep|Episode|Ep\.)\s*(\d+)/i,  // "Ep 11", "Episode 11", "Ep. 11"
-    /(?:^|\s)#(\d+)/i,                        // "#11"
-    /(?:^|\s)Ep(\d+)/i,                       // "Ep11"
+    /\b(?:ep|episode)\.?\s*(\d{1,3})\b/i, // "Ep 11", "Episode 11", "Ep. 11"
+    /\bep(\d{1,3})\b/i,                   // "Ep11"
   ];
   
   for (const pattern of patterns) {
