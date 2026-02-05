@@ -167,7 +167,7 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
                 <p className="text-lg font-semibold text-gray-900 mb-2">
                   {totalVideos} {totalVideos === 1 ? 'Episode' : 'Episodes'} Available
                 </p>
-                <p className="text-gray-600">
+                {/* <p className="text-gray-600">
                   {totalPages > 1 && (
                     <>
                       Showing {startIndex + 1}-{Math.min(endIndex, totalVideos)} of {totalVideos} episodes
@@ -175,8 +175,8 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
                     </>
                   )}
                   {totalPages === 1 && `All ${totalVideos} episodes displayed`}
-                </p>
-                <div className="mt-4 flex items-center justify-center gap-3">
+                </p> */}
+                {/* <div className="mt-4 flex items-center justify-center gap-3">
                   <span className="text-sm text-gray-500">Looking for Shorts, clips, or other uploads?</span>
                   <Link
                     href="https://youtube.com/@nothingbutthefruit"
@@ -186,7 +186,7 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
                   >
                     View on YouTube
                   </Link>
-                </div>
+                </div> */}
               </div>
 
               {/* Episodes Grid */}
