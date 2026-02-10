@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendPreorderEmail, PreorderFormData } from '../../lib/emailService';
 
+export const runtime = 'nodejs';
+
 // In-memory rate limiting (simple, no external dependencies)
 // In production, consider using Redis or a proper rate limiting service
 interface RateLimitEntry {
@@ -54,30 +56,35 @@ if (typeof setInterval !== 'undefined') {
 }
 
 export async function POST(request: NextRequest) {
+  const requestId =
+    request.headers.get('x-request-id') ||
+    (globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : `${Date.now()}`);
+
   try {
     // Rate limiting check
     const clientIP = getClientIP(request);
     if (!checkRateLimit(clientIP)) {
-      console.warn(`Rate limit exceeded for IP: ${clientIP}`);
+      console.warn(`[preorder:${requestId}] Rate limit exceeded for IP: ${clientIP}`);
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         { status: 429 }
       );
     }
 
-    console.log('Preorder API called');
-    console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
-    console.log('CONTACT_EMAIL:', process.env.CONTACT_EMAIL);
+    console.log(`[preorder:${requestId}] API called`);
+    console.log(`[preorder:${requestId}] RESEND_API_KEY exists:`, !!process.env.RESEND_API_KEY);
+    console.log(`[preorder:${requestId}] CONTACT_EMAIL:`, process.env.CONTACT_EMAIL);
+    console.log(`[preorder:${requestId}] RESEND_FROM_EMAIL:`, process.env.RESEND_FROM_EMAIL);
     
     const body: PreorderRequestBody = await request.json();
     
     // Honeypot check - if this field is filled, it's likely a bot
     if (body.website && body.website.trim() !== '') {
-      console.warn('Honeypot triggered - possible bot submission');
+      console.warn(`[preorder:${requestId}] Honeypot triggered - possible bot submission`);
       // Return success to avoid revealing the honeypot
       return NextResponse.json(
         { success: true, message: 'Thank you for your preorder!' },
-        { status: 200 }
+        { status: 200, headers: { 'x-request-id': requestId } }
       );
     }
     
@@ -89,7 +96,7 @@ export async function POST(request: NextRequest) {
       quantity: body.quantity
     };
     
-    console.log('Preorder data received:', { ...formData, quantity: formData.quantity });
+    console.log(`[preorder:${requestId}] Preorder data received:`, { ...formData, quantity: formData.quantity });
     
     // Basic validation
     if (!formData.fullName || !formData.email || !formData.phone || !formData.quantity) {
@@ -137,7 +144,7 @@ export async function POST(request: NextRequest) {
     // Send email
     const result = await sendPreorderEmail(sanitizedData);
     
-    console.log('Preorder email sent successfully:', result.messageId);
+    console.log(`[preorder:${requestId}] Preorder email sent successfully:`, result.messageId);
     
     return NextResponse.json(
       { 
@@ -145,14 +152,18 @@ export async function POST(request: NextRequest) {
         message: 'Thank you for your preorder! Pastor Dee will contact you soon with next steps.',
         messageId: result.messageId 
       },
-      { status: 200 }
+      { status: 200, headers: { 'x-request-id': requestId } }
     );
     
   } catch (error) {
-    console.error('Preorder API error:', error);
+    const details =
+      error instanceof Error
+        ? { name: error.name, message: error.message, stack: error.stack }
+        : { message: String(error) };
+    console.error(`[preorder:${requestId}] API error:`, details);
     return NextResponse.json(
       { error: 'Failed to submit preorder. Please try again or contact us directly.' },
-      { status: 500 }
+      { status: 500, headers: { 'x-request-id': requestId } }
     );
   }
 }

@@ -1,6 +1,27 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getRequiredEnv(name: string): string {
+  const value = process.env[name];
+  if (!value || value.trim() === '') {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value.trim();
+}
+
+function getResendClient(): Resend {
+  const apiKey = getRequiredEnv('RESEND_API_KEY');
+  return new Resend(apiKey);
+}
+
+function getFromAddress(): string {
+  // Prefer a verified domain sender in production.
+  // Example: "Nothing But The Fruit <hello@nothingbutthefruit.com>"
+  // Fallback works for quick testing.
+  return (
+    process.env.RESEND_FROM_EMAIL?.trim() ||
+    'Nothing But The Fruit <noreply@resend.dev>'
+  );
+}
 
 export interface ContactFormData {
   fullName: string;
@@ -18,8 +39,9 @@ export interface PreorderFormData {
 
 export async function sendContactEmail(data: ContactFormData) {
   try {
+    const resend = getResendClient();
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Nothing But The Fruit <noreply@resend.dev>',
+      from: getFromAddress(),
       to: [process.env.CONTACT_EMAIL || 'nbtfruit@gmail.com'],
       replyTo: data.email, // This allows you to reply directly to the sender
       subject: `New ${data.messageType} from ${data.fullName}`,
@@ -152,9 +174,10 @@ This message was sent from the Nothing But The Fruit contact form on ${new Date(
 
 export async function sendPreorderEmail(data: PreorderFormData) {
   try {
+    const resend = getResendClient();
     const totalAmount = (data.quantity * 19.95).toFixed(2);
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Nothing But The Fruit <noreply@resend.dev>',
+      from: getFromAddress(),
       to: [process.env.CONTACT_EMAIL || 'nbtfruit@gmail.com'],
       replyTo: data.email,
       subject: `New Book Preorder: ${data.fullName} - ${data.quantity} copy/copies`,
