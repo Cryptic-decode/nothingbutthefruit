@@ -174,8 +174,8 @@ export default function Book() {
             </p>
             
             <p className="mt-6 text-lg text-gray-300 max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.5s'}}>
-              Discover the language of the Spirit and unlock the fruit God has placed within you. 
-              Transform your spiritual walk with powerful biblical insights.
+              Discover the language of the Spirit and <span className="font-semibold text-white">unlock the fruit</span> God has placed within you.{' '}
+              Transform your spiritual walk with <span className="font-semibold text-white">powerful biblical insights</span>.
             </p>
 
             {isBeforeLaunch && (
@@ -189,11 +189,11 @@ export default function Book() {
             {isPreorderActive && (
               <div className="mt-10 animate-fade-in" style={{animationDelay: '0.7s'}}>
                 <div className="inline-block bg-brand-gold text-brand-black px-6 py-3 rounded-full font-bold text-lg shadow-xl mb-3">
-                  Limited Time: $19.95 + Free Delivery
+                  Limited Time: <span className="font-extrabold">$19.95</span> + <span className="font-extrabold">Free Delivery</span>
                 </div>
                 <div className="mt-3 space-y-2">
                   <p className="text-white text-base font-semibold">
-                    Free delivery ends in {daysUntilPreorderEnds} {daysUntilPreorderEnds === 1 ? 'day' : 'days'}
+                    Free delivery ends in <span className="font-bold">{daysUntilPreorderEnds}</span> {daysUntilPreorderEnds === 1 ? 'day' : 'days'}
                   </p>
                   <p className="text-gray-200 text-sm">
                     Pre-order window: February 10 - February 24, 2026 only
@@ -218,7 +218,7 @@ export default function Book() {
                 className={`inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-bold shadow-xl transition-all duration-200 ${
                   isBeforeLaunch
                     ? 'bg-white/30 text-white/70 cursor-not-allowed'
-                    : 'bg-white text-brand-black hover:bg-gray-100'
+                    : 'bg-white text-brand-black hover:bg-gray-100 cursor-pointer'
                 }`}
               >
                 {isBeforeLaunch ? 'Pre-orders open Feb 10' : isPreorderActive ? 'Pre-order now' : 'Order now'}
