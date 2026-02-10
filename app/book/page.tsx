@@ -101,6 +101,17 @@ export default function Book() {
     setToast(prev => ({ ...prev, isVisible: false }));
   };
 
+  const scrollToForm = () => {
+    const form = document.querySelector('form');
+    if (!form) return;
+
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      const firstInput = form.querySelector('input') as HTMLInputElement | null;
+      firstInput?.focus();
+    }, 400);
+  };
+
   const totalAmount = (formData.quantity * 19.95).toFixed(2);
 
   return (
@@ -178,33 +189,16 @@ export default function Book() {
             {isPreorderActive && (
               <div className="mt-10 animate-fade-in" style={{animationDelay: '0.7s'}}>
                 <div className="inline-block bg-brand-gold text-brand-black px-6 py-3 rounded-full font-bold text-lg shadow-xl mb-3">
-                  🎉 Limited Time: $19.95 + FREE Delivery
+                  Limited Time: $19.95 + Free Delivery
                 </div>
                 <div className="mt-3 space-y-2">
                   <p className="text-white text-base font-semibold">
-                    ⏰ Free delivery ends in {daysUntilPreorderEnds} {daysUntilPreorderEnds === 1 ? 'day' : 'days'}
+                    Free delivery ends in {daysUntilPreorderEnds} {daysUntilPreorderEnds === 1 ? 'day' : 'days'}
                   </p>
                   <p className="text-gray-200 text-sm">
                     Pre-order window: February 10 - February 24, 2026 only
                   </p>
                 </div>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const form = document.querySelector('form');
-                    if (form) {
-                      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      setTimeout(() => {
-                        const firstInput = form.querySelector('input') as HTMLInputElement;
-                        firstInput?.focus();
-                      }, 500);
-                    }
-                  }}
-                  className="mt-6 inline-block bg-white hover:bg-gray-100 text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-2xl"
-                >
-                  🚀 Pre-order Now - Secure Your Copy
-                </a>
               </div>
             )}
 
@@ -215,6 +209,24 @@ export default function Book() {
                 </div>
               </div>
             )}
+
+            <div className="mt-10 animate-fade-in" style={{animationDelay: '0.9s'}}>
+              <button
+                type="button"
+                onClick={scrollToForm}
+                disabled={isBeforeLaunch}
+                className={`inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-bold shadow-xl transition-all duration-200 ${
+                  isBeforeLaunch
+                    ? 'bg-white/30 text-white/70 cursor-not-allowed'
+                    : 'bg-white text-brand-black hover:bg-gray-100'
+                }`}
+              >
+                {isBeforeLaunch ? 'Pre-orders open Feb 10' : isPreorderActive ? 'Pre-order now' : 'Order now'}
+              </button>
+              <p className="mt-3 text-sm text-gray-200/90">
+                Pastor Dee will follow up with payment and delivery details.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -280,54 +292,23 @@ export default function Book() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-2xl border border-purple-100">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">What You'll Discover</h3>
-                  <ul className="space-y-3 text-gray-700">
+                <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Inside the book</h3>
+                  <p className="text-gray-700">
+                    A clear, Scripture-rooted guide to recognizing spiritual growth through the fruit of the Spirit—written with practical steps you can apply daily.
+                  </p>
+                  <ul className="mt-4 space-y-2 text-gray-700">
                     <li className="flex items-start">
-                      <svg className="w-5 h-5 text-brand-gold mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span><strong>Your unique fruit language</strong> - Understand how God speaks to you through the fruit of the Spirit</span>
+                      <span className="text-brand-gold mr-2 font-bold">•</span>
+                      <span>How to understand your “fruit language”</span>
                     </li>
                     <li className="flex items-start">
-                      <svg className="w-5 h-5 text-brand-gold mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span><strong>Practical biblical wisdom</strong> - Real-world applications for daily spiritual growth</span>
+                      <span className="text-brand-gold mr-2 font-bold">•</span>
+                      <span>Simple practices for daily spiritual growth</span>
                     </li>
                     <li className="flex items-start">
-                      <svg className="w-5 h-5 text-brand-gold mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span><strong>Transformative insights</strong> - From military veteran to powerful minister, Pastor Dee's journey of faith</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-brand-gold mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span><strong>Actionable steps</strong> - Tools to cultivate and walk in the fruit of the Spirit daily</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border-2 border-brand-gold">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Who Is This Book For?</h3>
-                  <ul className="space-y-2 text-gray-700">
-                    <li className="flex items-start">
-                      <span className="text-brand-gold mr-2 font-bold">✓</span>
-                      <span>Believers seeking deeper understanding of the fruit of the Spirit</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-brand-gold mr-2 font-bold">✓</span>
-                      <span>Anyone wanting to grow in their spiritual walk and relationship with God</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-brand-gold mr-2 font-bold">✓</span>
-                      <span>Leaders and ministers looking for fresh biblical insights</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-brand-gold mr-2 font-bold">✓</span>
-                      <span>Those ready to discover how God uniquely speaks to them</span>
+                      <span className="text-brand-gold mr-2 font-bold">•</span>
+                      <span>Practical teaching from Pastor Demetria Bass</span>
                     </li>
                   </ul>
                 </div>
@@ -505,149 +486,6 @@ export default function Book() {
               </form>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Why This Book Matters Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl mb-6">
-              Why This Book Matters
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              In a world filled with noise, discover the clear, powerful language God uses to speak directly to your heart.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-8 rounded-2xl border border-purple-200">
-              <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Clarity in Your Walk</h3>
-              <p className="text-gray-700 leading-relaxed">
-                Stop wondering if you're hearing God correctly. Learn to recognize His voice through the fruit of the Spirit and gain confidence in your spiritual journey.
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 p-8 rounded-2xl border border-amber-200">
-              <div className="text-4xl mb-4">💪</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Practical Application</h3>
-              <p className="text-gray-700 leading-relaxed">
-                This isn't just theory—it's a practical guide you can use every day. Transform your relationship with God through actionable steps and real-world wisdom.
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl border border-green-200">
-              <div className="text-4xl mb-4">🌟</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">From Experience</h3>
-              <p className="text-gray-700 leading-relaxed">
-                Written by Pastor Demetria Bass, a military veteran turned powerful minister, this book comes from real-life transformation and tested faith.
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl border border-blue-200">
-              <div className="text-4xl mb-4">🔥</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Timely Message</h3>
-              <p className="text-gray-700 leading-relaxed">
-                In these times, understanding God's language is more crucial than ever. This book equips you with the tools you need to navigate life with spiritual clarity.
-              </p>
-            </div>
-          </div>
-
-          {isPreorderActive && (
-            <div className="text-center bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-2xl p-6 mb-8">
-              <p className="text-green-800 font-bold text-lg mb-2">
-                ⚡ Don't Miss Out: Free Delivery Ends in {daysUntilPreorderEnds} {daysUntilPreorderEnds === 1 ? 'Day' : 'Days'}!
-              </p>
-              <p className="text-green-700 text-sm">
-                Secure your copy now and save on delivery costs. This special offer is only available until February 24, 2026.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Promotional CTA Section */}
-      <section className="py-20 bg-brand-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl mb-6">
-              Ready to Transform Your Spiritual Journey?
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-4">
-              Join countless believers who are discovering their fruit language and experiencing deeper connection with God. 
-              Your transformation starts with one decision.
-            </p>
-            {isPreorderActive && (
-              <p className="text-lg text-brand-gold font-semibold mb-2">
-                ⚡ Limited Time: Free delivery ends in {daysUntilPreorderEnds} {daysUntilPreorderEnds === 1 ? 'day' : 'days'}!
-              </p>
-            )}
-            <p className="text-gray-400 text-sm">
-              Pre-order now and receive your copy on launch day, February 10, 2026
-            </p>
-          </div>
-
-          {/* Key Benefits Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
-              <div className="text-brand-gold text-3xl mb-3">📖</div>
-              <h3 className="text-white font-bold text-lg mb-2">Biblical Foundation</h3>
-              <p className="text-gray-300 text-sm">
-                Rooted in Scripture, grounded in truth. Every insight is backed by God's Word.
-              </p>
-            </div>
-            <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
-              <div className="text-brand-gold text-3xl mb-3">💡</div>
-              <h3 className="text-white font-bold text-lg mb-2">Practical Wisdom</h3>
-              <p className="text-gray-300 text-sm">
-                Real-world applications you can use immediately in your daily walk with God.
-              </p>
-            </div>
-            <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
-              <div className="text-brand-gold text-3xl mb-3">🌟</div>
-              <h3 className="text-white font-bold text-lg mb-2">Life Transformation</h3>
-              <p className="text-gray-300 text-sm">
-                Discover how the fruit of the Spirit can revolutionize your faith journey.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                const form = document.querySelector('form');
-                if (form) {
-                  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  // Small delay to ensure smooth scroll completes
-                  setTimeout(() => {
-                    const firstInput = form.querySelector('input') as HTMLInputElement;
-                    firstInput?.focus();
-                  }, 500);
-                }
-              }}
-              className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-5 px-10 rounded-full text-xl transition-all duration-200 transform hover:scale-110 shadow-2xl hover:shadow-3xl"
-            >
-              {isPreorderActive 
-                ? '🎁 Pre-order Now - Get Free Delivery!' 
-                : isBeforeLaunch 
-                  ? 'Reserve My Copy' 
-                  : 'Order Your Copy Now'}
-            </a>
-            <a
-              href="/episodes"
-              className="inline-block bg-transparent border-2 border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105"
-            >
-              Watch Episodes
-            </a>
-          </div>
-          
-          {isPreorderActive && (
-            <div className="mt-8 text-center">
-              <p className="text-gray-400 text-sm">
-                🔒 Secure checkout • 📧 Pastor Dee will contact you with payment details • 🚚 Free delivery included
-              </p>
-            </div>
-          )}
         </div>
       </section>
     </div>
