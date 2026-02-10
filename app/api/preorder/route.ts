@@ -8,6 +8,11 @@ interface RateLimitEntry {
   resetTime: number;
 }
 
+// Request body type (includes honeypot field)
+interface PreorderRequestBody extends PreorderFormData {
+  website?: string; // Honeypot field
+}
+
 const rateLimitMap = new Map<string, RateLimitEntry>();
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_MAX_REQUESTS = 3; // Max 3 requests per 15 minutes per IP
@@ -64,7 +69,7 @@ export async function POST(request: NextRequest) {
     console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
     console.log('CONTACT_EMAIL:', process.env.CONTACT_EMAIL);
     
-    const body: any = await request.json();
+    const body: PreorderRequestBody = await request.json();
     
     // Honeypot check - if this field is filled, it's likely a bot
     if (body.website && body.website.trim() !== '') {
