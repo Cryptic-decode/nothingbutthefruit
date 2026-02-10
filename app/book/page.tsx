@@ -295,7 +295,7 @@ export default function Book() {
                 <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
                   <h3 className="text-xl font-bold text-gray-900 mb-3">Inside the book</h3>
                   <p className="text-gray-700">
-                    A clear, Scripture-rooted guide to recognizing spiritual growth through the fruit of the Spirit—written with practical steps you can apply daily.
+                    A clear, Scripture-rooted guide to recognizing spiritual growth through the fruit of the Spirit, written with practical steps you can apply daily.
                   </p>
                   <ul className="mt-4 space-y-2 text-gray-700">
                     <li className="flex items-start">
@@ -476,7 +476,7 @@ export default function Book() {
                   {isBeforeLaunch 
                     ? 'Pre-orders Open February 10' 
                     : isPreorderActive 
-                      ? '🎁 Secure My Pre-order with Free Delivery' 
+                      ? 'Secure My Pre-order with Free Delivery' 
                       : 'Submit Order'}
                 </button>
 
