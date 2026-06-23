@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import BookMockup from './BookMockup';
 import type { Book } from '../lib/books';
+import { getBookDisplayImage, getBookDisplayVariant } from '../lib/books';
+import { motion } from 'framer-motion';
 
 interface RelatedBooksProps {
   books: Book[];
@@ -11,78 +15,65 @@ export default function RelatedBooks({ books, bundleIncludes }: RelatedBooksProp
   if (books.length === 0) return null;
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {bundleIncludes ? (
-          <>
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
-              What&apos;s Included in This Bundle
-            </h2>
-            <p className="text-gray-600 text-center mb-10 max-w-xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-2xl font-bold text-gray-900">
+            {bundleIncludes ? "What's Included" : 'Also in This Series'}
+          </h2>
+          {bundleIncludes && (
+            <p className="mt-1 text-gray-500 text-sm">
               Two powerful resources in one package
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-              {books.map((book) => (
-                <Link
-                  key={book.slug}
-                  href={`/books/${book.slug}`}
-                  className="group flex items-center gap-6 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6"
-                >
-                  <div className="relative w-20 h-28 flex-shrink-0">
-                    <BookMockup
-                      src={book.coverImage}
-                      alt={book.title}
-                      sizes="80px"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-purple-700 transition-colors duration-200">
-                      {book.title}
-                    </h3>
-                    <p className="text-brand-gold font-bold mt-1">
-                      ${book.price.toFixed(2)}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">View details</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">
-              Also in this series
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-              {books.map((book) => (
-                <Link
-                  key={book.slug}
-                  href={`/books/${book.slug}`}
-                  className="group flex items-center gap-6 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6"
-                >
-                  <div className="relative w-20 h-28 flex-shrink-0">
-                    <BookMockup
-                      src={book.coverImage}
-                      alt={book.title}
-                      sizes="80px"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-purple-700 transition-colors duration-200">
-                      {book.title}
-                    </h3>
-                    <p className="text-brand-gold font-bold mt-1">
-                      ${book.price.toFixed(2)}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">View details</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
+          )}
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          {books.map((book, i) => (
+            <motion.div
+              key={book.slug}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <Link
+                href={`/books/${book.slug}`}
+                className="group flex items-center gap-5 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 border border-gray-100"
+              >
+                <div className="relative w-16 h-24 flex-shrink-0">
+                  <BookMockup
+                    src={getBookDisplayImage(book)}
+                    alt={book.title}
+                    variant={getBookDisplayVariant(book)}
+                    sizes="64px"
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-gray-900 group-hover:text-purple-700 transition-colors duration-200 line-clamp-1">
+                    {book.title}
+                  </h3>
+                  <p className="text-brand-gold font-bold mt-0.5 text-sm">
+                    ${book.price.toFixed(2)}
+                  </p>
+                  <span className="inline-flex items-center gap-1 text-xs text-purple-700 font-medium mt-1 group-hover:gap-1.5 transition-all duration-200">
+                    View Details
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

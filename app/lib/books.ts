@@ -1,3 +1,5 @@
+export type BookDisplayVariant = 'rendered' | 'constructed' | 'landscape';
+
 export interface Book {
   slug: string;
   title: string;
@@ -7,11 +9,22 @@ export interface Book {
   description: string;
   highlights: string[];
   coverImage: string;
+  mockupImage?: string;
   coverAspect: 'portrait' | 'landscape';
   series: 'wyfl' | 'orchard';
   relatedSlugs: string[];
   isBundle: boolean;
   bundleIncludes?: string[];
+}
+
+export function getBookDisplayImage(book: Book): string {
+  return book.mockupImage ?? book.coverImage;
+}
+
+export function getBookDisplayVariant(book: Book): BookDisplayVariant {
+  if (book.mockupImage) return 'rendered';
+  if (book.coverAspect === 'landscape') return 'landscape';
+  return 'constructed';
 }
 
 const books: Book[] = [
@@ -27,6 +40,7 @@ const books: Book[] = [
       'Understand your fruit language',
     ],
     coverImage: "/book-covers/What'sYourFruitLanguage.jpg",
+    mockupImage: "/book-covers/What'sYourFruitLanguage(Mockup).png",
     coverAspect: 'portrait',
     series: 'wyfl',
     relatedSlugs: ['whats-your-fruit-language-devotional', 'fruit-growth-bundle'],
@@ -44,6 +58,7 @@ const books: Book[] = [
       'Daily spiritual growth',
     ],
     coverImage: "/book-covers/What'sYourFruitLanguage_Devotional.png",
+    mockupImage: "/book-covers/What'sYourFruitLanguage_Devotional(Mockup).png",
     coverAspect: 'portrait',
     series: 'wyfl',
     relatedSlugs: ['whats-your-fruit-language', 'fruit-growth-bundle'],
@@ -63,6 +78,7 @@ const books: Book[] = [
       'Perfect for gifts and small groups',
     ],
     coverImage: "/book-covers/What'sYourFruitLanguage_BundlePackage(Improved).png",
+    mockupImage: "/book-covers/What'sYourFruitLanguage_BundlePackage(Improved).png",
     coverAspect: 'landscape',
     series: 'wyfl',
     relatedSlugs: ['whats-your-fruit-language', 'whats-your-fruit-language-devotional'],
@@ -82,6 +98,7 @@ const books: Book[] = [
       'Practical faith living',
     ],
     coverImage: "/book-covers/ThroughTheOrchard_CultivatingTheFruitInEveryDayLife.jpg",
+    mockupImage: "/book-covers/ThroughTheOrchard_CultivatingTheFruitInEveryDayLife(Mockup).png",
     coverAspect: 'portrait',
     series: 'orchard',
     relatedSlugs: ['through-the-orchard-soil-to-harvest'],
@@ -99,6 +116,7 @@ const books: Book[] = [
       'Growth and discipleship',
     ],
     coverImage: "/book-covers/ThroughTheOrchard_FromSoilToHaverst.jpeg",
+    mockupImage: '/book-covers/ThroughTheOrchardBookMockup.png',
     coverAspect: 'portrait',
     series: 'orchard',
     relatedSlugs: ['through-the-orchard-everyday-life'],

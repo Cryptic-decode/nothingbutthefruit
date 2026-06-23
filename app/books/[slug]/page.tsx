@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getBookBySlug, getAllBooks, getRelatedBooks } from '../../lib/books';
+import { getBookBySlug, getAllBooks, getRelatedBooks, getBookDisplayImage, getBookDisplayVariant } from '../../lib/books';
 import type { Book } from '../../lib/books';
 import BookMockup from '../../components/BookMockup';
 import BookOrderForm from '../../components/BookOrderForm';
@@ -103,58 +103,15 @@ export default async function BookDetailPage({ params }: BookPageProps) {
         }}
       />
 
-      {/* Hero with Cover + Details */}
-      <section
-        className="relative overflow-hidden py-20 lg:py-28"
-        style={{
-          background:
-            'linear-gradient(135deg, #581c87 0%, #312e81 50%, #111827 100%)',
-        }}
-      >
+      {/* Hero — minimal, with focus on the book */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 py-20 lg:py-28">
         <div className="absolute inset-0">
-          <svg
-            className="absolute inset-0 w-full h-full opacity-20"
-            viewBox="0 0 1000 1000"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            <defs>
-              <pattern
-                id="waves-book-detail"
-                x="0"
-                y="0"
-                width="200"
-                height="100"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M0,50 Q50,0 100,50 T200,50"
-                  stroke="#F59E0B"
-                  strokeWidth="2"
-                  fill="none"
-                />
-                <path
-                  d="M0,70 Q50,20 100,70 T200,70"
-                  stroke="#A855F7"
-                  strokeWidth="1.5"
-                  fill="none"
-                />
-                <path
-                  d="M0,30 Q50,-20 100,30 T200,30"
-                  stroke="#EC4899"
-                  strokeWidth="1"
-                  fill="none"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#waves-book-detail)" />
-          </svg>
-          <div className="absolute top-20 left-10 w-32 h-32 bg-brand-gold opacity-10 rounded-lg blur-xl animate-float" />
-          <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-400 opacity-5 rounded-full blur-2xl animate-float" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-gold/5 rounded-full blur-3xl" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Cover Image with 3D Book Mockup */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Cover Image */}
             <div
               className={`relative mx-auto w-full ${
                 book.coverAspect === 'landscape'
@@ -163,9 +120,9 @@ export default async function BookDetailPage({ params }: BookPageProps) {
               }`}
             >
               <BookMockup
-                src={book.coverImage}
+                src={getBookDisplayImage(book)}
                 alt={book.title}
-                aspect={book.coverAspect}
+                variant={getBookDisplayVariant(book)}
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="w-full h-full"
@@ -174,35 +131,37 @@ export default async function BookDetailPage({ params }: BookPageProps) {
 
             {/* Details */}
             <div className="text-center lg:text-left">
-              <h1 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
                 {book.title}
               </h1>
-              <p className="mt-4 text-3xl font-bold text-brand-gold">
-                ${book.price.toFixed(2)}
+
+              <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 justify-center lg:justify-start">
+                <span className="text-2xl sm:text-3xl font-bold text-brand-gold">
+                  ${book.price.toFixed(2)}
+                </span>
+                {book.regularValue && (
+                  <span className="text-base sm:text-lg text-purple-200/60 line-through">
+                    ${book.regularValue.toFixed(2)}
+                  </span>
+                )}
                 {book.savings && (
-                  <span className="ml-3 text-sm text-white bg-green-500 px-2 py-1 rounded-full font-semibold align-middle">
+                  <span className="inline-block bg-green-500/20 text-green-400 text-sm font-bold px-3 py-1 rounded-full border border-green-500/30">
                     {book.savings}
                   </span>
                 )}
-              </p>
-              {book.regularValue && (
-                <p className="mt-1 text-gray-400 line-through text-sm">
-                  Regular value ${book.regularValue.toFixed(2)}
-                </p>
-              )}
-              <p className="mt-6 text-lg text-gray-200 leading-relaxed max-w-lg mx-auto lg:mx-0">
+              </div>
+
+              <p className="mt-5 text-base sm:text-lg text-purple-200/80 leading-relaxed max-w-lg mx-auto lg:mx-0">
                 {book.description}
               </p>
 
               {/* Highlights */}
               {book.highlights.length > 0 && (
-                <ul className="mt-6 space-y-2">
+                <ul className="mt-6 space-y-2.5">
                   {book.highlights.map((h, i) => (
-                    <li key={i} className="flex items-start text-gray-200">
-                      <span className="text-brand-gold mr-2 font-bold">
-                        &#x2022;
-                      </span>
-                      <span>{h}</span>
+                    <li key={i} className="flex items-center gap-3 text-purple-200/80 justify-center lg:justify-start">
+                      <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brand-gold" />
+                      <span className="text-sm sm:text-base">{h}</span>
                     </li>
                   ))}
                 </ul>
@@ -213,16 +172,23 @@ export default async function BookDetailPage({ params }: BookPageProps) {
       </section>
 
       {/* Order Form Section */}
-      <section className="py-20 bg-gradient-to-br from-white to-gray-50">
+      <section className="py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">
-              Order Your Copy
-            </h2>
-            <p className="text-gray-600 text-center mb-8">
-              Pastor Dee will contact you with payment and delivery details.
-            </p>
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+          <div className="max-w-lg mx-auto">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 text-purple-700 text-sm font-semibold uppercase tracking-[0.2em] mb-3">
+                <span className="w-6 h-px bg-purple-300" />
+                Order
+                <span className="w-6 h-px bg-purple-300" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                Order Your Copy
+              </h2>
+              <p className="mt-2 text-gray-500">
+                Pastor Dee will contact you with payment and delivery details.
+              </p>
+            </div>
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
               <BookOrderForm
                 bookSlug={book.slug}
                 bookTitle={book.title}

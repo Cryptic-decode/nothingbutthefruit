@@ -14,6 +14,11 @@ const navigation = [
   { name: 'Contact Us', href: '/contact' },
 ];
 
+function isNavActive(pathname: string, href: string): boolean {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -46,7 +51,7 @@ export default function Header() {
         
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = isNavActive(pathname, item.href);
             return (
             <Link
               key={item.name}
@@ -114,7 +119,7 @@ export default function Header() {
               <div className="flex-1 px-6 py-6 bg-white/95 h-[100vh]">
                 <nav className="space-y-2">
                   {navigation.map((item) => {
-                    const isActive = pathname === item.href;
+                    const isActive = isNavActive(pathname, item.href);
                     return (
                     <Link
                       key={item.name}
