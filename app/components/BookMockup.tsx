@@ -40,7 +40,6 @@ export default function BookMockup({
     );
   }
 
-  const spine = 'left';
   const pageColor1 = '#f0ebe3';
   const pageColor2 = '#e8e2d8';
   const pageColor3 = '#ddd7cc';
