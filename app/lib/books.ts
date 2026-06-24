@@ -11,7 +11,7 @@ export interface Book {
   coverImage: string;
   mockupImage?: string;
   coverAspect: 'portrait' | 'landscape';
-  series: 'wyfl' | 'orchard';
+  series: 'wyfl' | 'orchard' | 'marriage';
   relatedSlugs: string[];
   isBundle: boolean;
   bundleIncludes?: string[];
@@ -43,7 +43,12 @@ const books: Book[] = [
     mockupImage: "/book-covers/What'sYourFruitLanguage(Mockup).png",
     coverAspect: 'portrait',
     series: 'wyfl',
-    relatedSlugs: ['whats-your-fruit-language-devotional', 'fruit-growth-bundle'],
+    relatedSlugs: [
+      'whats-your-fruit-language-devotional',
+      'fruit-growth-bundle',
+      'whats-your-fruit-language-married-couples',
+      'whats-your-fruit-language-married-couples-playbook',
+    ],
     isBundle: false,
   },
   {
@@ -84,6 +89,50 @@ const books: Book[] = [
     relatedSlugs: ['whats-your-fruit-language', 'whats-your-fruit-language-devotional'],
     isBundle: true,
     bundleIncludes: ['whats-your-fruit-language', 'whats-your-fruit-language-devotional'],
+  },
+  {
+    slug: 'whats-your-fruit-language-married-couples',
+    title: "What's Your Fruit Language? Married Couples Edition",
+    price: 22.95,
+    description:
+      'Discover how God speaks through the fruit of the Spirit in your marriage. A clear, Scripture-rooted guide to understanding each other\'s fruit language and growing a sweeter, stronger marriage together.',
+    highlights: [
+      'Built for married couples',
+      'Rooted in Galatians 5:22-23',
+      'Speak each other\'s fruit language',
+      'Grow a sweeter, stronger marriage',
+    ],
+    coverImage: "/book-covers/What'sYourFuitLanguageMarriageEdition.png",
+    mockupImage: "/book-covers/What'sYourFuitLanguageMarriageEdition(Mockup).png",
+    coverAspect: 'portrait',
+    series: 'marriage',
+    relatedSlugs: [
+      'whats-your-fruit-language-married-couples-playbook',
+      'whats-your-fruit-language',
+    ],
+    isBundle: false,
+  },
+  {
+    slug: 'whats-your-fruit-language-married-couples-playbook',
+    title: "What's Your Fruit Language? Married Couples Edition Playbook",
+    price: 19.95,
+    description:
+      'Put the fruit of the Spirit into practice as a couple. A hands-on playbook with conversation, reflection, and practical steps to help you discover, develop, and demonstrate God\'s fruit in your marriage.',
+    highlights: [
+      'Practical couples playbook',
+      'All nine fruits of the Spirit',
+      'Discover, develop, demonstrate',
+      'Use together at home or in a group',
+    ],
+    coverImage: "/book-covers/What'sYourFuitLanguageMarriageEditionPlaybook.png",
+    mockupImage: "/book-covers/What'sYourFuitLanguageMarriageEditionPlaybook(Mockup).png",
+    coverAspect: 'portrait',
+    series: 'marriage',
+    relatedSlugs: [
+      'whats-your-fruit-language-married-couples',
+      'whats-your-fruit-language',
+    ],
+    isBundle: false,
   },
   {
     slug: 'through-the-orchard-everyday-life',
@@ -132,7 +181,7 @@ export function getBookBySlug(slug: string): Book | undefined {
   return books.find((b) => b.slug === slug);
 }
 
-export function getBooksBySeries(series: 'wyfl' | 'orchard'): Book[] {
+export function getBooksBySeries(series: 'wyfl' | 'orchard' | 'marriage'): Book[] {
   return books.filter((b) => b.series === series);
 }
 

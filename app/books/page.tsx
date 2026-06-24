@@ -7,7 +7,7 @@ import { getBooksBySeries, getBookBySlug } from '../lib/books';
 export const metadata: Metadata = {
   title: 'Books | Nothing But The Fruit Podcast',
   description:
-    'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series and Through the Orchard series. Order your copies today.',
+    'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series, Married Couples Edition, and Through the Orchard series. Order your copies today.',
   keywords: [
     "What's your fruit language book",
     'Pastor Demetria Bass books',
@@ -16,11 +16,14 @@ export const metadata: Metadata = {
     'spiritual growth books',
     'devotional companion',
     'Through the Orchard book',
+    'Married Couples Edition',
+    'marriage fruit of the Spirit',
+    'Christian marriage books',
   ],
   openGraph: {
     title: 'Books | Nothing But The Fruit Podcast',
     description:
-      'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series and Through the Orchard series.',
+      'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series, Married Couples Edition, and Through the Orchard series.',
     url: 'https://nothingbutthefruit.com/books',
     images: [
       {
@@ -38,6 +41,7 @@ export const metadata: Metadata = {
 
 export default function BooksPage() {
   const wyflBooks = getBooksBySeries('wyfl');
+  const marriageBooks = getBooksBySeries('marriage');
   const orchardBooks = getBooksBySeries('orchard');
   const bundle = wyflBooks.find((b) => b.slug === 'fruit-growth-bundle');
   const individualWyfl = wyflBooks.filter((b) => !b.isBundle);
@@ -168,8 +172,37 @@ export default function BooksPage() {
         <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
       </div>
 
-      {/* Through the Orchard Series */}
+      {/* Married Couples Edition Series */}
       <section className="py-24 lg:py-32 bg-gray-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto text-center mb-16">
+            <div className="inline-flex items-center gap-2 text-purple-700 text-sm font-semibold uppercase tracking-[0.2em] mb-4">
+              <span className="w-6 h-px bg-purple-300" />
+              Series
+              <span className="w-6 h-px bg-purple-300" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
+              What&apos;s Your Fruit Language? Married Couples Edition
+            </h2>
+            <p className="mt-4 text-gray-500 text-lg leading-relaxed">
+              Discover, understand, and speak each other&apos;s fruit language
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {marriageBooks.map((book) => (
+              <BookCard key={book.slug} book={book} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section divider */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+      </div>
+
+      {/* Through the Orchard Series */}
+      <section className="py-24 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto text-center mb-16">
             <div className="inline-flex items-center gap-2 text-purple-700 text-sm font-semibold uppercase tracking-[0.2em] mb-4">
