@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import ButtonLink from '../components/ui/ButtonLink';
 
 export default function BookNotFound() {
   return (
@@ -15,18 +15,17 @@ export default function BookNotFound() {
           moved or the link may be incorrect.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
+          <ButtonLink
             href="/books"
-            className="inline-flex items-center justify-center bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-3 px-8 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
             Browse All Books
-          </Link>
-          <Link
+          </ButtonLink>
+          <ButtonLink
             href="/contact"
-            className="inline-flex items-center justify-center border-2 border-gray-300 text-gray-700 hover:border-gray-400 font-semibold py-3 px-8 rounded-full transition-all duration-200"
+            variant="outline-dark"
           >
             Contact Us
-          </Link>
+          </ButtonLink>
         </div>
       </div>
     </div>

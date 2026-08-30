@@ -1,7 +1,10 @@
+import ButtonLink from './ui/ButtonLink';
+import Container from './ui/Container';
+
 export default function StayConnected() {
   return (
     <section className="py-20 bg-brand-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <Container className="text-center">
         <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl animate-on-scroll animate-slideInUp">
           Stay Connected
         </h2>
@@ -9,11 +12,11 @@ export default function StayConnected() {
           Join our growing community of believers and never miss a teaching. Subscribe today and grow deeper in your walk with God.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
-          <a 
+          <ButtonLink
             href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            size="lg"
           >
             <span className="flex items-center">
               Subscribe on YouTube
@@ -21,13 +24,14 @@ export default function StayConnected() {
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
             </span>
-          </a>
-          <a 
+          </ButtonLink>
+          <ButtonLink
             href="/contact"
-            className="inline-block border-2 border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all duration-200 transform hover:scale-105"
+            size="lg"
+            variant="outline-light"
           >
             Send a Prayer Request
-          </a>
+          </ButtonLink>
         </div>
         
         {/* Social Media */}
@@ -58,7 +62,7 @@ export default function StayConnected() {
             </a>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

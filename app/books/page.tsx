@@ -1,7 +1,9 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import BookCard from '../components/BookCard';
 import BundleBanner from '../components/BundleBanner';
+import ButtonLink from '../components/ui/ButtonLink';
+import Container from '../components/ui/Container';
+import SectionHeading from '../components/ui/SectionHeading';
 import { getBooksBySeries, getBookBySlug } from '../lib/books';
 
 export const metadata: Metadata = {
@@ -104,7 +106,7 @@ export default function BooksPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Container className="relative">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl animate-fade-in">
               Our{' '}
@@ -119,26 +121,19 @@ export default function BooksPage() {
               Resources to help you grow deeper in your walk with God
             </p>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* What's Your Fruit Language? Series */}
       <section className="py-24 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Container>
           {/* Series header */}
-          <div className="max-w-2xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center gap-2 text-purple-700 text-sm font-semibold uppercase tracking-[0.2em] mb-4">
-              <span className="w-6 h-px bg-purple-300" />
-              Series
-              <span className="w-6 h-px bg-purple-300" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-              What&apos;s Your Fruit Language?
-            </h2>
-            <p className="mt-4 text-gray-500 text-lg leading-relaxed">
-              Discover how God speaks through the fruit of the Spirit
-            </p>
-          </div>
+          <SectionHeading
+            className="mb-16"
+            eyebrow="Series"
+            title="What's Your Fruit Language?"
+            description="Discover how God speaks through the fruit of the Spirit"
+          />
 
           {/* Bundle Banner */}
           {bundle && bundleBooks.length > 0 && (
@@ -164,70 +159,56 @@ export default function BooksPage() {
               </div>
             </div>
           )}
-        </div>
+        </Container>
       </section>
 
       {/* Section divider */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-      </div>
+      </Container>
 
       {/* Married Couples Edition Series */}
       <section className="py-24 lg:py-32 bg-gray-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center gap-2 text-purple-700 text-sm font-semibold uppercase tracking-[0.2em] mb-4">
-              <span className="w-6 h-px bg-purple-300" />
-              Series
-              <span className="w-6 h-px bg-purple-300" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-              What&apos;s Your Fruit Language? Married Couples Edition
-            </h2>
-            <p className="mt-4 text-gray-500 text-lg leading-relaxed">
-              Discover, understand, and speak each other&apos;s fruit language
-            </p>
-          </div>
+        <Container>
+          <SectionHeading
+            className="mb-16"
+            eyebrow="Series"
+            title="What's Your Fruit Language? Married Couples Edition"
+            description="Discover, understand, and speak each other's fruit language"
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {marriageBooks.map((book) => (
               <BookCard key={book.slug} book={book} />
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Section divider */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-      </div>
+      </Container>
 
       {/* Through the Orchard Series */}
       <section className="py-24 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center gap-2 text-purple-700 text-sm font-semibold uppercase tracking-[0.2em] mb-4">
-              <span className="w-6 h-px bg-purple-300" />
-              Series
-              <span className="w-6 h-px bg-purple-300" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-              Through the Orchard
-            </h2>
-            <p className="mt-4 text-gray-500 text-lg leading-relaxed">
-              Cultivating the fruit of the Spirit in everyday life
-            </p>
-          </div>
+        <Container>
+          <SectionHeading
+            className="mb-16"
+            eyebrow="Series"
+            title="Through the Orchard"
+            description="Cultivating the fruit of the Spirit in everyday life"
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-3xl mx-auto">
             {orchardBooks.map((book) => (
               <BookCard key={book.slug} book={book} />
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* CTA */}
       <section className="py-24 lg:py-32 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <Container className="text-center">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
             Questions About Your Order?
           </h2>
@@ -235,17 +216,17 @@ export default function BooksPage() {
             Pastor Dee handles all orders personally. Reach out and we&apos;ll get back to you soon.
           </p>
           <div className="mt-8">
-            <Link
+            <ButtonLink
               href="/contact"
-              className="inline-flex items-center gap-2 bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-3.5 px-8 rounded-full transition-all duration-200 hover:scale-105 shadow-lg"
+              className="gap-2"
             >
               Contact Us
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </Link>
+            </ButtonLink>
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );

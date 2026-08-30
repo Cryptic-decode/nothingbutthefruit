@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import ButtonLink from './ui/ButtonLink';
+import Container from './ui/Container';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -25,7 +27,8 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 w-full bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100 z-50">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+      <Container className="flex items-center justify-between py-6">
+      <nav className="contents" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Nothing But The Fruit</span>
@@ -43,6 +46,8 @@ export default function Header() {
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 hover:bg-gray-100/50 transition-colors duration-200"
             onClick={() => setMobileMenuOpen(true)}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -56,6 +61,7 @@ export default function Header() {
             <Link
               key={item.name}
               href={item.href}
+              aria-current={isActive ? 'page' : undefined}
                 className={`transition-all duration-300 ${
                   isActive 
                     ? 'text-purple-700 text-base font-extrabold' 
@@ -69,11 +75,12 @@ export default function Header() {
         </div>
         
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link
+          <ButtonLink
             href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-brand-gold hover:bg-amber-500 text-brand-black font-semibold py-2 px-6 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-xl"
+            size="sm"
+            className="group font-semibold"
           >
             <span className="flex items-center">
             Subscribe
@@ -81,9 +88,10 @@ export default function Header() {
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
             </span>
-          </Link>
+          </ButtonLink>
         </div>
       </nav>
+      </Container>
       
       {/* Mobile menu */}
       {mobileMenuOpen && (
@@ -92,7 +100,7 @@ export default function Header() {
           <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm animate-fade-in h-screen w-screen" onClick={() => setMobileMenuOpen(false)}></div>
           
           {/* Mobile menu panel */}
-          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white/[0.97] backdrop-blur-2xl shadow-2xl animate-slide-in-right border-l border-white/20 h-screen">
+          <div id="mobile-navigation" className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white/[0.97] backdrop-blur-2xl shadow-2xl animate-slide-in-right border-l border-white/20 h-screen">
             <div className="flex flex-col h-full bg-gradient-to-b from-white/50 to-white/30">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200/30 bg-white/50 backdrop-blur-xl">
@@ -124,6 +132,7 @@ export default function Header() {
                     <Link
                       key={item.name}
                       href={item.href}
+                      aria-current={isActive ? 'page' : undefined}
                         className={`block rounded-lg px-4 py-3 text-base font-semibold transition-all duration-200 ${
                           isActive 
                             ? 'bg-brand-gold text-brand-black shadow-sm' 
@@ -140,11 +149,11 @@ export default function Header() {
               
               {/* Subscribe Button */}
               <div className="p-6 border-t border-gray-200/30 bg-white/50 backdrop-blur-xl">
-                  <Link
+                  <ButtonLink
                     href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
                     target="_blank"
                     rel="noopener noreferrer"
-                  className="block w-full bg-brand-gold hover:bg-amber-500 text-brand-black font-semibold py-3 px-6 rounded-full text-center transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                    className="flex w-full font-semibold"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                   <span className="flex items-center justify-center">
@@ -153,7 +162,7 @@ export default function Header() {
                       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                     </svg>
                   </span>
-                  </Link>
+                  </ButtonLink>
               </div>
             </div>
           </div>
@@ -161,4 +170,4 @@ export default function Header() {
       )}
     </header>
   );
-} 
+}

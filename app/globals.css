@@ -17,6 +17,18 @@
   /* Accent Colors */
   --warm-white: #FAFAF9;
   --rich-black: #1C1917;
+
+  /* Shared UI foundations */
+  --surface: #ffffff;
+  --surface-subtle: #fafafa;
+  --border-subtle: #e5e7eb;
+  --text-muted: #6b7280;
+  --focus-ring: #7e22ce;
+  --content-max: 80rem;
+  --content-reading: 48rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.06);
   
   /* Legacy Support (for gradual migration) */
   --brand-yellow: var(--brand-gold);
@@ -56,19 +68,13 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Hide scrollbar while keeping scroll functionality */
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* For Firefox */
 html {
-  scrollbar-width: none;
+  scroll-behavior: smooth;
 }
 
-/* For IE and Edge */
-body {
-  -ms-overflow-style: none;
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 /* Custom animations - Now using Framer Motion for scroll animations */
@@ -132,6 +138,34 @@ body {
   -moz-animation: fadeIn 0.3s ease-out;
   -ms-animation: fadeIn 0.3s ease-out;
   animation: fadeIn 0.3s ease-out;
+}
+
+/* Progressive scroll reveals for legacy page sections. Content stays visible
+   before hydration and when JavaScript or IntersectionObserver is unavailable. */
+.motion-ready .animate-on-scroll {
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.motion-ready .animate-on-scroll.animate-slideInUp {
+  transform: translate3d(0, 20px, 0);
+}
+
+.motion-ready .animate-on-scroll.animate-slideInLeft {
+  transform: translate3d(-20px, 0, 0);
+}
+
+.motion-ready .animate-on-scroll.animate-slideInRight {
+  transform: translate3d(20px, 0, 0);
+}
+
+.motion-ready .animate-on-scroll.animate-scaleIn {
+  transform: scale(0.96);
+}
+
+.motion-ready .animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* Browser compatibility enhancements */
@@ -211,5 +245,9 @@ body {
     -moz-transform: none;
     -ms-transform: none;
     transform: none;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }

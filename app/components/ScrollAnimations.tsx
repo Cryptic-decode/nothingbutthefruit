@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 // Mature, subtle animation variants
 export const fadeInUp: Variants = {
@@ -111,8 +112,52 @@ export function AnimatedSection({
   );
 }
 
-// This component is no longer needed as we use Framer Motion directly
-// Keeping it for backward compatibility
 export default function ScrollAnimations() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>('.animate-on-scroll')
+    );
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      elements.forEach((element) => element.classList.add('is-visible'));
+      return;
+    }
+
+    document.documentElement.classList.add('motion-ready');
+
+    elements.forEach((element) => {
+      if (element.style.animationDelay) {
+        element.style.transitionDelay = element.style.animationDelay;
+      }
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.1,
+      }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => {
+      observer.disconnect();
+      document.documentElement.classList.remove('motion-ready');
+    };
+  }, [pathname]);
+
   return null;
 }
