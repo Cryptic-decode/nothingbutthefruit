@@ -1,4 +1,5 @@
 export type BookDisplayVariant = 'rendered' | 'constructed' | 'landscape';
+export type BookSeries = 'wyfl' | 'orchard' | 'marriage';
 
 export interface Book {
   slug: string;
@@ -11,7 +12,7 @@ export interface Book {
   coverImage: string;
   mockupImage?: string;
   coverAspect: 'portrait' | 'landscape';
-  series: 'wyfl' | 'orchard' | 'marriage';
+  series: BookSeries;
   relatedSlugs: string[];
   isBundle: boolean;
   bundleIncludes?: string[];
@@ -25,6 +26,16 @@ export function getBookDisplayVariant(book: Book): BookDisplayVariant {
   if (book.mockupImage) return 'rendered';
   if (book.coverAspect === 'landscape') return 'landscape';
   return 'constructed';
+}
+
+const seriesLabels: Record<BookSeries, string> = {
+  wyfl: "What's Your Fruit Language?",
+  marriage: 'Married Couples Edition',
+  orchard: 'Through the Orchard',
+};
+
+export function getBookSeriesLabel(series: BookSeries): string {
+  return seriesLabels[series];
 }
 
 const books: Book[] = [
@@ -181,7 +192,7 @@ export function getBookBySlug(slug: string): Book | undefined {
   return books.find((b) => b.slug === slug);
 }
 
-export function getBooksBySeries(series: 'wyfl' | 'orchard' | 'marriage'): Book[] {
+export function getBooksBySeries(series: BookSeries): Book[] {
   return books.filter((b) => b.series === series);
 }
 

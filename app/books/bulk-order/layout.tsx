@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Bulk Book Order | Nothing But The Fruit Books',
+  title: 'Bulk Book Order',
   description:
-    'Order multiple books at once for your church, small group, or ministry. Pastor Demetria Bass handles all orders personally.',
+    'Request multiple Nothing But The Fruit books for your church, small group, or ministry.',
   openGraph: {
     title: 'Bulk Book Order | Nothing But The Fruit Books',
     description:
-      'Order multiple books at once for your church, small group, or ministry.',
+      'Request multiple Nothing But The Fruit books for your church, small group, or ministry.',
     url: 'https://nothingbutthefruit.com/books/bulk-order',
   },
   alternates: {
@@ -15,10 +16,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BulkOrderLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function BulkOrderLayout({ children }: { children: ReactNode }) {
   return children;
 }

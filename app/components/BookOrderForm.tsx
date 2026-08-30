@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import Toast from './Toast';
 
@@ -9,14 +10,20 @@ interface BookOrderFormProps {
   bookPrice: number;
 }
 
-export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOrderFormProps) {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    quantity: 1,
-  });
+const initialFormData = {
+  fullName: '',
+  email: '',
+  phone: '',
+  quantity: 1,
+  website: '',
+};
 
+const inputClasses =
+  'w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm text-gray-950 transition-colors placeholder:text-gray-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-700/20';
+
+export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOrderFormProps) {
+  const [formData, setFormData] = useState(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
     type: 'success' | 'error';
@@ -27,15 +34,9 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
     isVisible: false,
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const submitButton = e.currentTarget.querySelector(
-      'button[type="submit"]'
-    ) as HTMLButtonElement;
-    const originalText = submitButton.textContent;
-    submitButton.textContent = 'Submitting...';
-    submitButton.disabled = true;
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsSubmitting(true);
 
     try {
       const response = await fetch('/api/book-order', {
@@ -46,7 +47,6 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
           bookSlug,
           bookTitle,
           bookPrice,
-          website: '',
         }),
       });
 
@@ -59,7 +59,7 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
           type: 'success',
           isVisible: true,
         });
-        setFormData({ fullName: '', email: '', phone: '', quantity: 1 });
+        setFormData(initialFormData);
       } else {
         setToast({
           message: result.error || 'Something went wrong. Please try again.',
@@ -70,29 +70,23 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
     } catch (error) {
       console.error('Form submission error:', error);
       setToast({
-        message:
-          'Something went wrong. Please try again or contact us directly.',
+        message: 'Something went wrong. Please try again or contact us directly.',
         type: 'error',
         isVisible: true,
       });
     } finally {
-      submitButton.textContent = originalText;
-      submitButton.disabled = false;
+      setIsSubmitting(false);
     }
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const value =
-      e.target.name === 'quantity'
-        ? parseInt(e.target.value, 10)
-        : e.target.value;
-    setFormData((prev) => ({ ...prev, [e.target.name]: value }));
-  };
-
-  const closeToast = () => {
-    setToast((prev) => ({ ...prev, isVisible: false }));
+      event.target.name === 'quantity'
+        ? Number.parseInt(event.target.value, 10)
+        : event.target.value;
+    setFormData((current) => ({ ...current, [event.target.name]: value }));
   };
 
   const totalAmount = (formData.quantity * bookPrice).toFixed(2);
@@ -103,132 +97,114 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
         message={toast.message}
         type={toast.type}
         isVisible={toast.isVisible}
-        onClose={closeToast}
+        onClose={() => setToast((current) => ({ ...current, isVisible: false }))}
       />
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Honeypot */}
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         <input
           type="text"
           name="website"
           tabIndex={-1}
           autoComplete="off"
-          style={{
-            position: 'absolute',
-            left: '-9999px',
-            width: '1px',
-            height: '1px',
-            overflow: 'hidden',
-            opacity: 0,
-            pointerEvents: 'none',
-          }}
+          value={formData.website}
+          onChange={handleChange}
+          className="absolute -left-[9999px] h-px w-px overflow-hidden opacity-0"
           aria-hidden="true"
         />
 
         <div>
-          <label
-            htmlFor="fullName"
-            className="block text-sm font-semibold text-gray-900 mb-2"
-          >
-            Full Name *
+          <label htmlFor="fullName" className="mb-1.5 block text-sm font-bold text-gray-900">
+            Full name <span aria-hidden="true">*</span>
           </label>
           <input
             type="text"
             id="fullName"
             name="fullName"
             required
+            autoComplete="name"
             value={formData.fullName}
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-colors duration-200"
+            className={inputClasses}
             placeholder="Your full name"
           />
         </div>
 
         <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-semibold text-gray-900 mb-2"
-          >
-            Email Address *
+          <label htmlFor="email" className="mb-1.5 block text-sm font-bold text-gray-900">
+            Email address <span aria-hidden="true">*</span>
           </label>
           <input
             type="email"
             id="email"
             name="email"
             required
+            autoComplete="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-colors duration-200"
+            className={inputClasses}
             placeholder="your@email.com"
           />
         </div>
 
         <div>
-          <label
-            htmlFor="phone"
-            className="block text-sm font-semibold text-gray-900 mb-2"
-          >
-            Phone Number *
+          <label htmlFor="phone" className="mb-1.5 block text-sm font-bold text-gray-900">
+            Phone number <span aria-hidden="true">*</span>
           </label>
           <input
             type="tel"
             id="phone"
             name="phone"
             required
+            autoComplete="tel"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-colors duration-200"
+            className={inputClasses}
             placeholder="(555) 123-4567"
           />
         </div>
 
         <div>
-          <label
-            htmlFor="quantity"
-            className="block text-sm font-semibold text-gray-900 mb-2"
-          >
-            Quantity *
+          <label htmlFor="quantity" className="mb-1.5 block text-sm font-bold text-gray-900">
+            Quantity <span aria-hidden="true">*</span>
           </label>
           <select
             id="quantity"
             name="quantity"
             required
+            aria-describedby="quantity-help"
             value={formData.quantity}
             onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-colors duration-200"
+            className={inputClasses}
           >
-            {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-              <option key={num} value={num}>
-                {num} {num === 1 ? 'copy' : 'copies'}
+            {Array.from({ length: 20 }, (_, index) => index + 1).map((number) => (
+              <option key={number} value={number}>
+                {number} {number === 1 ? 'copy' : 'copies'}
               </option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">
+          <p id="quantity-help" className="mt-2 text-xs leading-5 text-gray-500">
             Need more than 20 copies?{' '}
-            <a href="/contact" className="text-brand-gold hover:underline">
-              Contact us
-            </a>
+            <Link href="/books/bulk-order" className="font-bold text-purple-700 hover:text-purple-900">
+              Start a bulk order
+            </Link>
           </p>
         </div>
 
-        <div className="p-4 rounded-lg border-2 border-gray-200 bg-gray-50">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-700 font-semibold">Total Amount:</span>
-            <span className="text-2xl font-bold text-brand-gold">
-              ${totalAmount}
-            </span>
-          </div>
+        <div className="flex items-center justify-between rounded-xl bg-[#faf7f2] px-4 py-3">
+          <span className="text-sm font-bold text-gray-700">Estimated total</span>
+          <span className="text-xl font-bold text-gray-950">${totalAmount}</span>
         </div>
 
         <button
           type="submit"
-          className="w-full font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg bg-brand-gold hover:bg-amber-500 text-brand-black"
+          disabled={isSubmitting}
+          className="min-h-12 w-full rounded-full bg-brand-gold px-6 py-3 font-bold text-brand-black shadow-md transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-amber-500 hover:shadow-lg disabled:cursor-wait disabled:opacity-65 disabled:hover:translate-y-0"
         >
-          Submit Order
+          {isSubmitting ? 'Submitting order…' : 'Submit order request'}
         </button>
 
-        <p className="text-xs text-gray-500 text-center">
-          By submitting, you agree that Pastor Dee will contact you with payment
-          and delivery details.
+        <p className="text-center text-xs leading-5 text-gray-500">
+          By submitting, you agree that Pastor Dee may contact you about payment and delivery.
         </p>
       </form>
     </>

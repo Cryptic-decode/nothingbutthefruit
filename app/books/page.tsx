@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
-import BookCard from '../components/BookCard';
+import BookstoreHero from '../components/BookstoreHero';
+import BookStorefront from '../components/BookStorefront';
 import BundleBanner from '../components/BundleBanner';
 import ButtonLink from '../components/ui/ButtonLink';
 import Container from '../components/ui/Container';
-import SectionHeading from '../components/ui/SectionHeading';
-import { getBooksBySeries, getBookBySlug } from '../lib/books';
+import {
+  getAllBooks,
+  getBookBySlug,
+} from '../lib/books';
+import type { Book } from '../lib/books';
 
 export const metadata: Metadata = {
   title: 'Books | Nothing But The Fruit Podcast',
@@ -41,191 +45,85 @@ export const metadata: Metadata = {
   },
 };
 
+function getBooksBySlug(slugs: string[]): Book[] {
+  return slugs
+    .map((slug) => getBookBySlug(slug))
+    .filter((book): book is Book => book !== undefined);
+}
+
 export default function BooksPage() {
-  const wyflBooks = getBooksBySeries('wyfl');
-  const marriageBooks = getBooksBySeries('marriage');
-  const orchardBooks = getBooksBySeries('orchard');
-  const bundle = wyflBooks.find((b) => b.slug === 'fruit-growth-bundle');
-  const individualWyfl = wyflBooks.filter((b) => !b.isBundle);
+  const books = getAllBooks();
+  const individualBooks = books.filter((book) => !book.isBundle);
+  const bundle = books.find((book) => book.isBundle);
   const bundleBooks = bundle?.bundleIncludes
-    ? bundle.bundleIncludes
-        .map((s) => getBookBySlug(s))
-        .filter((b): b is NonNullable<typeof b> => b !== undefined)
+    ? getBooksBySlug(bundle.bundleIncludes)
     : [];
+  const heroBooks = getBooksBySlug([
+    'whats-your-fruit-language',
+    'whats-your-fruit-language-married-couples',
+    'through-the-orchard-soil-to-harvest',
+  ]);
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section
-        className="relative overflow-hidden py-20 lg:py-32"
-        style={{
-          background: 'linear-gradient(135deg, #581c87 0%, #312e81 50%, #111827 100%)',
-          backgroundImage: 'linear-gradient(135deg, #581c87 0%, #312e81 50%, #111827 100%)',
-          WebkitBackgroundClip: 'padding-box',
-          backgroundClip: 'padding-box',
-        }}
-      >
-        <div className="absolute inset-0">
-          {/* Wave pattern */}
-          <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <pattern id="waves-books" x="0" y="0" width="200" height="100" patternUnits="userSpaceOnUse">
-                <path d="M0,50 Q50,0 100,50 T200,50" stroke="#F59E0B" strokeWidth="2" fill="none" />
-                <path d="M0,70 Q50,20 100,70 T200,70" stroke="#A855F7" strokeWidth="1.5" fill="none" />
-                <path d="M0,30 Q50,-20 100,30 T200,30" stroke="#EC4899" strokeWidth="1" fill="none" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#waves-books)" />
-          </svg>
+      <BookstoreHero books={heroBooks} />
 
-          {/* Floating shapes */}
-          <div className="absolute top-20 left-10 w-32 h-32 bg-brand-gold opacity-10 rounded-lg blur-xl animate-float" />
-          <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-400 opacity-5 rounded-full blur-2xl animate-float" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-purple-400 opacity-10 rounded-xl rotate-45 blur-lg animate-float" style={{ animationDelay: '4s' }} />
-          <div className="absolute top-1/3 right-1/3 w-16 h-16 bg-brand-gold opacity-15 rounded-full blur-md animate-float" style={{ animationDelay: '1.5s' }} />
-
-          {/* Floating book icons */}
-          <div className="absolute top-32 right-1/4 opacity-20 animate-float">
-            <svg className="w-16 h-16 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-            </svg>
-          </div>
-          <div className="absolute bottom-40 left-1/3 opacity-15 animate-float" style={{ animationDelay: '1.5s' }}>
-            <svg className="w-12 h-12 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-            </svg>
-          </div>
-          <div className="absolute top-1/2 right-1/5 opacity-10 animate-float" style={{ animationDelay: '3s' }}>
-            <svg className="w-8 h-8 text-purple-300" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-            </svg>
-          </div>
-
-          {/* Depth overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-purple-900/10 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent" />
-        </div>
-
-        <Container className="relative">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl animate-fade-in">
-              Our{' '}
-              <span className="text-brand-black bg-brand-gold px-3 py-1 rounded-lg inline-block transform -rotate-1 shadow-2xl hover:scale-110 transition-all duration-300 cursor-default">
-                Books
-              </span>
-            </h1>
-            <p
-              className="mt-8 text-xl leading-8 text-gray-200 max-w-3xl mx-auto sm:text-2xl sm:leading-9 animate-fade-in"
-              style={{ animationDelay: '0.3s' }}
-            >
-              Resources to help you grow deeper in your walk with God
+      <section id="book-collections" className="scroll-mt-28 py-20 lg:py-24">
+        <Container>
+          <div className="mb-10 max-w-3xl">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-700">
+              Shop the collection
+            </p>
+            <h2 className="mt-3 font-playfair text-4xl font-semibold tracking-tight text-gray-950 sm:text-5xl">
+              Find the right book for your season
+            </h2>
+            <p className="mt-4 max-w-2xl leading-7 text-gray-600">
+              Explore personal growth, devotional, marriage, and discipleship resources by Pastor Demetria Bass.
             </p>
           </div>
+
+          <BookStorefront books={individualBooks} />
         </Container>
       </section>
 
-      {/* What's Your Fruit Language? Series */}
-      <section className="py-24 lg:py-32">
-        <Container>
-          {/* Series header */}
-          <SectionHeading
-            className="mb-16"
-            eyebrow="Series"
-            title="What's Your Fruit Language?"
-            description="Discover how God speaks through the fruit of the Spirit"
-          />
+      {bundle && bundleBooks.length > 0 && (
+        <section className="pb-20 lg:pb-24">
+          <Container>
+            <BundleBanner bundle={bundle} includedBooks={bundleBooks} />
+          </Container>
+        </section>
+      )}
 
-          {/* Bundle Banner */}
-          {bundle && bundleBooks.length > 0 && (
-            <div className="mb-20">
-              <BundleBanner bundle={bundle} includedBooks={bundleBooks} />
-            </div>
-          )}
-
-          {/* Individual Books */}
-          {individualWyfl.length > 0 && (
-            <div>
-              <div className="flex items-center gap-4 mb-12">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-                <span className="text-xs font-semibold text-gray-400 uppercase tracking-[0.15em] whitespace-nowrap">
-                  Also Available Individually
-                </span>
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-3xl mx-auto">
-                {individualWyfl.map((book) => (
-                  <BookCard key={book.slug} book={book} />
-                ))}
-              </div>
-            </div>
-          )}
-        </Container>
-      </section>
-
-      {/* Section divider */}
-      <Container>
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-      </Container>
-
-      {/* Married Couples Edition Series */}
-      <section className="py-24 lg:py-32 bg-gray-50/50">
-        <Container>
-          <SectionHeading
-            className="mb-16"
-            eyebrow="Series"
-            title="What's Your Fruit Language? Married Couples Edition"
-            description="Discover, understand, and speak each other's fruit language"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {marriageBooks.map((book) => (
-              <BookCard key={book.slug} book={book} />
-            ))}
+      <section className="border-y border-stone-200 bg-[#faf7f2] py-16 lg:py-20">
+        <Container className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
+          <div className="max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-700">
+              Ordering for a group?
+            </p>
+            <h2 className="mt-3 font-playfair text-3xl font-semibold text-gray-950 sm:text-4xl">
+              Build one order for your church, small group, or ministry.
+            </h2>
+            <p className="mt-3 leading-7 text-gray-600">
+              Choose titles and quantities together, then Pastor Dee will follow up with payment and delivery details.
+            </p>
           </div>
+          <ButtonLink href="/books/bulk-order" variant="dark" size="lg" className="shrink-0">
+            Start a bulk order
+          </ButtonLink>
         </Container>
       </section>
 
-      {/* Section divider */}
-      <Container>
-        <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-      </Container>
-
-      {/* Through the Orchard Series */}
-      <section className="py-24 lg:py-32">
-        <Container>
-          <SectionHeading
-            className="mb-16"
-            eyebrow="Series"
-            title="Through the Orchard"
-            description="Cultivating the fruit of the Spirit in everyday life"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-3xl mx-auto">
-            {orchardBooks.map((book) => (
-              <BookCard key={book.slug} book={book} />
-            ))}
+      <section className="bg-purple-950 py-16 text-white">
+        <Container className="flex flex-col items-start justify-between gap-7 sm:flex-row sm:items-center">
+          <div>
+            <h2 className="font-playfair text-3xl font-semibold">Have a question about an order?</h2>
+            <p className="mt-2 text-purple-100/75">
+              Reach out and we&apos;ll get back to you soon.
+            </p>
           </div>
-        </Container>
-      </section>
-
-      {/* CTA */}
-      <section className="py-24 lg:py-32 bg-gray-900">
-        <Container className="text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-            Questions About Your Order?
-          </h2>
-          <p className="mt-4 text-lg text-gray-400 max-w-md mx-auto leading-relaxed">
-            Pastor Dee handles all orders personally. Reach out and we&apos;ll get back to you soon.
-          </p>
-          <div className="mt-8">
-            <ButtonLink
-              href="/contact"
-              className="gap-2"
-            >
-              Contact Us
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </ButtonLink>
-          </div>
+          <ButtonLink href="/contact" className="shrink-0">
+            Contact us
+          </ButtonLink>
         </Container>
       </section>
     </div>

@@ -23,8 +23,12 @@ const Toast: React.FC<ToastProps> = ({ message, type, isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-20 right-4 z-50 animate-slide-in-right">
-      <div className={`w-96 shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden ${
+    <div
+      className="fixed left-4 right-4 top-24 z-50 animate-slide-in-right sm:left-auto"
+      role={type === 'error' ? 'alert' : 'status'}
+      aria-live={type === 'error' ? 'assertive' : 'polite'}
+    >
+      <div className={`w-full max-w-96 shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden ${
         type === 'success' 
           ? 'bg-green-50 border border-green-200' 
           : 'bg-red-50 border border-red-200'
@@ -51,7 +55,8 @@ const Toast: React.FC<ToastProps> = ({ message, type, isVisible, onClose }) => {
             </div>
             <div className="ml-4 flex-shrink-0 flex">
               <button
-                className={`inline-flex rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                type="button"
+                className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                   type === 'success' 
                     ? 'text-green-400 hover:text-green-500 focus:ring-green-500' 
                     : 'text-red-400 hover:text-red-500 focus:ring-red-500'

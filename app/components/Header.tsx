@@ -35,7 +35,7 @@ export default function Header() {
               <div className="flex items-center">
                 {/* Brand Logo */}
                 <div className="h-12 flex items-center justify-center relative">
-                  <Image src="/NBTF44.png" alt="Nothing But The Fruit" width={90} height={28} className="object-contain" priority />
+                  <Image src="/NBTF44.png" alt="Nothing But The Fruit" width={90} height={88} className="object-contain" priority />
               </div>
             </div>
           </Link>
