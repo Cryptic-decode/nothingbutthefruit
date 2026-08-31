@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendContactEmail, ContactFormData } from '../../lib/emailService';
+import { getClientIp, isRateLimited } from '../../lib/rateLimit';
 
 export const runtime = 'nodejs';
+
+interface ContactRequestBody extends ContactFormData {
+  website?: string;
+}
 
 export async function POST(request: NextRequest) {
   const requestId =
@@ -9,13 +14,24 @@ export async function POST(request: NextRequest) {
     (globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : `${Date.now()}`);
 
   try {
-    console.log(`[contact:${requestId}] API called`);
-    console.log(`[contact:${requestId}] RESEND_API_KEY exists:`, !!process.env.RESEND_API_KEY);
-    console.log(`[contact:${requestId}] CONTACT_EMAIL:`, process.env.CONTACT_EMAIL);
-    console.log(`[contact:${requestId}] RESEND_FROM_EMAIL:`, process.env.RESEND_FROM_EMAIL);
-    
-    const body: ContactFormData = await request.json();
-    console.log(`[contact:${requestId}] Form data received:`, { ...body, message: body.message.substring(0, 50) + '...' });
+    const clientIp = getClientIp(request);
+    if (isRateLimited({ key: clientIp, scope: 'contact' })) {
+      console.warn(`[contact:${requestId}] Rate limit exceeded`);
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429, headers: { 'x-request-id': requestId } }
+      );
+    }
+
+    const body: ContactRequestBody = await request.json();
+
+    if (body.website && body.website.trim() !== '') {
+      console.warn(`[contact:${requestId}] Honeypot triggered`);
+      return NextResponse.json(
+        { success: true, message: 'Thank you for your message!' },
+        { status: 200, headers: { 'x-request-id': requestId } }
+      );
+    }
     
     // Basic validation
     if (!body.fullName || !body.email || !body.messageType || !body.message) {
@@ -59,7 +75,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     const details =
       error instanceof Error
-        ? { name: error.name, message: error.message, stack: error.stack }
+        ? { name: error.name, message: error.message }
         : { message: String(error) };
     console.error(`[contact:${requestId}] API error:`, details);
     return NextResponse.json(

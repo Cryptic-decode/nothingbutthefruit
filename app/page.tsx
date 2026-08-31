@@ -22,7 +22,7 @@ export default async function Home() {
         {/* Background Elements */}
         <div className="absolute inset-0">
           {/* Dynamic wave pattern - Safari compatible */}
-          <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+          <svg aria-hidden="true" className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
             <defs>
               <pattern id="waves-home" x="0" y="0" width="200" height="100" patternUnits="userSpaceOnUse">
                 <path d="M0,50 Q50,0 100,50 T200,50" stroke="#F59E0B" strokeWidth="2" fill="none"/>
@@ -35,12 +35,12 @@ export default async function Home() {
 
           {/* Open Book icons with gentle float */}
           <div className="absolute top-24 right-1/3 opacity-20 animate-float">
-            <svg className="w-20 h-20 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
+            <svg aria-hidden="true" className="w-20 h-20 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
             </svg>
           </div>
           <div className="absolute bottom-32 left-1/4 opacity-15 animate-float" style={{animationDelay: '2s'}}>
-            <svg className="w-16 h-16 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
+            <svg aria-hidden="true" className="w-16 h-16 text-pink-300" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
             </svg>
           </div>
@@ -101,7 +101,7 @@ export default async function Home() {
             <div className="mt-16 flex justify-center items-center space-x-8 flex-wrap gap-4 animate-fade-in" style={{animationDelay: '1.2s'}}>
               <div className="flex items-center space-x-2 group">
                 <div className="w-8 h-8 bg-brand-gold rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                  <svg className="w-5 h-5 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                  <svg aria-hidden="true" className="w-5 h-5 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
                   </svg>
                 </div>
@@ -110,7 +110,7 @@ export default async function Home() {
               
               <div className="flex items-center space-x-2 group">
                 <div className="w-8 h-8 bg-brand-gold rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                  <svg className="w-5 h-5 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                  <svg aria-hidden="true" className="w-5 h-5 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -119,7 +119,7 @@ export default async function Home() {
               
               <div className="flex items-center space-x-2 group">
                 <div className="w-8 h-8 bg-brand-gold rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                  <svg className="w-5 h-5 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                  <svg aria-hidden="true" className="w-5 h-5 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -233,7 +233,7 @@ export default async function Home() {
             <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 animate-on-scroll animate-slideInUp">
               <div className="group text-center p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                 <div className="mx-auto w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                  <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -243,7 +243,7 @@ export default async function Home() {
 
               <div className="group text-center p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                 <div className="mx-auto w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                  <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -253,7 +253,7 @@ export default async function Home() {
 
               <div className="group text-center p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                 <div className="mx-auto w-16 h-16 bg-brand-gold rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                  <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -288,7 +288,7 @@ export default async function Home() {
             {/* Biblical Teaching */}
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8 animate-on-scroll animate-slideInLeft">
               <div className="flex items-center justify-center w-16 h-16 bg-brand-gold rounded-full mb-6">
-                <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -304,7 +304,7 @@ export default async function Home() {
             {/* Faith & Resilience */}
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8 animate-on-scroll animate-slideInUp" style={{animationDelay: '0.1s'}}>
               <div className="flex items-center justify-center w-16 h-16 bg-brand-gold rounded-full mb-6">
-                <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -320,7 +320,7 @@ export default async function Home() {
             {/* Spiritual Growth */}
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8 animate-on-scroll animate-slideInRight" style={{animationDelay: '0.2s'}}>
               <div className="flex items-center justify-center w-16 h-16 bg-brand-gold rounded-full mb-6">
-                <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                 </svg>
               </div>

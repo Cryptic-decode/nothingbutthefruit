@@ -233,21 +233,41 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
   .animate-slide-in-right,
-  .animate-fade-in {
-    -webkit-animation: none;
-    -moz-animation: none;
-    -ms-animation: none;
-    animation: none;
+  .animate-fade-in,
+  .animate-bounce,
+  .animate-pulse,
+  .animate-spin {
+    -webkit-animation-duration: 0.01ms !important;
+    -moz-animation-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+    -moz-animation-iteration-count: 1 !important;
+    animation-iteration-count: 1 !important;
   }
-  
-  .transform {
-    -webkit-transform: none;
-    -moz-transform: none;
-    -ms-transform: none;
-    transform: none;
+
+  .motion-ready .animate-on-scroll,
+  .transition-all,
+  .transition-transform {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Consistent keyboard focus across light and dark surfaces. */
+:where(a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #7e22ce;
 }

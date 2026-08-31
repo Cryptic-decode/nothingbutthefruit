@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Toast from './Toast';
+import { getFormSubmissionError } from '../lib/formErrors';
 
 interface BookOrderFormProps {
   bookSlug: string;
@@ -70,7 +71,9 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
     } catch (error) {
       console.error('Form submission error:', error);
       setToast({
-        message: 'Something went wrong. Please try again or contact us directly.',
+        message: getFormSubmissionError(
+          'Something went wrong. Please try again or contact us directly.'
+        ),
         type: 'error',
         isVisible: true,
       });
@@ -100,7 +103,7 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
         onClose={() => setToast((current) => ({ ...current, isVisible: false }))}
       />
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
         <input
           type="text"
           name="website"
@@ -112,6 +115,7 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
           aria-hidden="true"
         />
 
+        <fieldset disabled={isSubmitting} className="min-w-0 space-y-5 disabled:opacity-75">
         <div>
           <label htmlFor="fullName" className="mb-1.5 block text-sm font-bold text-gray-900">
             Full name <span aria-hidden="true">*</span>
@@ -206,6 +210,7 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
         <p className="text-center text-xs leading-5 text-gray-500">
           By submitting, you agree that Pastor Dee may contact you about payment and delivery.
         </p>
+        </fieldset>
       </form>
     </>
   );

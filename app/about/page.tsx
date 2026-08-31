@@ -72,7 +72,7 @@ export default function About() {
           <div className="absolute bottom-20 left-1/4 w-24 h-24 bg-white opacity-5 rounded-full blur-lg"></div>
           
           {/* Topographical pattern */}
-          <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+          <svg aria-hidden="true" className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
             <defs>
               <pattern id="topographic-about" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
                 <path d="M0,50 Q25,25 50,50 T100,50" stroke="#FFE500" strokeWidth="1" fill="none"/>
@@ -85,12 +85,12 @@ export default function About() {
 
           {/* Floating open book icons */}
           <div className="absolute top-32 right-1/4 opacity-20">
-            <svg className="w-16 h-16 text-brand-gold animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+            <svg aria-hidden="true" className="w-16 h-16 text-brand-gold animate-pulse" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
             </svg>
           </div>
           <div className="absolute bottom-32 left-1/3 opacity-15">
-            <svg className="w-12 h-12 text-white animate-pulse" fill="currentColor" viewBox="0 0 20 20" style={{animationDelay: '1s'}}>
+            <svg aria-hidden="true" className="w-12 h-12 text-white animate-pulse" fill="currentColor" viewBox="0 0 20 20" style={{animationDelay: '1s'}}>
               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
             </svg>
           </div>
@@ -186,7 +186,7 @@ export default function About() {
             {/* New Believers */}
             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-4">
               <div className="w-16 h-16 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300">
-                <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
                 </svg>
               </div>
@@ -197,7 +197,7 @@ export default function About() {
             {/* Seasoned Saints */}
             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-4">
               <div className="w-16 h-16 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300">
-                <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
                 </svg>
               </div>
@@ -208,7 +208,7 @@ export default function About() {
             {/* Spiritual Seekers */}
             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-4">
               <div className="w-16 h-16 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300">
-                <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -219,7 +219,7 @@ export default function About() {
             {/* Ministry Leaders */}
             <div className="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 text-center hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-4">
               <div className="w-16 h-16 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300">
-                <svg className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-8 h-8 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                 </svg>
               </div>

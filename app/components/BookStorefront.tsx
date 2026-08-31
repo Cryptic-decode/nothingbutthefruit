@@ -31,6 +31,7 @@ export default function BookStorefront({ books }: BookStorefrontProps) {
   return (
     <div>
       <div
+        role="group"
         aria-label="Book collections"
         className="flex gap-2 overflow-x-auto border-b border-stone-200 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >

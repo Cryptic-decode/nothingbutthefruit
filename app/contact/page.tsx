@@ -3,14 +3,19 @@
 import { useState } from 'react';
 import Toast from '../components/Toast';
 import { contactFaqs } from '../lib/contact';
+import { getFormSubmissionError } from '../lib/formErrors';
+
+const initialFormData = {
+  fullName: '',
+  email: '',
+  messageType: '',
+  message: '',
+  website: '',
+};
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    messageType: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [toast, setToast] = useState<{
     message: string;
@@ -25,11 +30,7 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Show loading state
-    const submitButton = e.currentTarget.querySelector('button[type="submit"]') as HTMLButtonElement;
-    const originalText = submitButton.textContent;
-    submitButton.textContent = 'Sending...';
-    submitButton.disabled = true;
+    setIsSubmitting(true);
     
     try {
       const response = await fetch('/api/contact', {
@@ -48,13 +49,7 @@ export default function Contact() {
           type: 'success',
           isVisible: true
         });
-        // Reset form
-        setFormData({
-          fullName: '',
-          email: '',
-          messageType: '',
-          message: ''
-        });
+        setFormData(initialFormData);
       } else {
         setToast({
           message: result.error || 'Something went wrong. Please try again.',
@@ -65,14 +60,14 @@ export default function Contact() {
     } catch (error) {
       console.error('Form submission error:', error);
       setToast({
-        message: 'Something went wrong. Please try again or contact us directly.',
+        message: getFormSubmissionError(
+          'Something went wrong. Please try again or contact us directly.'
+        ),
         type: 'error',
         isVisible: true
       });
     } finally {
-      // Reset button state
-      submitButton.textContent = originalText;
-      submitButton.disabled = false;
+      setIsSubmitting(false);
     }
   };
 
@@ -106,7 +101,7 @@ export default function Contact() {
           <div className="absolute top-32 right-1/3 w-20 h-20 bg-purple-400 opacity-15 rounded-full blur-sm"></div>
           
           {/* Grid pattern */}
-          <svg className="absolute inset-0 w-full h-full opacity-5" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+          <svg aria-hidden="true" className="absolute inset-0 w-full h-full opacity-5" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
             <defs>
               <pattern id="grid-contact" width="10" height="10" patternUnits="userSpaceOnUse">
                 <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#FFE500" strokeWidth="0.5"/>
@@ -116,7 +111,7 @@ export default function Contact() {
           </svg>
 
           {/* Animated circuit-like lines */}
-          <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 800 600">
+          <svg aria-hidden="true" className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 800 600">
             <path 
               d="M100,100 Q200,50 300,100 T500,100 L600,200 Q650,250 600,300 T400,300 L200,400" 
               stroke="#FFE500" 
@@ -138,12 +133,12 @@ export default function Contact() {
 
           {/* Message/communication icons */}
           <div className="absolute top-40 left-1/4 opacity-20">
-            <svg className="w-14 h-14 text-brand-gold animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="w-14 h-14 text-brand-gold animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </div>
           <div className="absolute bottom-40 right-1/4 opacity-15">
-            <svg className="w-16 h-16 text-purple-300 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{animationDelay: '2s'}}>
+            <svg aria-hidden="true" className="w-16 h-16 text-purple-300 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{animationDelay: '2s'}}>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
@@ -179,17 +174,29 @@ export default function Contact() {
               <h2 className="text-3xl font-bold text-gray-900 mb-8">
                 Send us a message
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website}
+                  onChange={handleChange}
+                  className="absolute -left-[9999px] h-px w-px overflow-hidden opacity-0"
+                  aria-hidden="true"
+                />
+                <fieldset disabled={isSubmitting} className="space-y-6 disabled:opacity-75">
                 {/* Full Name */}
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Full Name *
+                    Full Name <span aria-hidden="true">*</span>
                   </label>
                   <input
                     type="text"
                     id="fullName"
                     name="fullName"
                     required
+                    autoComplete="name"
                     value={formData.fullName}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-colors duration-200"
@@ -200,13 +207,14 @@ export default function Contact() {
                 {/* Email */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Email Address *
+                    Email Address <span aria-hidden="true">*</span>
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
                     required
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-colors duration-200"
@@ -217,7 +225,7 @@ export default function Contact() {
                 {/* Message Type */}
                 <div>
                   <label htmlFor="messageType" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Message Type *
+                    Message Type <span aria-hidden="true">*</span>
                   </label>
                   <select
                     id="messageType"
@@ -239,7 +247,7 @@ export default function Contact() {
                 {/* Message */}
                 <div>
                   <label htmlFor="message" className="block text-sm font-semibold text-gray-900 mb-2">
-                    Message *
+                    Message <span aria-hidden="true">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -256,10 +264,11 @@ export default function Contact() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-brand-gold hover:bg-yellow-400 text-brand-black font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="w-full bg-brand-gold hover:bg-yellow-400 text-brand-black font-bold py-4 px-8 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:cursor-wait disabled:opacity-65 disabled:hover:scale-100"
                 >
-                  Send Message
+                  {isSubmitting ? 'Sending message…' : 'Send Message'}
                 </button>
+                </fieldset>
               </form>
             </div>
 
@@ -273,7 +282,7 @@ export default function Contact() {
                 {/* Email */}
                 <div className="flex items-start animate-on-scroll animate-slideInUp">
                   <div className="w-12 h-12 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mr-4 flex-shrink-0 animate-float">
-                    <svg className="w-6 h-6 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                    <svg aria-hidden="true" className="w-6 h-6 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                       <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                     </svg>
@@ -294,7 +303,7 @@ export default function Contact() {
                 {/* YouTube */}
                 <div className="flex items-start animate-on-scroll animate-slideInUp" style={{animationDelay: '0.2s'}}>
                   <div className="w-12 h-12 bg-gradient-to-br from-brand-gold to-yellow-300 rounded-full flex items-center justify-center mr-4 flex-shrink-0 animate-float" style={{animationDelay: '1s'}}>
-                    <svg className="w-6 h-6 text-brand-black" fill="currentColor" viewBox="0 0 24 24">
+                    <svg aria-hidden="true" className="w-6 h-6 text-brand-black" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                     </svg>
                   </div>
@@ -372,7 +381,7 @@ export default function Contact() {
             >
               <span className="flex items-center">
                 Subscribe on YouTube
-                <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
               </span>

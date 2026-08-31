@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, Variants } from 'framer-motion';
+import { motion, useReducedMotion, Variants } from 'framer-motion';
 import { ReactNode, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -91,6 +91,7 @@ export function AnimatedSection({
   variant = 'fadeInUp',
   delay = 0 
 }: AnimatedSectionProps) {
+  const reduceMotion = useReducedMotion();
   const variants = {
     fadeInUp,
     fadeInLeft,
@@ -100,8 +101,8 @@ export function AnimatedSection({
 
   return (
     <motion.div
-      initial="hidden"
-      whileInView="visible"
+      initial={reduceMotion ? false : 'hidden'}
+      whileInView={reduceMotion ? undefined : 'visible'}
       viewport={{ once: true, margin: '-100px' }}
       variants={variants[variant]}
       transition={{ delay }}
@@ -122,6 +123,8 @@ export default function ScrollAnimations() {
     const reduceMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches;
+
+    document.documentElement.classList.remove('motion-ready');
 
     if (reduceMotion || !('IntersectionObserver' in window)) {
       elements.forEach((element) => element.classList.add('is-visible'));

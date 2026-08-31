@@ -32,7 +32,7 @@ export default function BookCard({ book }: BookCardProps) {
         <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-[#f7f2e9] p-5 sm:p-7">
           <BookMockup
             src={getBookDisplayImage(book)}
-            alt={book.title}
+            alt=""
             variant={getBookDisplayVariant(book)}
             sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
             className="h-full w-full"

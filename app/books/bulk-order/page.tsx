@@ -11,6 +11,7 @@ import {
   getBookDisplayVariant,
 } from '../../lib/books';
 import type { BookDisplayVariant } from '../../lib/books';
+import { getFormSubmissionError } from '../../lib/formErrors';
 
 interface BookOrder {
   slug: string;
@@ -123,7 +124,9 @@ export default function BulkOrderPage() {
     } catch (error) {
       console.error('Bulk order submission error:', error);
       setToast({
-        message: 'Something went wrong. Please try again or contact us directly.',
+        message: getFormSubmissionError(
+          'Something went wrong. Please try again or contact us directly.'
+        ),
         type: 'error',
         isVisible: true,
       });
@@ -166,7 +169,7 @@ export default function BulkOrderPage() {
 
       <section className="py-16 lg:py-20">
         <Container>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
             <input
               type="text"
               name="website"
@@ -178,6 +181,7 @@ export default function BulkOrderPage() {
               aria-hidden="true"
             />
 
+            <fieldset disabled={isSubmitting} className="min-w-0 disabled:opacity-75">
             <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(20rem,0.65fr)] xl:gap-14">
               <div>
                 <div className="flex items-end justify-between gap-4">
@@ -370,6 +374,7 @@ export default function BulkOrderPage() {
                 </Link>
               </aside>
             </div>
+            </fieldset>
           </form>
         </Container>
       </section>

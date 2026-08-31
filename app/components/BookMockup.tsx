@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { BookDisplayVariant } from '../lib/books';
 
 interface BookMockupProps {
@@ -21,11 +21,13 @@ export default function BookMockup({
   sizes,
   className = '',
 }: BookMockupProps) {
+  const reduceMotion = useReducedMotion();
+
   if (variant === 'rendered' || variant === 'landscape') {
     return (
       <motion.div
         className={`relative w-full h-full ${className}`}
-        whileHover={{ scale: 1.02 }}
+        whileHover={reduceMotion ? undefined : { scale: 1.02 }}
         transition={{ type: 'spring', stiffness: 250, damping: 18 }}
       >
         <Image
@@ -53,7 +55,7 @@ export default function BookMockup({
     <motion.div
       className={`group relative ${className}`}
       style={{ perspective: '1200px' }}
-      whileHover={{ scale: 1.02 }}
+      whileHover={reduceMotion ? undefined : { scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 250, damping: 18 }}
     >
       <div

@@ -13,6 +13,8 @@ export default function YouTubeEmbed({ videoId, title = 'YouTube video player', 
         className="absolute inset-0 w-full h-full rounded-2xl shadow-2xl"
         src={`https://www.youtube.com/embed/${videoId}?rel=0`}
         title={title}
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
       />

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendBookOrderEmail } from '../../lib/emailService';
 import { getBookBySlug } from '../../lib/books';
+import { getClientIp, isRateLimited } from '../../lib/rateLimit';
 
 export const runtime = 'nodejs';
 
@@ -15,49 +16,6 @@ interface BookOrderRequestBody {
   website?: string;
 }
 
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
-}
-
-const rateLimitMap = new Map<string, RateLimitEntry>();
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 3;
-
-function getClientIP(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for');
-  const realIP = request.headers.get('x-real-ip');
-  return forwarded?.split(',')[0]?.trim() || realIP || 'unknown';
-}
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-    return true;
-  }
-
-  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return false;
-  }
-
-  entry.count++;
-  return true;
-}
-
-if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
-    const now = Date.now();
-    for (const [ip, entry] of rateLimitMap.entries()) {
-      if (now > entry.resetTime) {
-        rateLimitMap.delete(ip);
-      }
-    }
-  }, 5 * 60 * 1000);
-}
-
 export async function POST(request: NextRequest) {
   const requestId =
     request.headers.get('x-request-id') ||
@@ -66,18 +24,14 @@ export async function POST(request: NextRequest) {
       : `${Date.now()}`);
 
   try {
-    const clientIP = getClientIP(request);
-    if (!checkRateLimit(clientIP)) {
-      console.warn(`[book-order:${requestId}] Rate limit exceeded for IP: ${clientIP}`);
+    const clientIp = getClientIp(request);
+    if (isRateLimited({ key: clientIp, scope: 'book-order' })) {
+      console.warn(`[book-order:${requestId}] Rate limit exceeded`);
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         { status: 429 }
       );
     }
-
-    console.log(`[book-order:${requestId}] API called`);
-    console.log(`[book-order:${requestId}] RESEND_API_KEY exists:`, !!process.env.RESEND_API_KEY);
-    console.log(`[book-order:${requestId}] CONTACT_EMAIL:`, process.env.CONTACT_EMAIL);
 
     const body: BookOrderRequestBody = await request.json();
 

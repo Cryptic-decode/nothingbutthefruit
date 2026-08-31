@@ -143,7 +143,7 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
         {/* Background Elements */}
         <div className="absolute inset-0">
           {/* Dynamic wave pattern - Safari compatible */}
-          <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+          <svg aria-hidden="true" className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
             <defs>
               <pattern id="waves-episodes" x="0" y="0" width="200" height="100" patternUnits="userSpaceOnUse">
                 <path d="M0,50 Q50,0 100,50 T200,50" stroke="#F59E0B" strokeWidth="2" fill="none"/>
@@ -162,17 +162,17 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
           
           {/* Floating play icons with enhanced animations */}
           <div className="absolute top-32 right-1/4 opacity-20 animate-float">
-            <svg className="w-16 h-16 text-brand-gold" fill="currentColor" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="w-16 h-16 text-brand-gold" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z"/>
             </svg>
           </div>
           <div className="absolute bottom-40 left-1/3 opacity-15 animate-float" style={{animationDelay: '1.5s'}}>
-            <svg className="w-12 h-12 text-pink-300" fill="currentColor" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="w-12 h-12 text-pink-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z"/>
             </svg>
           </div>
           <div className="absolute top-1/2 right-1/5 opacity-10 animate-float" style={{animationDelay: '3s'}}>
-            <svg className="w-8 h-8 text-purple-300" fill="currentColor" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="w-8 h-8 text-purple-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z"/>
             </svg>
           </div>
@@ -206,7 +206,7 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
           {videos.length === 0 ? (
             <div className="text-center py-20">
               <div className="w-20 h-20 bg-brand-gold rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
+                <svg aria-hidden="true" className="w-10 h-10 text-brand-black" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
                 </svg>
               </div>
@@ -222,7 +222,7 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
               >
                 <span className="flex items-center">
                 Subscribe on YouTube
-                  <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <svg aria-hidden="true" className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                   </svg>
                 </span>
@@ -299,7 +299,7 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
             >
               <span className="flex items-center">
               Subscribe Now
-                <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
               </span>
