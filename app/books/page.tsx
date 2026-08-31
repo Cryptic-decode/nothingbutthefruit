@@ -15,7 +15,7 @@ import { entityIds, siteConfig } from '../lib/site';
 export const metadata: Metadata = {
   title: 'Books',
   description:
-    'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series, Married Couples Edition, and Through the Orchard series. Order your copies today.',
+    'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series, Singles Edition, Married Couples Edition, and Through the Orchard series. Order your copies today.',
   keywords: [
     "What's your fruit language book",
     'Pastor Demetria Bass books',
@@ -23,6 +23,8 @@ export const metadata: Metadata = {
     'christian books',
     'spiritual growth books',
     'devotional companion',
+    'Singles Edition',
+    'Christian singles devotional',
     'Through the Orchard book',
     'Married Couples Edition',
     'marriage fruit of the Spirit',
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Books | Nothing But The Fruit Podcast',
     description:
-      'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series, Married Couples Edition, and Through the Orchard series.',
+      'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series, Singles Edition, Married Couples Edition, and Through the Orchard series.',
     url: 'https://nothingbutthefruit.com/books',
     images: [
       {
@@ -56,10 +58,7 @@ function getBooksBySlug(slugs: string[]): Book[] {
 export default function BooksPage() {
   const books = getAllBooks();
   const individualBooks = books.filter((book) => !book.isBundle);
-  const bundle = books.find((book) => book.isBundle);
-  const bundleBooks = bundle?.bundleIncludes
-    ? getBooksBySlug(bundle.bundleIncludes)
-    : [];
+  const bundles = books.filter((book) => book.isBundle);
   const heroBooks = getBooksBySlug([
     'whats-your-fruit-language',
     'whats-your-fruit-language-married-couples',
@@ -114,10 +113,24 @@ export default function BooksPage() {
         </Container>
       </section>
 
-      {bundle && bundleBooks.length > 0 && (
+      {bundles.length > 0 && (
         <section className="pb-20 lg:pb-24">
-          <Container>
-            <BundleBanner bundle={bundle} includedBooks={bundleBooks} />
+          <Container className="space-y-8 lg:space-y-10">
+            {bundles.map((bundle) => {
+              const includedBooks = bundle.bundleIncludes
+                ? getBooksBySlug(bundle.bundleIncludes)
+                : [];
+
+              if (includedBooks.length === 0) return null;
+
+              return (
+                <BundleBanner
+                  key={bundle.slug}
+                  bundle={bundle}
+                  includedBooks={includedBooks}
+                />
+              );
+            })}
           </Container>
         </section>
       )}

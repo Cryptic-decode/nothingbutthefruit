@@ -1,5 +1,5 @@
 export type BookDisplayVariant = 'rendered' | 'constructed' | 'landscape';
-export type BookSeries = 'wyfl' | 'orchard' | 'marriage';
+export type BookSeries = 'wyfl' | 'singles' | 'orchard' | 'marriage';
 
 export interface Book {
   slug: string;
@@ -30,6 +30,7 @@ export function getBookDisplayVariant(book: Book): BookDisplayVariant {
 
 const seriesLabels: Record<BookSeries, string> = {
   wyfl: "What's Your Fruit Language?",
+  singles: 'Singles Edition',
   marriage: 'Married Couples Edition',
   orchard: 'Through the Orchard',
 };
@@ -100,6 +101,77 @@ const books: Book[] = [
     relatedSlugs: ['whats-your-fruit-language', 'whats-your-fruit-language-devotional'],
     isBundle: true,
     bundleIncludes: ['whats-your-fruit-language', 'whats-your-fruit-language-devotional'],
+  },
+  {
+    slug: 'whats-your-fruit-language-singles-edition',
+    title: "What's Your Fruit Language? Singles Edition",
+    price: 15.95,
+    description:
+      'Grow in the fruit of the Spirit through every season of singleness, whether you have never married, are single again, or are widowed.',
+    highlights: [
+      'Rooted in Christ',
+      'Grow through every season of singleness',
+      "Trust God's timing",
+      'Live fruitfully today',
+    ],
+    coverImage: '/book-covers/SinglesEdition_Mockup.png',
+    mockupImage: '/book-covers/SinglesEdition_Mockup.png',
+    coverAspect: 'portrait',
+    series: 'singles',
+    relatedSlugs: [
+      'whats-your-fruit-language-singles-edition-90-day-activity-devotional',
+      'whats-your-fruit-language-singles-edition-bundle',
+    ],
+    isBundle: false,
+  },
+  {
+    slug: 'whats-your-fruit-language-singles-edition-90-day-activity-devotional',
+    title: "What's Your Fruit Language? Singles Edition - 90-Day Activity Devotional",
+    price: 29.95,
+    description:
+      'A 90-day activity devotional with daily Scripture, reflection, response, application, and prayer to help you grow deeper and live fruitfully.',
+    highlights: [
+      '90 days of guided activity',
+      'Daily Scripture and reflection',
+      'Read, reflect, respond, apply, and pray',
+      'Grow deeper and live fruitfully',
+    ],
+    coverImage: '/book-covers/SinglesEdition_90DayActivityDevotional_Mockup.png',
+    mockupImage: '/book-covers/SinglesEdition_90DayActivityDevotional_Mockup.png',
+    coverAspect: 'portrait',
+    series: 'singles',
+    relatedSlugs: [
+      'whats-your-fruit-language-singles-edition',
+      'whats-your-fruit-language-singles-edition-bundle',
+    ],
+    isBundle: false,
+  },
+  {
+    slug: 'whats-your-fruit-language-singles-edition-bundle',
+    title: "What's Your Fruit Language? Singles Edition Bundle",
+    price: 40.00,
+    savings: 'Save $5.90',
+    regularValue: 45.90,
+    description:
+      'The Singles Edition and 90-day activity devotional together, with two complementary resources to help you grow deeper and live fruitfully.',
+    highlights: [
+      'Includes both Singles Edition resources',
+      'Save $5.90',
+      'Book and activity devotional together',
+    ],
+    coverImage: '/book-covers/SinglesEdition_Bundle.png',
+    mockupImage: '/book-covers/SinglesEdition_Bundle.png',
+    coverAspect: 'landscape',
+    series: 'singles',
+    relatedSlugs: [
+      'whats-your-fruit-language-singles-edition',
+      'whats-your-fruit-language-singles-edition-90-day-activity-devotional',
+    ],
+    isBundle: true,
+    bundleIncludes: [
+      'whats-your-fruit-language-singles-edition',
+      'whats-your-fruit-language-singles-edition-90-day-activity-devotional',
+    ],
   },
   {
     slug: 'whats-your-fruit-language-married-couples',

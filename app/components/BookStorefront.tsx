@@ -13,6 +13,7 @@ interface BookStorefrontProps {
 const collections: Array<{ id: Collection; label: string }> = [
   { id: 'all', label: 'All books' },
   { id: 'wyfl', label: 'Fruit Language' },
+  { id: 'singles', label: 'Singles' },
   { id: 'marriage', label: 'Marriage' },
   { id: 'orchard', label: 'Through the Orchard' },
 ];
