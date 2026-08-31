@@ -80,8 +80,8 @@ export default function Header() {
             <span className="sr-only">Nothing But The Fruit</span>
               <div className="flex items-center">
                 {/* Brand Logo */}
-                <div className="h-12 flex items-center justify-center relative">
-                  <Image src="/NBTF44.png" alt="" width={90} height={88} className="h-auto w-auto object-contain" priority />
+                <div className="relative flex h-16 items-center justify-center">
+                  <Image src="/NBTF44.png" alt="" width={90} height={88} className="h-16 w-auto object-contain" priority />
               </div>
             </div>
           </Link>
@@ -168,7 +168,7 @@ export default function Header() {
                   <div className="flex items-center">
                     {/* Brand Logo - Mobile */}
                     <div className="h-10 flex items-center justify-center relative">
-                      <Image src="/NothingButTheFruitUpgrade.png" alt="" width={160} height={40} className="h-auto w-auto object-contain" />
+                      <Image src="/NothingButTheFruitUpgrade.png" alt="" width={160} height={40} className="h-10 w-auto object-contain" />
                   </div>
                 </div>
               </Link>

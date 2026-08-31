@@ -14,6 +14,8 @@ import BookMockup from '../../components/BookMockup';
 import BookOrderForm from '../../components/BookOrderForm';
 import RelatedBooks from '../../components/RelatedBooks';
 import Container from '../../components/ui/Container';
+import JsonLd from '../../components/JsonLd';
+import { entityIds, siteConfig } from '../../lib/site';
 
 interface BookPageProps {
   params: Promise<{ slug: string }>;
@@ -29,7 +31,7 @@ export async function generateMetadata({ params }: BookPageProps): Promise<Metad
   if (!book) return {};
 
   return {
-    title: `${book.title} | Nothing But The Fruit Books`,
+    title: book.title,
     description: book.description,
     openGraph: {
       title: `${book.title} | Nothing But The Fruit Books`,
@@ -65,33 +67,25 @@ export default async function BookDetailPage({ params }: BookPageProps) {
         .filter((includedBook): includedBook is Book => includedBook !== undefined)
     : [];
 
-  const baseUrl = 'https://nothingbutthefruit.com';
-
   return (
     <div className="min-h-screen bg-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+      <JsonLd
+        data={{
             '@context': 'https://schema.org',
             '@type': 'Book',
+            '@id': `${siteConfig.url}/books/${book.slug}#book`,
             name: book.title,
             description: book.description,
-            author: {
-              '@type': 'Person',
-              name: 'Pastor Demetria Bass',
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: 'Bass Global Ministries',
-            },
-            image: `${baseUrl}${book.coverImage}`,
-            url: `${baseUrl}/books/${book.slug}`,
+            author: { '@id': entityIds.author },
+            publisher: { '@id': entityIds.organization },
+            image: `${siteConfig.url}${book.coverImage}`,
+            url: `${siteConfig.url}/books/${book.slug}`,
             offers: {
               '@type': 'Offer',
               price: book.price,
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
+              url: `${siteConfig.url}/books/${book.slug}#order-form`,
             },
             ...(book.isBundle
               ? {
@@ -101,13 +95,12 @@ export default async function BookDetailPage({ params }: BookPageProps) {
                       ? {
                           '@type': 'Book',
                           name: included.title,
-                          url: `${baseUrl}/books/${included.slug}`,
+                          url: `${siteConfig.url}/books/${included.slug}`,
                         }
                       : {};
                   }),
                 }
               : {}),
-          }),
         }}
       />
 

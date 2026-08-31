@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Toast from '../components/Toast';
+import { contactFaqs } from '../lib/contact';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -314,7 +315,7 @@ export default function Contact() {
 
               {/* Response Time */}
               <div className="mt-12 p-6 bg-gray-50 rounded-2xl animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">🙏 We're Here For You</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">We're Here For You</h3>
                 <p className="text-gray-600">
                   We read every message and prayer request. You're not alone in your faith journey — we're praying with you and for you.
                 </p>
@@ -337,33 +338,18 @@ export default function Contact() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll animate-slideInLeft">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Where can I watch episodes?</h3>
-              <p className="text-gray-600">
-                Full episodes are available on our YouTube channel @nothingbutthefruit. Subscribe to get notified when new episodes drop!
-              </p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll animate-slideInRight" style={{animationDelay: '0.1s'}}>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Will you share my prayer request?</h3>
-              <p className="text-gray-600">
-                All prayer requests are kept confidential. We only share testimonies with your explicit permission.
-              </p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll animate-slideInLeft" style={{animationDelay: '0.2s'}}>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Can I suggest a topic?</h3>
-              <p className="text-gray-600">
-                Absolutely! We love hearing from our listeners. Use the "Guest/Topic Suggestion" option in the contact form above.
-              </p>
-            </div>
-
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll animate-slideInRight" style={{animationDelay: '0.3s'}}>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">How often are new episodes released?</h3>
-              <p className="text-gray-600">
-                We release new episodes weekly. Follow us on social media for episode announcements and bonus content!
-              </p>
-            </div>
+            {contactFaqs.map((faq, index) => (
+              <div
+                key={faq.question}
+                className={`bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-2xl hover:bg-white transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll ${
+                  index % 2 === 0 ? 'animate-slideInLeft' : 'animate-slideInRight'
+                }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{faq.question}</h3>
+                <p className="text-gray-600">{faq.answer}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -396,4 +382,4 @@ export default function Contact() {
       </section>
     </div>
   );
-} 
+}

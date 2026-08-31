@@ -1,9 +1,11 @@
 import Image from 'next/image';
 import StayConnected from '../components/StayConnected';
 import type { Metadata } from 'next';
+import JsonLd from '../components/JsonLd';
+import { entityIds, siteConfig } from '../lib/site';
 
 export const metadata: Metadata = {
-  title: 'About Pastor Demetria Bass | Nothing But The Fruit Podcast',
+  title: 'About Pastor Demetria Bass',
   description: 'Meet Pastor Demetria Bass, military veteran turned powerful minister. Discover her journey from the battlefield to the pulpit, delivering transformative biblical teaching that changes lives.',
   keywords: [
     'Pastor Demetria Bass',
@@ -38,6 +40,23 @@ export const metadata: Metadata = {
 export default function About() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'ProfilePage',
+          '@id': `${siteConfig.url}/about#profile-page`,
+          url: `${siteConfig.url}/about`,
+          name: `About ${siteConfig.authorName}`,
+          description:
+            'Meet Pastor Demetria Bass, Executive Pastor at Bass Global Ministries, military veteran, and host of Nothing But The Fruit.',
+          mainEntity: {
+            '@id': entityIds.author,
+          },
+          isPartOf: {
+            '@id': entityIds.website,
+          },
+        }}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32" style={{
         background: 'linear-gradient(135deg, #111827 0%, #1f2937 50%, #000000 100%)',
@@ -289,4 +308,4 @@ export default function About() {
       <StayConnected />
     </div>
   );
-} 
+}

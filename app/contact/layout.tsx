@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
+import JsonLd from '../components/JsonLd';
+import { contactFaqs } from '../lib/contact';
+import { siteConfig } from '../lib/site';
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Nothing But The Fruit Podcast',
+  title: 'Contact Us',
   description: 'Get in touch with Pastor Demetria Bass and the Nothing But The Fruit team. Send prayer requests, questions, or connect with our ministry. We\'d love to hear from you.',
   keywords: [
     'contact Pastor Demetria Bass',
@@ -36,5 +39,25 @@ export default function ContactLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          '@id': `${siteConfig.url}/contact#faq`,
+          url: `${siteConfig.url}/contact`,
+          mainEntity: contactFaqs.map((faq) => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: faq.answer,
+            },
+          })),
+        }}
+      />
+      {children}
+    </>
+  );
 }

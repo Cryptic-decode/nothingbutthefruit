@@ -2,8 +2,14 @@
 import Link from 'next/link';
 import YouTubeEmbed from './components/YouTubeEmbed';
 import StayConnected from './components/StayConnected';
+import { fetchChannelEpisodes, formatVideoDate } from './lib/youtubeService';
 
-export default function Home() {
+export default async function Home() {
+  const [latestEpisode] = await fetchChannelEpisodes(undefined, 10);
+  const latestEpisodeUrl = latestEpisode
+    ? `https://youtube.com/watch?v=${latestEpisode.videoId}`
+    : 'https://youtube.com/@nothingbutthefruit';
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -64,7 +70,7 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{animationDelay: '0.9s'}}>
               <a 
-                href="https://youtube.com/@nothingbutthefruit"
+                href={latestEpisodeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-semibold rounded-full text-brand-black bg-brand-gold hover:bg-amber-500 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 shadow-2xl hover:shadow-3xl"
@@ -150,19 +156,43 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
-            <YouTubeEmbed 
-              videoId="your-latest-video-id"
-              title="Latest Episode - Nothing But The Fruit"
-            />
-          </div>
+          {latestEpisode ? (
+            <div className="max-w-4xl mx-auto animate-on-scroll animate-scaleIn" style={{animationDelay: '0.4s'}}>
+              <YouTubeEmbed
+                videoId={latestEpisode.videoId}
+                title={latestEpisode.title}
+              />
+              <div className="mt-6 text-left">
+                <p className="text-sm font-bold uppercase tracking-[0.16em] text-purple-700">
+                  {latestEpisode.episodeNumber && `Episode ${latestEpisode.episodeNumber} · `}
+                  {formatVideoDate(latestEpisode.publishedAt)}
+                </p>
+                <h3 className="mt-2 text-2xl font-bold text-gray-950 sm:text-3xl">
+                  {latestEpisode.title}
+                </h3>
+              </div>
+            </div>
+          ) : (
+            <div className="mx-auto max-w-3xl rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-950">The latest episode is temporarily unavailable</h3>
+              <p className="mt-3 text-gray-600">
+                Visit the YouTube channel to watch the newest teaching.
+              </p>
+            </div>
+          )}
 
-          <div className="text-center mt-12">
+          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              href="/episodes"
+              className="inline-flex items-center justify-center rounded-full border-2 border-gray-300 px-8 py-3 font-bold text-gray-700 transition-colors duration-200 hover:border-gray-500 hover:text-gray-950"
+            >
+              View all episodes
+            </Link>
             <Link
               href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-brand-gold hover:bg-amber-500 text-brand-black font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center rounded-full bg-brand-gold px-8 py-3 font-bold text-brand-black shadow-lg transition-[background-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-amber-500 hover:shadow-xl"
             >
               Subscribe for New Episodes
               <svg 
@@ -262,24 +292,12 @@ export default function Home() {
                   <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">📖 Biblical Teaching</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Deep verse-by-verse studies
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Practical application of Scripture
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Understanding biblical context
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Moving from milk to meat
-                </li>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Biblical Teaching</h3>
+              <ul className="list-disc space-y-3 pl-5 text-gray-600 marker:text-brand-gold">
+                <li>Deep verse-by-verse studies</li>
+                <li>Practical application of Scripture</li>
+                <li>Understanding biblical context</li>
+                <li>Moving from milk to meat</li>
               </ul>
             </div>
 
@@ -290,24 +308,12 @@ export default function Home() {
                   <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">💪 Faith & Resilience</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Overcoming life's challenges
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Building unshakeable faith
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Applying biblical wisdom
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Standing firm in trials
-                </li>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Faith &amp; Resilience</h3>
+              <ul className="list-disc space-y-3 pl-5 text-gray-600 marker:text-brand-gold">
+                <li>Overcoming life's challenges</li>
+                <li>Building unshakeable faith</li>
+                <li>Applying biblical wisdom</li>
+                <li>Standing firm in trials</li>
               </ul>
             </div>
 
@@ -318,24 +324,12 @@ export default function Home() {
                   <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">🌱 Spiritual Growth</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Fruit of the Spirit development
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Becoming mature disciples
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Prayer &amp; intimate relationship with God
-                </li>
-                <li className="flex items-start">
-                  <span className="text-brand-gold mr-2">•</span>
-                  Kingdom living in daily life
-                </li>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Spiritual Growth</h3>
+              <ul className="list-disc space-y-3 pl-5 text-gray-600 marker:text-brand-gold">
+                <li>Fruit of the Spirit development</li>
+                <li>Becoming mature disciples</li>
+                <li>Prayer &amp; intimate relationship with God</li>
+                <li>Kingdom living in daily life</li>
               </ul>
             </div>
           </div>

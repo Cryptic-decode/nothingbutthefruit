@@ -9,9 +9,11 @@ import {
   getBookBySlug,
 } from '../lib/books';
 import type { Book } from '../lib/books';
+import JsonLd from '../components/JsonLd';
+import { entityIds, siteConfig } from '../lib/site';
 
 export const metadata: Metadata = {
-  title: 'Books | Nothing But The Fruit Podcast',
+  title: 'Books',
   description:
     'Browse books by Pastor Demetria Bass including the What\u2019s Your Fruit Language? series, Married Couples Edition, and Through the Orchard series. Order your copies today.',
   keywords: [
@@ -66,6 +68,32 @@ export default function BooksPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          '@id': `${siteConfig.url}/books#collection`,
+          url: `${siteConfig.url}/books`,
+          name: 'Books by Pastor Demetria Bass',
+          description: metadata.description,
+          isPartOf: { '@id': entityIds.website },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: books.length,
+            itemListElement: books.map((book, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              item: {
+                '@type': 'Book',
+                name: book.title,
+                url: `${siteConfig.url}/books/${book.slug}`,
+                image: `${siteConfig.url}${book.coverImage}`,
+                author: { '@id': entityIds.author },
+              },
+            })),
+          },
+        }}
+      />
       <BookstoreHero books={heroBooks} />
 
       <section id="book-collections" className="scroll-mt-28 py-20 lg:py-24">

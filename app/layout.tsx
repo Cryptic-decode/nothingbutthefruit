@@ -6,6 +6,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScrollAnimations from "./components/ScrollAnimations";
 import GoogleAnalytics from "./components/GoogleAnalytics";
+import JsonLd from "./components/JsonLd";
+import { entityIds, siteConfig } from "./lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
     "christian discipleship podcast",
     "spiritual transformation podcast",
     "faith podcast",
-    "christian podcast 2024"
+    "christian faith podcast"
   ],
   authors: [{ name: "Pastor Demetria Bass" }],
   creator: "Nothing But The Fruit",
@@ -92,9 +94,62 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: process.env.GOOGLE_SITE_VERIFICATION || 'your-google-verification-code',
-  },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
+};
+
+const siteStructuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': entityIds.organization,
+      name: siteConfig.name,
+      alternateName: siteConfig.organizationName,
+      url: siteConfig.url,
+      logo: `${siteConfig.url}/icon.png`,
+      description: siteConfig.description,
+      founder: { '@id': entityIds.author },
+      sameAs: [siteConfig.youtubeUrl, siteConfig.facebookUrl],
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        url: `${siteConfig.url}/contact`,
+      },
+    },
+    {
+      '@type': 'Person',
+      '@id': entityIds.author,
+      name: siteConfig.authorName,
+      url: `${siteConfig.url}/about`,
+      image: `${siteConfig.url}/PastorDeeNew.png`,
+      jobTitle: 'Executive Pastor',
+      worksFor: { '@id': entityIds.organization },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': entityIds.website,
+      name: siteConfig.title,
+      url: siteConfig.url,
+      description: siteConfig.description,
+      publisher: { '@id': entityIds.organization },
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'PodcastSeries',
+      '@id': entityIds.podcast,
+      name: siteConfig.name,
+      description: siteConfig.description,
+      author: { '@id': entityIds.author },
+      publisher: { '@id': entityIds.organization },
+      image: `${siteConfig.url}/icon.png`,
+      url: `${siteConfig.url}/episodes`,
+      sameAs: [siteConfig.youtubeUrl, siteConfig.facebookUrl],
+      genre: ['Religion & Spirituality', 'Christianity', 'Biblical Teaching'],
+      inLanguage: 'en-US',
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -108,65 +163,7 @@ export default function RootLayout({
         <link rel="icon" href="/icon.png" />
         <link rel="apple-touch-icon" href="/icon.png" />
         <meta name="theme-color" content="#F59E0B" />
-        {/* Organization Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Nothing But The Fruit",
-              "alternateName": "Bass Global Ministries",
-              "url": "https://nothingbutthefruit.com",
-              "logo": "https://nothingbutthefruit.com/icon.png",
-              "description": "Gospel podcast with Pastor Demetria Bass providing biblical teaching and spiritual growth",
-              "founder": {
-                "@type": "Person",
-                "name": "Pastor Demetria Bass"
-              },
-              "sameAs": [
-                "https://www.youtube.com/@nothingbutthefruit",
-                "https://www.facebook.com/nothingbutthefruit"
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "contactType": "customer service",
-                "url": "https://nothingbutthefruit.com/contact"
-              }
-            })
-          }}
-        />
-
-        {/* Podcast Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "PodcastSeries",
-              "name": "Nothing But The Fruit",
-              "description": "Experience transformative biblical teaching with Pastor Demetria Bass. From military veteran to powerful minister, discover pure gospel truth that changes lives.",
-              "author": {
-                "@type": "Person",
-                "name": "Pastor Demetria Bass",
-                "description": "Military veteran turned powerful minister, providing biblical teaching and spiritual growth"
-              },
-              "publisher": {
-                "@type": "Organization",
-                "name": "Bass Global Ministries"
-              },
-              "image": "https://nothingbutthefruit.com/icon.png",
-              "url": "https://nothingbutthefruit.com",
-              "webFeed": "https://nothingbutthefruit.com/episodes",
-              "sameAs": [
-                "https://youtube.com/@nothingbutthefruit",
-                "https://facebook.com/nothingbutthefruit"
-              ],
-              "genre": ["Religion & Spirituality", "Christianity", "Biblical Teaching"],
-              "keywords": "christian podcast, gospel teaching, biblical teaching, Pastor Demetria Bass, spiritual growth, faith podcast"
-            })
-          }}
-        />
+        <JsonLd data={siteStructuredData} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}

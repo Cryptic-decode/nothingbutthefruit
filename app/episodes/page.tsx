@@ -3,10 +3,14 @@ import EpisodeCard from '../components/EpisodeCard';
 import Pagination from '../components/Pagination';
 import { fetchChannelEpisodes } from '../lib/youtubeService';
 import type { Metadata } from 'next';
+import JsonLd from '../components/JsonLd';
+import { entityIds, siteConfig } from '../lib/site';
 
-export const metadata: Metadata = {
-  title: 'Episodes | Nothing But The Fruit Podcast with Pastor Demetria Bass',
-  description: 'Watch all episodes of Nothing But The Fruit with Pastor Demetria Bass. Powerful biblical teachings, spiritual growth, and gospel truth that transforms lives. New episodes weekly.',
+const episodesDescription = 'Watch all episodes of Nothing But The Fruit with Pastor Demetria Bass. Powerful biblical teachings, spiritual growth, and gospel truth that transforms lives. New episodes weekly.';
+
+const episodesMetadata: Metadata = {
+  title: 'Episodes',
+  description: episodesDescription,
   keywords: [
     'gospel podcast episodes',
     'biblical teaching videos',
@@ -43,6 +47,26 @@ interface EpisodesPageProps {
   searchParams: Promise<{ page?: string }>;
 }
 
+export async function generateMetadata({ searchParams }: EpisodesPageProps): Promise<Metadata> {
+  const { page } = await searchParams;
+  const pageNumber = Math.max(1, Number.parseInt(page || '1', 10) || 1);
+
+  if (pageNumber === 1) return episodesMetadata;
+
+  return {
+    ...episodesMetadata,
+    title: `Episodes — Page ${pageNumber}`,
+    alternates: {
+      canonical: `${siteConfig.url}/episodes?page=${pageNumber}`,
+    },
+    openGraph: {
+      ...episodesMetadata.openGraph,
+      title: `Episodes — Page ${pageNumber} | Nothing But The Fruit Podcast`,
+      url: `${siteConfig.url}/episodes?page=${pageNumber}`,
+    },
+  };
+}
+
 export default async function Episodes({ searchParams }: EpisodesPageProps) {
   // Fetch videos from YouTube channel
   const allVideos = await fetchChannelEpisodes();
@@ -63,8 +87,52 @@ export default async function Episodes({ searchParams }: EpisodesPageProps) {
   const startIndex = (currentPage - 1) * EPISODES_PER_PAGE;
   const endIndex = startIndex + EPISODES_PER_PAGE;
   const videos = allVideos.slice(startIndex, endIndex);
+  const pageUrl = currentPage === 1
+    ? `${siteConfig.url}/episodes`
+    : `${siteConfig.url}/episodes?page=${currentPage}`;
+
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          '@id': `${pageUrl}#collection`,
+          url: pageUrl,
+          name: currentPage === 1
+            ? 'Nothing But The Fruit Episodes'
+            : `Nothing But The Fruit Episodes — Page ${currentPage}`,
+          description: episodesDescription,
+          isPartOf: { '@id': entityIds.website },
+          about: { '@id': entityIds.podcast },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: totalVideos,
+            itemListElement: videos.map((video, index) => ({
+              '@type': 'ListItem',
+              position: startIndex + index + 1,
+              item: {
+                '@type': 'PodcastEpisode',
+                name: video.title,
+                description: video.description,
+                episodeNumber: video.episodeNumber,
+                datePublished: video.publishedAt,
+                url: `https://www.youtube.com/watch?v=${video.videoId}`,
+                partOfSeries: { '@id': entityIds.podcast },
+                associatedMedia: {
+                  '@type': 'VideoObject',
+                  name: video.title,
+                  description: video.description,
+                  thumbnailUrl: video.thumbnail.url,
+                  uploadDate: video.publishedAt,
+                  embedUrl: `https://www.youtube.com/embed/${video.videoId}`,
+                  contentUrl: `https://www.youtube.com/watch?v=${video.videoId}`,
+                },
+              },
+            })),
+          },
+        }}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32" style={{
         background: 'linear-gradient(135deg, #581c87 0%, #312e81 50%, #111827 100%)',
