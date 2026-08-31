@@ -171,8 +171,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
       >
+        <a
+          href="#main-content"
+          className="fixed left-4 top-4 z-[60] -translate-y-24 rounded-full bg-brand-gold px-5 py-3 font-bold text-brand-black shadow-lg transition-transform focus:translate-y-0"
+        >
+          Skip to main content
+        </a>
         <Header />
-        <main className="pt-[90px]">{children}</main>
+        <main id="main-content" tabIndex={-1} className="pt-[90px] focus:outline-none">{children}</main>
         <Footer />
         <ScrollAnimations />
         <GoogleAnalytics />
