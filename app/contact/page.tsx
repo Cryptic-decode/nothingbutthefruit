@@ -292,7 +292,7 @@ export default function Contact() {
                     <p className="text-gray-600 mb-2">For prayer requests, testimonies, and inquiries</p>
                     <a 
                       href="mailto:nbtfruit@gmail.com" 
-                      className="text-brand-black hover:text-gray-700 font-semibold transition-colors duration-200"
+                      className="inline-flex min-h-11 items-center text-brand-black hover:text-gray-700 font-semibold transition-colors duration-200"
                     >
                       nbtfruit@gmail.com
                     </a>
@@ -314,7 +314,7 @@ export default function Contact() {
                       href="https://youtube.com/@nothingbutthefruit" 
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-brand-black hover:text-gray-700 font-semibold transition-colors duration-200"
+                      className="inline-flex min-h-11 items-center text-brand-black hover:text-gray-700 font-semibold transition-colors duration-200"
                     >
                       @nothingbutthefruit
                     </a>

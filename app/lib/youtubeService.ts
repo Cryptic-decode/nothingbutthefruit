@@ -25,6 +25,12 @@ export interface YouTubeChannel {
   publishedAt: string;
 }
 
+function debugLog(...args: unknown[]) {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(...args);
+  }
+}
+
 /**
  * Episodes are videos that are explicitly labeled with an episode number in the title.
  * We intentionally exclude other uploads (promos, clips, Shorts, etc.) from the Episodes page.
@@ -74,7 +80,7 @@ export async function resolveChannelId(handle: string): Promise<string> {
 
     for (const channelUrl of urlsToTry) {
       try {
-        console.log(`Trying to resolve channel ID from: ${channelUrl}`);
+        debugLog(`Trying to resolve channel ID from: ${channelUrl}`);
         
         const response = await fetch(channelUrl, {
           headers: {
@@ -92,21 +98,21 @@ export async function resolveChannelId(handle: string): Promise<string> {
           
           if (channelIdMatch && channelIdMatch[1]) {
             const channelId = channelIdMatch[1];
-            console.log(`✅ Successfully resolved channel ID for ${handle}: ${channelId}`);
+            debugLog(`Successfully resolved channel ID for ${handle}: ${channelId}`);
             return channelId;
           }
         } else {
-          console.log(`❌ Failed to fetch ${channelUrl}: ${response.status}`);
+          debugLog(`Failed to fetch ${channelUrl}: ${response.status}`);
         }
       } catch (urlError) {
-        console.log(`❌ Error fetching ${channelUrl}:`, urlError);
+        debugLog(`Error fetching ${channelUrl}:`, urlError);
         continue;
       }
     }
     
     console.warn(`❌ Could not resolve channel ID for ${handle} from any URL format`);
-    console.log(`💡 The channel might not exist yet or the handle might be different`);
-    console.log(`💡 You can manually provide the channel ID if you know it`);
+    debugLog('The channel might not exist yet or the handle might be different');
+    debugLog('You can manually provide the channel ID if you know it');
     
     return 'UC_placeholder';
     
@@ -127,31 +133,30 @@ export async function fetchChannelVideos(channelId?: string, maxResults: number 
     
     // Check for manual override first
     if (MANUAL_CHANNEL_ID) {
-      console.log('Using manual channel ID override:', MANUAL_CHANNEL_ID);
+      debugLog('Using manual channel ID override:', MANUAL_CHANNEL_ID);
       resolvedChannelId = MANUAL_CHANNEL_ID;
     }
     
     // If no channel ID provided, resolve it from the handle
     if (!resolvedChannelId || resolvedChannelId === 'UC_placeholder') {
-      console.log('Resolving channel ID from handle...');
+      debugLog('Resolving channel ID from handle...');
       resolvedChannelId = await resolveChannelId(CHANNEL_HANDLE);
     }
     
     if (!resolvedChannelId || resolvedChannelId === 'UC_placeholder') {
-      console.log('No valid channel ID available, returning empty array');
+      debugLog('No valid channel ID available, returning empty array');
       return [];
     }
 
     // Try YouTube Data API v3 first if API key is available
     const apiKey = process.env.YOUTUBE_API_KEY;
     if (apiKey) {
-      console.log('✅ YOUTUBE_API_KEY found, attempting to use YouTube Data API v3');
-      console.log(`📺 Channel ID: ${resolvedChannelId}`);
-      console.log(`🔑 API Key: ${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 4)} (masked)`);
+      debugLog('YOUTUBE_API_KEY found, attempting to use YouTube Data API v3');
+      debugLog(`Channel ID: ${resolvedChannelId}`);
       try {
         const siteUrl = getSiteUrlForApiReferrer();
         if (siteUrl) {
-          console.log(`🌐 Using Referer header for YouTube API: ${siteUrl}`);
+          debugLog(`Using Referer header for YouTube API: ${siteUrl}`);
         } else {
           console.warn('⚠️ No SITE_URL/NEXT_PUBLIC_SITE_URL set; YouTube API keys restricted by HTTP referrer may fail');
         }
@@ -160,7 +165,7 @@ export async function fetchChannelVideos(channelId?: string, maxResults: number 
         if (videos.length === 0) {
           console.warn('⚠️ API returned 0 videos, falling back to RSS feed');
         } else {
-          console.log(`✅ Successfully fetched ${videos.length} videos from YouTube Data API`);
+          debugLog(`Successfully fetched ${videos.length} videos from YouTube Data API`);
           return videos;
         }
       } catch (apiError: unknown) {
@@ -173,8 +178,7 @@ export async function fetchChannelVideos(channelId?: string, maxResults: number 
         // Fall through to RSS fallback
       }
     } else {
-      console.log('⚠️ No YOUTUBE_API_KEY found in process.env, using RSS feed (limited to ~15 recent videos)');
-      console.log('💡 To use YouTube Data API, add YOUTUBE_API_KEY to .env.local and restart the dev server');
+      debugLog('No YOUTUBE_API_KEY found; using the RSS feed');
     }
 
     // Fallback to RSS feed
@@ -204,7 +208,7 @@ async function fetchVideosFromAPI(
   
   // Get channel details to find uploads playlist (only once)
   const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${apiKey}`;
-  console.log(`🔍 Fetching channel details for: ${channelId}`);
+  debugLog(`Fetching channel details for: ${channelId}`);
   
   const channelResponse = await fetch(channelUrl, {
     next: { revalidate: 3600 }, // Cache for 1 hour
@@ -229,7 +233,7 @@ async function fetchVideosFromAPI(
     throw new Error(`Channel not found: ${channelId}`);
   }
   
-  console.log('✅ Channel found, getting uploads playlist...');
+  debugLog('Channel found, getting uploads playlist...');
 
   const uploadsPlaylistId = channelData.items[0].contentDetails?.relatedPlaylists?.uploads;
   if (!uploadsPlaylistId) {
@@ -262,11 +266,11 @@ async function fetchVideosFromAPI(
     }
 
     if (!data.items || data.items.length === 0) {
-      console.log('ℹ️ No more videos in playlist');
+      debugLog('No more videos in playlist');
       break;
     }
     
-    console.log(`📹 Fetched ${data.items.length} items from playlist (page ${nextPageToken ? 'next' : 'first'})`);
+    debugLog(`Fetched ${data.items.length} playlist items`);
 
     // Get video IDs to fetch duration details
     interface PlaylistItem {
@@ -322,7 +326,6 @@ async function fetchVideosFromAPI(
       
       if (isShort) {
         shortsFiltered++;
-        console.log(`🚫 Filtered Short: "${title.substring(0, 50)}..." (ID: ${videoId})`);
         continue;
       }
 
@@ -347,7 +350,7 @@ async function fetchVideosFromAPI(
     }
 
     nextPageToken = data.nextPageToken;
-    console.log(`✅ Processed page: ${allVideos.length} full videos, ${shortsFiltered} Shorts filtered`);
+    debugLog(`Processed page: ${allVideos.length} full videos, ${shortsFiltered} Shorts filtered`);
     
     // Stop if we have enough videos or no more pages
     if (allVideos.length >= maxResults || !nextPageToken) {
@@ -370,7 +373,7 @@ async function fetchVideosFromAPI(
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
 
-  console.log(`Successfully fetched ${allVideos.length} full-length videos from YouTube Data API (Shorts excluded)`);
+  debugLog(`Fetched ${allVideos.length} full-length videos from YouTube Data API`);
   return allVideos;
 }
 
@@ -546,7 +549,7 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
                        (title.toLowerCase().includes('shorts') && !title.toLowerCase().includes('episode'));
         
         if (isShort) {
-          console.log(`Entry ${entryCount}: Skipping Short - "${title.substring(0, 50)}..."`);
+          debugLog(`Skipping Short in RSS entry ${entryCount}`);
           continue;
         }
         
@@ -625,7 +628,7 @@ function parseRSSFeed(xmlText: string): YouTubeVideo[] {
       return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
     });
     
-    console.log(`✅ Successfully parsed ${videos.length} full-length videos from RSS feed (Shorts excluded)`);
+    debugLog(`Parsed ${videos.length} full-length videos from the RSS feed`);
     return videos;
     
   } catch (error) {
@@ -687,13 +690,13 @@ export async function getChannelInfo(channelId?: string): Promise<YouTubeChannel
     
     // Check for manual override first
     if (MANUAL_CHANNEL_ID) {
-      console.log('Using manual channel ID override for channel info:', MANUAL_CHANNEL_ID);
+      debugLog('Using manual channel ID override for channel info:', MANUAL_CHANNEL_ID);
       resolvedChannelId = MANUAL_CHANNEL_ID;
     }
     
     // If no channel ID provided, resolve it from the handle
     if (!resolvedChannelId || resolvedChannelId === 'UC_placeholder') {
-      console.log('Resolving channel ID for channel info...');
+      debugLog('Resolving channel ID for channel info...');
       resolvedChannelId = await resolveChannelId(CHANNEL_HANDLE);
     }
     

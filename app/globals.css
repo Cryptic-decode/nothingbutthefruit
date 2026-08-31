@@ -152,11 +152,21 @@ html {
 }
 
 .motion-ready .animate-on-scroll.animate-slideInLeft {
-  transform: translate3d(-20px, 0, 0);
+  transform: translate3d(0, 20px, 0);
 }
 
 .motion-ready .animate-on-scroll.animate-slideInRight {
-  transform: translate3d(20px, 0, 0);
+  transform: translate3d(0, 20px, 0);
+}
+
+@media (min-width: 640px) {
+  .motion-ready .animate-on-scroll.animate-slideInLeft {
+    transform: translate3d(-20px, 0, 0);
+  }
+
+  .motion-ready .animate-on-scroll.animate-slideInRight {
+    transform: translate3d(20px, 0, 0);
+  }
 }
 
 .motion-ready .animate-on-scroll.animate-scaleIn {
