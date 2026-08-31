@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Toast from './Toast';
+import SelectField, { type SelectOption } from './ui/SelectField';
 import { getFormSubmissionError } from '../lib/formErrors';
 
 interface BookOrderFormProps {
@@ -21,6 +22,14 @@ const initialFormData = {
 
 const inputClasses =
   'w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm text-gray-950 transition-colors placeholder:text-gray-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-700/20';
+
+const quantityOptions: SelectOption[] = Array.from({ length: 20 }, (_, index) => {
+  const quantity = index + 1;
+  return {
+    value: quantity,
+    label: `${quantity} ${quantity === 1 ? 'copy' : 'copies'}`,
+  };
+});
 
 export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOrderFormProps) {
   const [formData, setFormData] = useState(initialFormData);
@@ -82,14 +91,16 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
     }
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const value =
-      event.target.name === 'quantity'
-        ? Number.parseInt(event.target.value, 10)
-        : event.target.value;
-    setFormData((current) => ({ ...current, [event.target.name]: value }));
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleQuantityChange = (value: string | number | null) => {
+    if (typeof value !== 'number') return;
+    setFormData((current) => ({ ...current, quantity: value }));
   };
 
   const totalAmount = (formData.quantity * bookPrice).toFixed(2);
@@ -171,21 +182,16 @@ export default function BookOrderForm({ bookSlug, bookTitle, bookPrice }: BookOr
           <label htmlFor="quantity" className="mb-1.5 block text-sm font-bold text-gray-900">
             Quantity <span aria-hidden="true">*</span>
           </label>
-          <select
-            id="quantity"
+          <SelectField
+            inputId="quantity"
             name="quantity"
             required
-            aria-describedby="quantity-help"
             value={formData.quantity}
-            onChange={handleChange}
-            className={inputClasses}
-          >
-            {Array.from({ length: 20 }, (_, index) => index + 1).map((number) => (
-              <option key={number} value={number}>
-                {number} {number === 1 ? 'copy' : 'copies'}
-              </option>
-            ))}
-          </select>
+            options={quantityOptions}
+            onChange={handleQuantityChange}
+            isDisabled={isSubmitting}
+            ariaDescribedBy="quantity-help"
+          />
           <p id="quantity-help" className="mt-2 text-xs leading-5 text-gray-500">
             Need more than 20 copies?{' '}
             <Link href="/books/bulk-order" className="font-bold text-purple-700 hover:text-purple-900">

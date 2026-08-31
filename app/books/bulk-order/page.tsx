@@ -5,6 +5,7 @@ import { useState } from 'react';
 import BookMockup from '../../components/BookMockup';
 import Toast from '../../components/Toast';
 import Container from '../../components/ui/Container';
+import SelectField, { type SelectOption } from '../../components/ui/SelectField';
 import {
   getAllBooks,
   getBookDisplayImage,
@@ -37,6 +38,11 @@ function createInitialOrders(): BookOrder[] {
 
 const inputClasses =
   'w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm text-gray-950 transition-colors placeholder:text-gray-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-700/20';
+
+const bulkQuantityOptions: SelectOption[] = Array.from({ length: 101 }, (_, value) => ({
+  value,
+  label: String(value),
+}));
 
 export default function BulkOrderPage() {
   const [orders, setOrders] = useState<BookOrder[]>(createInitialOrders);
@@ -233,20 +239,20 @@ export default function BulkOrderPage() {
                         <label htmlFor={`qty-${order.slug}`} className="text-sm font-bold text-gray-700">
                           Quantity
                         </label>
-                        <select
-                          id={`qty-${order.slug}`}
+                        <SelectField
+                          inputId={`qty-${order.slug}`}
                           value={order.quantity}
-                          onChange={(event) =>
-                            handleQuantityChange(order.slug, Number.parseInt(event.target.value, 10))
-                          }
-                          className="min-h-11 w-24 rounded-lg border border-stone-300 bg-white px-3 text-sm font-semibold focus:border-purple-700 focus:ring-2 focus:ring-purple-700/20"
-                        >
-                          {Array.from({ length: 101 }, (_, index) => index).map((number) => (
-                            <option key={number} value={number}>
-                              {number}
-                            </option>
-                          ))}
-                        </select>
+                          options={bulkQuantityOptions}
+                          onChange={(value) => {
+                            if (typeof value === 'number') {
+                              handleQuantityChange(order.slug, value);
+                            }
+                          }}
+                          isDisabled={isSubmitting}
+                          isSearchable
+                          compact
+                          className="w-24"
+                        />
                       </div>
                     </article>
                   ))}

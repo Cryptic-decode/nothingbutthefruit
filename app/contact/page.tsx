@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Toast from '../components/Toast';
+import SelectField, { type SelectOption } from '../components/ui/SelectField';
 import { contactFaqs } from '../lib/contact';
 import { getFormSubmissionError } from '../lib/formErrors';
 
@@ -12,6 +13,14 @@ const initialFormData = {
   message: '',
   website: '',
 };
+
+const messageTypeOptions: SelectOption[] = [
+  { value: 'Prayer Request', label: 'Prayer Request' },
+  { value: 'Testimony', label: 'Testimony' },
+  { value: 'Question', label: 'Question About an Episode' },
+  { value: 'Guest Suggestion', label: 'Guest/Topic Suggestion' },
+  { value: 'General', label: 'General Inquiry' },
+];
 
 export default function Contact() {
   const [formData, setFormData] = useState(initialFormData);
@@ -71,11 +80,18 @@ export default function Contact() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleMessageTypeChange = (value: string | number | null) => {
+    setFormData((current) => ({
+      ...current,
+      messageType: typeof value === 'string' ? value : '',
+    }));
   };
 
   const closeToast = () => {
@@ -227,21 +243,16 @@ export default function Contact() {
                   <label htmlFor="messageType" className="block text-sm font-semibold text-gray-900 mb-2">
                     Message Type <span aria-hidden="true">*</span>
                   </label>
-                  <select
-                    id="messageType"
+                  <SelectField
+                    inputId="messageType"
                     name="messageType"
                     required
                     value={formData.messageType}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-colors duration-200"
-                  >
-                    <option value="">Select message type</option>
-                    <option value="Prayer Request">Prayer Request</option>
-                    <option value="Testimony">Testimony</option>
-                    <option value="Question">Question About an Episode</option>
-                    <option value="Guest Suggestion">Guest/Topic Suggestion</option>
-                    <option value="General">General Inquiry</option>
-                  </select>
+                    options={messageTypeOptions}
+                    onChange={handleMessageTypeChange}
+                    placeholder="Select message type"
+                    isDisabled={isSubmitting}
+                  />
                 </div>
 
                 {/* Message */}

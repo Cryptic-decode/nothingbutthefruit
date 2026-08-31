@@ -281,3 +281,8 @@ html {
   outline-offset: 2px;
   box-shadow: 0 0 0 5px #7e22ce;
 }
+
+.nbtf-select__input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
