@@ -80,8 +80,8 @@ export default function Header() {
             <span className="sr-only">Nothing But The Fruit</span>
               <div className="flex items-center">
                 {/* Brand Logo */}
-                <div className="relative flex h-16 items-center justify-center">
-                  <Image src="/NBTF44.png" alt="" width={90} height={88} className="h-16 w-auto object-contain" priority />
+                <div className="relative flex h-[68px] items-center justify-center">
+                  <Image src="/NBTF44.png" alt="" width={90} height={88} className="h-[68px] w-auto object-contain" priority />
               </div>
             </div>
           </Link>
