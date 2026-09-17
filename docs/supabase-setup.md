@@ -37,7 +37,21 @@ insert into public.admin_users (user_id)
 values ('00000000-0000-0000-0000-000000000000');
 ```
 
-Public sign-up will not be exposed by the application. The dashboard login and password-recovery flow will be added in Phase 2.
+Public sign-up is not exposed by the application. Pastor Dee can sign in and access the private dashboard at `/admin`. If she has not set a password yet, she can use **Set or reset password** on that page.
+
+## 4. Configure password recovery
+
+In Supabase Authentication URL Configuration:
+
+1. Set the production Site URL to `https://nothingbutthefruit.com`.
+2. Add `http://localhost:3000/auth/callback` for local development.
+3. Add `https://nothingbutthefruit.com/auth/callback` for production.
+
+The application sends password-recovery links through this callback before opening the new-password form.
+
+## 5. Configure authentication email delivery
+
+Supabase's default email service is intended only for testing and sends messages only to members of the Supabase project team. Before inviting Pastor Dee or sending her a password-reset email, configure a custom SMTP provider under **Authentication → Emails → SMTP Settings** if her email is not a project-team address.
 
 ## Security model
 

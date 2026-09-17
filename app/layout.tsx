@@ -4,9 +4,9 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import ScrollAnimations from "./components/ScrollAnimations";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import JsonLd from "./components/JsonLd";
+import AppShell from "./components/AppShell";
 import { entityIds, siteConfig } from "./lib/site";
 
 const geistSans = Geist({
@@ -168,16 +168,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
       >
-        <a
-          href="#main-content"
-          className="fixed left-4 top-4 z-[60] -translate-y-24 rounded-full bg-brand-gold px-5 py-3 font-bold text-brand-black shadow-lg transition-transform focus:translate-y-0"
-        >
-          Skip to main content
-        </a>
-        <Header />
-        <main id="main-content" tabIndex={-1} className="pt-[90px] focus:outline-none">{children}</main>
-        <Footer />
-        <ScrollAnimations />
+        <AppShell header={<Header />} footer={<Footer />}>
+          {children}
+        </AppShell>
         <GoogleAnalytics />
       </body>
     </html>
