@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import {
   requestPasswordReset,
@@ -28,6 +29,51 @@ const buttonLabels: Record<AuthMode, { idle: string; pending: string }> = {
   'forgot-password': { idle: 'Send reset link', pending: 'Sending…' },
   'update-password': { idle: 'Save new password', pending: 'Saving…' },
 };
+
+interface PasswordInputProps {
+  autoComplete: 'current-password' | 'new-password';
+  id: string;
+  minLength?: number;
+  name: string;
+}
+
+function PasswordInput({
+  autoComplete,
+  id,
+  minLength,
+  name,
+}: PasswordInputProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleLabel = isVisible ? 'Hide password' : 'Show password';
+
+  return (
+    <div className="relative">
+      <input
+        id={id}
+        name={name}
+        type={isVisible ? 'text' : 'password'}
+        autoComplete={autoComplete}
+        minLength={minLength}
+        required
+        className="min-h-12 w-full rounded-xl border border-gray-300 bg-white py-2 pl-4 pr-12 text-gray-950 shadow-sm transition-colors hover:border-gray-400 focus:border-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200"
+      />
+      <button
+        type="button"
+        onClick={() => setIsVisible((visible) => !visible)}
+        aria-label={toggleLabel}
+        aria-pressed={isVisible}
+        title={toggleLabel}
+        className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-gray-500 transition-colors hover:text-purple-700 focus-visible:text-purple-700"
+      >
+        {isVisible ? (
+          <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+        ) : (
+          <EyeIcon className="h-5 w-5" aria-hidden="true" />
+        )}
+      </button>
+    </div>
+  );
+}
 
 function SubmitButton({ mode }: { mode: AuthMode }) {
   const { pending } = useFormStatus();
@@ -99,14 +145,11 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               </Link>
             )}
           </div>
-          <input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             autoComplete={isUpdate ? 'new-password' : 'current-password'}
             minLength={isUpdate ? 8 : undefined}
-            required
-            className="min-h-12 w-full rounded-xl border border-gray-300 bg-white px-4 text-gray-950 shadow-sm transition-colors hover:border-gray-400 focus:border-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200"
           />
           {isUpdate && <p className="mt-2 text-sm text-gray-500">Use at least 8 characters.</p>}
         </div>
@@ -117,14 +160,11 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
           <label htmlFor="confirmation" className="mb-2 block text-sm font-semibold text-gray-900">
             Confirm new password
           </label>
-          <input
+          <PasswordInput
             id="confirmation"
             name="confirmation"
-            type="password"
             autoComplete="new-password"
             minLength={8}
-            required
-            className="min-h-12 w-full rounded-xl border border-gray-300 bg-white px-4 text-gray-950 shadow-sm transition-colors hover:border-gray-400 focus:border-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-200"
           />
         </div>
       )}

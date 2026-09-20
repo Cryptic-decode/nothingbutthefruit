@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import BrandLogoOnDark from '@/app/components/ui/BrandLogoOnDark';
 
 interface AuthCardProps {
   children: ReactNode;
@@ -18,14 +19,7 @@ export default function AuthCard({ children, description, title }: AuthCardProps
         />
         <Link href="/" className="relative w-fit rounded-lg focus-visible:outline-white">
           <span className="sr-only">Return to Nothing But The Fruit</span>
-          <Image
-            src="/NBTF44.png"
-            alt=""
-            width={112}
-            height={110}
-            className="h-24 w-auto object-contain"
-            priority
-          />
+          <BrandLogoOnDark priority />
         </Link>
         <div className="relative max-w-md">
           <p className="mb-5 text-xs font-bold uppercase tracking-[0.28em] text-amber-300">

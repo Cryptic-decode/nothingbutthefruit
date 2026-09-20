@@ -89,17 +89,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
       <section className="mt-8 rounded-3xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-700">Next phase</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-700">Book catalog</p>
           <h2 className="mt-3 font-playfair text-3xl font-semibold text-gray-950">Book management</h2>
           <p className="mt-3 leading-7 text-gray-600">
-            The secure dashboard foundation is ready. The next phase will add the forms and controls for creating, editing, publishing, and archiving books.
+            Create, edit, publish, and archive physical books and eBooks from one secure workspace.
           </p>
         </div>
         <Link
-          href="/books"
+          href="/admin/books"
           className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border-2 border-gray-300 px-6 py-2.5 text-sm font-bold text-gray-800 transition-colors hover:border-purple-700 hover:text-purple-700"
         >
-          View current bookstore
+          Manage books
         </Link>
       </section>
     </div>
