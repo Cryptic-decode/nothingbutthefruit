@@ -40,6 +40,41 @@ function parsePriceInCents(value: string): number | null {
   return Number.isSafeInteger(cents) ? cents : Number.NaN;
 }
 
+function slugify(value: string): string {
+  return (
+    value
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 160)
+      .replace(/-+$/g, '') || 'book'
+  );
+}
+
+async function createAvailableSlug(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  title: string
+): Promise<string> {
+  const baseSlug = slugify(title);
+  const { data } = await supabase
+    .from('books')
+    .select('slug')
+    .like('slug', `${baseSlug}%`)
+    .limit(100);
+  const usedSlugs = new Set((data ?? []).map((book) => book.slug));
+
+  if (!usedSlugs.has(baseSlug)) return baseSlug;
+
+  for (let suffix = 2; suffix <= 101; suffix += 1) {
+    const candidate = `${baseSlug.slice(0, 156)}-${suffix}`;
+    if (!usedSlugs.has(candidate)) return candidate;
+  }
+
+  return `${baseSlug.slice(0, 151)}-${crypto.randomUUID().slice(0, 8)}`;
+}
+
 function revalidateBookRoutes(id?: string) {
   revalidatePath('/admin');
   revalidatePath('/admin/books');
@@ -52,7 +87,6 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
   const supabase = await createClient();
   const id = readText(formData, 'id');
   const title = readText(formData, 'title');
-  const slug = readText(formData, 'slug').toLowerCase();
   const description = readText(formData, 'description');
   const coverAlt = readText(formData, 'cover_alt');
   const coverPath = readStoragePath(formData, 'cover_path');
@@ -67,13 +101,6 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
 
   if (!title || title.length > 180) {
     return { status: 'error', message: 'Enter a title of 180 characters or fewer.' };
-  }
-
-  if (!slugPattern.test(slug)) {
-    return {
-      status: 'error',
-      message: 'Use lowercase letters, numbers, and hyphens only for the URL slug.',
-    };
   }
 
   if (!['physical', 'ebook'].includes(productType)) {
@@ -111,10 +138,11 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
   }
 
   let existingPublishedAt: string | null = null;
+  let slug: string;
   if (id) {
     const { data: existing, error: existingError } = await supabase
       .from('books')
-      .select('published_at')
+      .select('published_at, slug')
       .eq('id', id)
       .single();
 
@@ -122,6 +150,13 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
       return { status: 'error', message: 'We could not find this book.' };
     }
     existingPublishedAt = existing.published_at;
+    slug = existing.slug;
+  } else {
+    slug = await createAvailableSlug(supabase, title);
+  }
+
+  if (!slugPattern.test(slug)) {
+    return { status: 'error', message: 'We could not create a valid store URL.' };
   }
 
   const values: BookUpdate = {
@@ -138,7 +173,7 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
       status === 'published' ? existingPublishedAt ?? new Date().toISOString() : null,
   };
 
-  const result = id
+  let result = id
     ? await supabase.from('books').update(values).eq('id', id).select('id').single()
     : await supabase
         .from('books')
@@ -146,12 +181,21 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
         .select('id')
         .single();
 
+  if (!id && result.error?.code === '23505') {
+    slug = await createAvailableSlug(supabase, title);
+    result = await supabase
+      .from('books')
+      .insert({ ...values, title, slug, created_by: admin.userId })
+      .select('id')
+      .single();
+  }
+
   if (result.error) {
     return {
       status: 'error',
       message:
         result.error.code === '23505'
-          ? 'That URL slug is already in use. Choose a different one.'
+          ? 'We could not reserve a store URL. Please try saving again.'
           : 'We could not save the book. Please review the details and try again.',
     };
   }

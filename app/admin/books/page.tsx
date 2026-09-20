@@ -2,14 +2,24 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { requireAdmin } from '@/app/lib/supabase/auth';
 import { createClient } from '@/app/lib/supabase/server';
+import BookCatalogToolbar from './BookCatalogToolbar';
 
 export const metadata: Metadata = {
   title: 'Books',
 };
 
 interface BooksPageProps {
-  searchParams: Promise<{ archived?: string; error?: string }>;
+  searchParams: Promise<{
+    archived?: string;
+    error?: string;
+    format?: string;
+    q?: string;
+    status?: string;
+  }>;
 }
+
+const validFormats = new Set(['all', 'ebook', 'physical']);
+const validStatuses = new Set(['all', 'draft', 'published', 'archived']);
 
 const statusStyles = {
   draft: 'bg-amber-100 text-amber-900',
@@ -35,12 +45,32 @@ function formatDate(value: string): string {
 
 export default async function BooksPage({ searchParams }: BooksPageProps) {
   await requireAdmin();
-  const { archived, error: queryError } = await searchParams;
+  const {
+    archived,
+    error: queryError,
+    format: requestedFormat,
+    q: requestedQuery,
+    status: requestedStatus,
+  } = await searchParams;
+  const format = validFormats.has(requestedFormat ?? '') ? requestedFormat! : 'all';
+  const status = validStatuses.has(requestedStatus ?? '') ? requestedStatus! : 'all';
+  const searchQuery = (requestedQuery ?? '').trim().slice(0, 100);
   const supabase = await createClient();
   const { data: books, error } = await supabase
     .from('books')
     .select('id, title, slug, product_type, status, price_cents, updated_at')
     .order('updated_at', { ascending: false });
+  const normalizedQuery = searchQuery.toLocaleLowerCase();
+  const visibleBooks = (books ?? []).filter((book) => {
+    const matchesFormat = format === 'all' || book.product_type === format;
+    const matchesStatus = status === 'all' || book.status === status;
+    const matchesSearch =
+      !normalizedQuery ||
+      book.title.toLocaleLowerCase().includes(normalizedQuery) ||
+      book.slug.includes(normalizedQuery);
+
+    return matchesFormat && matchesStatus && matchesSearch;
+  });
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10 lg:py-14">
@@ -73,12 +103,22 @@ export default async function BooksPage({ searchParams }: BooksPageProps) {
         </p>
       )}
 
+      {!error && (books?.length ?? 0) > 0 && (
+        <BookCatalogToolbar
+          initialQuery={searchQuery}
+          initialFormat={format}
+          initialStatus={status}
+          resultCount={visibleBooks.length}
+          totalCount={books?.length ?? 0}
+        />
+      )}
+
       {error ? (
         <div role="alert" className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-5 text-red-900">
           <p className="font-bold">We couldn&apos;t load the books.</p>
           <p className="mt-1 text-sm">Refresh the page to try again.</p>
         </div>
-      ) : books?.length ? (
+      ) : visibleBooks.length ? (
         <div className="mt-8 overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm">
           <div className="hidden grid-cols-[minmax(0,2fr)_0.8fr_0.8fr_0.8fr_auto] gap-4 border-b border-stone-200 bg-stone-50 px-6 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 md:grid">
             <span>Book</span>
@@ -88,7 +128,7 @@ export default async function BooksPage({ searchParams }: BooksPageProps) {
             <span className="sr-only">Actions</span>
           </div>
           <ul className="divide-y divide-stone-200">
-            {books.map((book) => (
+            {visibleBooks.map((book) => (
               <li key={book.id} className="grid gap-4 px-5 py-5 md:grid-cols-[minmax(0,2fr)_0.8fr_0.8fr_0.8fr_auto] md:items-center md:px-6">
                 <div className="min-w-0">
                   <p className="truncate font-bold text-gray-950">{book.title}</p>
@@ -113,6 +153,19 @@ export default async function BooksPage({ searchParams }: BooksPageProps) {
               </li>
             ))}
           </ul>
+        </div>
+      ) : books?.length ? (
+        <div className="mt-8 rounded-3xl border border-dashed border-stone-300 bg-white px-6 py-14 text-center">
+          <h2 className="font-playfair text-3xl font-semibold text-gray-950">No matching books</h2>
+          <p className="mx-auto mt-3 max-w-md leading-7 text-gray-600">
+            Try another search or clear the filters to see the full catalog.
+          </p>
+          <Link
+            href="/admin/books"
+            className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border-2 border-purple-700 px-5 py-2.5 text-sm font-bold text-purple-700 hover:bg-purple-50"
+          >
+            Clear filters
+          </Link>
         </div>
       ) : (
         <div className="mt-8 rounded-3xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">

@@ -55,8 +55,6 @@ function fileNameFromPath(path: string | null): string | null {
 export default function BookForm({ book }: BookFormProps) {
   const router = useRouter();
   const [title, setTitle] = useState(book?.title ?? '');
-  const [slug, setSlug] = useState(book?.slug ?? '');
-  const [slugEdited, setSlugEdited] = useState(Boolean(book));
   const [productType, setProductType] = useState<BookProductType>(
     book?.product_type ?? 'ebook'
   );
@@ -65,6 +63,7 @@ export default function BookForm({ book }: BookFormProps) {
   );
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const storeSlug = book?.slug ?? slugify(title);
 
   async function uploadFile(
     bucket: 'book-covers' | 'ebooks',
@@ -205,11 +204,7 @@ export default function BookForm({ book }: BookFormProps) {
             id="title"
             name="title"
             value={title}
-            onChange={(event) => {
-              const nextTitle = event.target.value;
-              setTitle(nextTitle);
-              if (!slugEdited) setSlug(slugify(nextTitle));
-            }}
+            onChange={(event) => setTitle(event.target.value)}
             maxLength={180}
             required
             className={fieldClassName}
@@ -217,27 +212,25 @@ export default function BookForm({ book }: BookFormProps) {
         </div>
 
         <div>
-          <label htmlFor="slug" className="mb-2 block text-sm font-bold text-gray-900">
+          <p className="mb-2 text-sm font-bold text-gray-900">
             Store URL
-          </label>
-          <div className="flex rounded-xl border border-stone-300 bg-white shadow-sm focus-within:border-purple-700 focus-within:ring-2 focus-within:ring-purple-200">
+          </p>
+          <div
+            aria-live="polite"
+            className="flex min-h-12 items-center overflow-hidden rounded-xl border border-stone-200 bg-stone-50 text-sm"
+          >
             <span className="flex items-center border-r border-stone-200 px-3 text-sm text-gray-500">
               /books/
             </span>
-            <input
-              id="slug"
-              name="slug"
-              value={slug}
-              onChange={(event) => {
-                setSlug(event.target.value.toLowerCase());
-                setSlugEdited(true);
-              }}
-              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-              required
-              className="min-h-12 min-w-0 flex-1 rounded-r-xl px-3 text-gray-950 focus:outline-none"
-            />
+            <span className="min-w-0 flex-1 truncate px-3 font-semibold text-gray-700">
+              {storeSlug || 'your-book-title'}
+            </span>
           </div>
-          <p className="mt-2 text-sm text-gray-500">Lowercase letters, numbers, and hyphens only.</p>
+          <p className="mt-2 text-sm leading-6 text-gray-500">
+            {book
+              ? 'The URL stays fixed so existing links continue to work.'
+              : 'Created automatically from the book title when you save.'}
+          </p>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -307,8 +300,13 @@ export default function BookForm({ book }: BookFormProps) {
           />
           <p className="mt-2 text-sm text-gray-500">
             JPG, PNG, or WebP. Maximum 10 MB.
-            {book?.cover_path && ` Current: ${fileNameFromPath(book.cover_path)}`}
           </p>
+          {book?.cover_path && (
+            <p className="mt-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm leading-6 text-emerald-900">
+              Current cover: <span className="font-semibold">{fileNameFromPath(book.cover_path)}</span>.
+              Choose a new image only if you want to replace it.
+            </p>
+          )}
         </div>
 
         <div>
@@ -340,8 +338,13 @@ export default function BookForm({ book }: BookFormProps) {
             />
             <p className="mt-2 text-sm text-gray-500">
               PDF or EPUB. Maximum 100 MB.
-              {book?.ebook_path && ` Current: ${fileNameFromPath(book.ebook_path)}`}
             </p>
+            {book?.ebook_path && (
+              <p className="mt-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm leading-6 text-emerald-900">
+                Current eBook: <span className="font-semibold">{fileNameFromPath(book.ebook_path)}</span>.
+                Choose a new file only if you want to replace it.
+              </p>
+            )}
           </div>
         )}
       </div>
