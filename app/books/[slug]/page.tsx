@@ -15,6 +15,8 @@ import BookOrderForm from '../../components/BookOrderForm';
 import RelatedBooks from '../../components/RelatedBooks';
 import Container from '../../components/ui/Container';
 import JsonLd from '../../components/JsonLd';
+import EbookDetail from '../../components/EbookDetail';
+import { getPublishedEbookBySlug } from '../../lib/ebooks';
 import { entityIds, siteConfig } from '../../lib/site';
 
 interface BookPageProps {
@@ -28,7 +30,24 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: BookPageProps): Promise<Metadata> {
   const { slug } = await params;
   const book = getBookBySlug(slug);
-  if (!book) return {};
+  if (!book) {
+    const ebook = await getPublishedEbookBySlug(slug);
+    if (!ebook) return {};
+
+    return {
+      title: ebook.title,
+      description: ebook.description,
+      openGraph: {
+        title: `${ebook.title} | Nothing But The Fruit eBooks`,
+        description: ebook.description,
+        url: `${siteConfig.url}/books/${ebook.slug}`,
+        images: [{ url: ebook.coverUrl, alt: ebook.coverAlt }],
+      },
+      alternates: {
+        canonical: `${siteConfig.url}/books/${ebook.slug}`,
+      },
+    };
+  }
 
   return {
     title: book.title,
@@ -57,7 +76,9 @@ export default async function BookDetailPage({ params }: BookPageProps) {
   const book = getBookBySlug(slug);
 
   if (!book) {
-    notFound();
+    const ebook = await getPublishedEbookBySlug(slug);
+    if (!ebook) notFound();
+    return <EbookDetail book={ebook} />;
   }
 
   const related = getRelatedBooks(slug);

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { requireAdmin } from '@/app/lib/supabase/auth';
 import { createClient } from '@/app/lib/supabase/server';
+import { getAllBooks } from '@/app/lib/books';
 import type {
   BookProductType,
   BookPublicationStatus,
@@ -55,9 +56,14 @@ function slugify(value: string): string {
 
 async function createAvailableSlug(
   supabase: Awaited<ReturnType<typeof createClient>>,
-  title: string
+  title: string,
+  productType: BookProductType
 ): Promise<string> {
-  const baseSlug = slugify(title);
+  const requestedBase = slugify(title);
+  const reservedSlugs = new Set(getAllBooks().map((book) => book.slug));
+  const baseSlug = reservedSlugs.has(requestedBase)
+    ? `${requestedBase.slice(0, 153)}-${productType}`
+    : requestedBase;
   const { data } = await supabase
     .from('books')
     .select('slug')
@@ -152,7 +158,7 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
     existingPublishedAt = existing.published_at;
     slug = existing.slug;
   } else {
-    slug = await createAvailableSlug(supabase, title);
+    slug = await createAvailableSlug(supabase, title, productType);
   }
 
   if (!slugPattern.test(slug)) {
@@ -182,7 +188,7 @@ export async function saveBook(formData: FormData): Promise<SaveBookResult> {
         .single();
 
   if (!id && result.error?.code === '23505') {
-    slug = await createAvailableSlug(supabase, title);
+    slug = await createAvailableSlug(supabase, title, productType);
     result = await supabase
       .from('books')
       .insert({ ...values, title, slug, created_by: admin.userId })
