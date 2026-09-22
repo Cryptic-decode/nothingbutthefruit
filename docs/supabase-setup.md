@@ -26,6 +26,11 @@ The migration creates:
 - Private `ebooks` storage
 - Row Level Security policies
 
+After the catalog migration, also run
+`supabase/migrations/202609220001_create_free_resource_downloads.sql`. It creates
+the private lead table used by the free-resource form. Visitors can submit a
+request, but only an administrator can read the saved names and email addresses.
+
 ## 3. Add Pastor Dee as the administrator
 
 1. In Supabase Authentication, create Pastor Dee's user account.

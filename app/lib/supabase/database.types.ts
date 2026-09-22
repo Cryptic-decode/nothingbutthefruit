@@ -78,6 +78,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      free_resource_downloads: {
+        Row: {
+          id: string;
+          resource_slug: string;
+          full_name: string;
+          email: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          resource_slug: string;
+          full_name: string;
+          email: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          resource_slug?: string;
+          full_name?: string;
+          email?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: { [_ in never]: never };
     Functions: {

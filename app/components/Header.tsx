@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import ButtonLink from './ui/ButtonLink';
 import Container from './ui/Container';
+import FreeResourceModal from './FreeResourceModal';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -87,7 +88,8 @@ export default function Header() {
           </Link>
         </div>
         
-        <div className="flex lg:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
+          <FreeResourceModal />
           <button
             ref={menuButtonRef}
             type="button"
@@ -101,7 +103,7 @@ export default function Header() {
           </button>
         </div>
         
-        <div className="hidden lg:flex lg:gap-x-12">
+        <div className="hidden lg:flex lg:gap-x-8 xl:gap-x-12">
           {navigation.map((item) => {
             const isActive = isNavActive(pathname, item.href);
             return (
@@ -121,7 +123,8 @@ export default function Header() {
           })}
         </div>
         
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:gap-3">
+          <FreeResourceModal />
           <ButtonLink
             href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
             target="_blank"
