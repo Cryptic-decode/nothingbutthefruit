@@ -7,6 +7,7 @@ import type { FormEvent } from 'react';
 
 interface FreeResourceModalProps {
   className?: string;
+  showLabel?: boolean;
 }
 
 type SubmissionState = 'idle' | 'submitting' | 'success';
@@ -20,7 +21,10 @@ function startDownload(url: string) {
   link.remove();
 }
 
-export default function FreeResourceModal({ className = '' }: FreeResourceModalProps) {
+export default function FreeResourceModal({
+  className = '',
+  showLabel = false,
+}: FreeResourceModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -92,11 +96,16 @@ export default function FreeResourceModal({ className = '' }: FreeResourceModalP
         ref={triggerRef}
         type="button"
         onClick={openDialog}
+        aria-label="Get the free 7-Day Fruit Check"
         title="Get the free 7-Day Fruit Check"
-        className={`group inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-50 text-purple-800 shadow-sm transition-[background-color,border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-100 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-700 focus-visible:ring-offset-2 ${className}`}
+        className={`group inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-50 text-purple-800 shadow-sm transition-[background-color,border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-100 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-700 focus-visible:ring-offset-2 ${showLabel ? 'gap-2 px-4' : 'w-11'} ${className}`}
       >
-        <span className="sr-only">Get the free 7-Day Fruit Check</span>
         <GiftIcon aria-hidden="true" className="h-6 w-6 transition-transform group-hover:scale-105" />
+        {showLabel && (
+          <span aria-hidden="true" className="text-sm font-bold whitespace-nowrap">
+            Free guide
+          </span>
+        )}
       </button>
 
       <dialog

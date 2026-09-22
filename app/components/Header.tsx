@@ -124,7 +124,7 @@ export default function Header() {
         </div>
         
         <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:gap-3">
-          <FreeResourceModal />
+          <FreeResourceModal showLabel />
           <ButtonLink
             href="https://youtube.com/@nothingbutthefruit?sub_confirmation=1"
             target="_blank"
