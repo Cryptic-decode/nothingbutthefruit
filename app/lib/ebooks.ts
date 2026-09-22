@@ -21,6 +21,7 @@ interface EbookCatalogResult {
 
 const ebookColumns =
   'id, slug, title, description, price_cents, cover_path, cover_alt, published_at';
+const catalogTimeoutMs = 8000;
 
 function createPublicClient() {
   const { supabaseUrl, supabasePublishableKey } = getSupabaseEnvironment();
@@ -70,7 +71,8 @@ export const getPublishedEbooks = cache(async (): Promise<EbookCatalogResult> =>
       .select(ebookColumns)
       .eq('product_type', 'ebook')
       .eq('status', 'published')
-      .order('published_at', { ascending: false });
+      .order('published_at', { ascending: false })
+      .abortSignal(AbortSignal.timeout(catalogTimeoutMs));
 
     if (error) return { books: [], error: true };
 
@@ -94,6 +96,7 @@ export const getPublishedEbookBySlug = cache(
       .eq('product_type', 'ebook')
       .eq('status', 'published')
       .eq('slug', slug)
+      .abortSignal(AbortSignal.timeout(catalogTimeoutMs))
       .maybeSingle();
 
     if (error) throw new Error('Unable to load the eBook catalog.');
